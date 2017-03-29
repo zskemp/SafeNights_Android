@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="apoorvazachmobileapps.safenights.AddDrinks">
+    tools:context="apoorvazachmobileapps.safenights.TrackingActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -30,10 +30,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:text="Lat:" />
 
-            android:text="Hello World!" />
+        <TextView
+            android:text="Lon:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lonTextView"
+            android:layout_below="@+id/latTextView"
+            android:layout_alignLeft="@+id/latTextView"
+            android:layout_alignStart="@+id/latTextView" />
 
+        <Button
+            android:id="@+id/start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:onClick="startGPS"
+            android:text="Start" />
 
     </RelativeLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>
