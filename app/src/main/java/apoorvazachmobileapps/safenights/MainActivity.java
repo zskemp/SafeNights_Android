@@ -29,4 +29,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LastNight.class);
         startActivity(intent);
     }
+
+    public void testwebservice(View view) {
+        Intent intent = new Intent(this, testwebservice.class);
+        startActivity(intent);
+    }
 }
