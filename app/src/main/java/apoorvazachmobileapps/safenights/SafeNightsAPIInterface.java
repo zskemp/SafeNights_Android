@@ -28,7 +28,7 @@ public interface SafeNightsAPIInterface {
 //    @POST("adddrinks/")
 //    Call<Alcohol> adddrink(@Field String id, @Field String day, @Field Double beer, @Field Double wine, @Field Double shots, @Field Double liquor, @Field Double money);
 
-//    @FormUrlEncoded
-//    @POST("signin_mobile/")
-//    Call<User> signin(@Field("username") String username, @Field("pwd") String password);
+    @FormUrlEncoded
+    @POST("api/v1/signin/")
+    Call<User> signin(@Field("username") String username, @Field("pwd") String password);
 }
