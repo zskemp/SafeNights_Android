@@ -6,4 +6,11 @@
     android:layout_height="match_parent"
     tools:context="apoorvazachmobileapps.safenights.SplashScreen">
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="hello"
+        tools:layout_editor_absoluteX="150dp"
+        tools:layout_editor_absoluteY="120dp" />
 </android.support.constraint.ConstraintLayout>

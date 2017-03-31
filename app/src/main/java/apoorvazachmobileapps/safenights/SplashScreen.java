@@ -4,10 +4,12 @@ package apoorvazachmobileapps.safenights;
 //Imports
         import android.app.Activity;
         import android.content.Intent;
+        import android.content.SharedPreferences;
         import android.os.Bundle;
 
 //Splash Screen!
 public class SplashScreen extends Activity {
+    public static final String PREFS_NAME = "CoreSkillsPrefsFile";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +24,16 @@ public class SplashScreen extends Activity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } finally {
-                    Intent intent = new Intent(SplashScreen.this, MainActivity.class);
-                    startActivity(intent);
+
+                    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                    if (settings.getString("username", "") == null || settings.getString("username","") == ""){
+                        Intent intent = new Intent(SplashScreen.this, Login.class);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(SplashScreen.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+
                 }
             }
         };
