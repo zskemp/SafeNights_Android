@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="apoorvazachmobileapps.safenights">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,10 +21,52 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GetStarted" />
-        <activity android:name=".AddDrinks" />
-        <activity android:name=".History" />
-        <activity android:name=".LastNight"></activity>
+        <activity
+            android:name=".TrackingActivity"
+            android:label="@string/title_activity_tracking"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="apoorvazachmobileapps.safenights.MainActivity" />
+        </activity>
+        <activity
+            android:name=".LastNight"
+            android:label="@string/title_activity_last_night"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="apoorvazachmobileapps.safenights.MainActivity" />
+        </activity>
+        <activity
+            android:name=".History"
+            android:label="@string/title_activity_history"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="apoorvazachmobileapps.safenights.MainActivity" />
+        </activity>
+        <activity
+            android:name=".AddDrinks"
+            android:label="@string/title_activity_add_drinks"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="apoorvazachmobileapps.safenights.MainActivity" />
+        </activity>
+        <activity
+            android:name=".GetStarted"
+            android:label="@string/title_activity_get_started"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="apoorvazachmobileapps.safenights.MainActivity" />
+        </activity>
+        <activity android:name=".testwebservice"></activity>
     </application>
 
 </manifest>

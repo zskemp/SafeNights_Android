@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">SafeNights</string>
+    <string name="title_activity_tracking">TrackingActivity</string>
+    <string name="title_activity_last_night">LastNight</string>
+    <string name="title_activity_history">History</string>
+    <string name="title_activity_add_drinks">AddDrinks</string>
+    <string name="title_activity_get_started">GetStarted</string>
 </resources>
