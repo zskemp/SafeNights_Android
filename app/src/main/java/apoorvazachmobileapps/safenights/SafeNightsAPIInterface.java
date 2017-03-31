@@ -17,9 +17,6 @@ import retrofit2.http.Query;
 
 public interface SafeNightsAPIInterface {
 
-    @GET("{dept}?json")
-    Call<List<Section>> sectionList(@Path("dept") String dept);
-
 //    @GET("{user}")
 //    Call<List<Alcohol>> alcoholList(@Path("user") String user);
 
@@ -31,4 +28,11 @@ public interface SafeNightsAPIInterface {
     @FormUrlEncoded
     @POST("api/v1/signin/")
     Call<User> signin(@Field("username") String username, @Field("pwd") String password);
+
+    @FormUrlEncoded
+    @POST("api/v1/signup/")
+    Call<User> signup(@Field("username") String username, @Field("fname") String fname, @Field("lname") String lname, @Field("email") String email, @Field("pwd") String password);
+
+
+
 }
