@@ -20,40 +20,86 @@ public class testwebservice extends AppCompatActivity {
 
     public static final String BASE_URL = "http://stardock.cs.virginia.edu/louslist/Courses/view/";
 
+    private EditText mUsername;
+    private EditText mFname;
+    private EditText mLname;
+    private EditText mEmail;
+    private EditText mPassword;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_testwebservice);
+
+        mUsername   = (EditText)findViewById(R.id.username);
+        mFname   = (EditText)findViewById(R.id.fname);
+        mLname   = (EditText)findViewById(R.id.lname);
+        mEmail   = (EditText)findViewById(R.id.email);
+        mPassword   = (EditText)findViewById(R.id.password);
     }
 
     public void callAPI(View view) {
-
         SafeNightsAPIInterface apiService =
                 SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
 
-        EditText mnemonic = (EditText)findViewById(R.id.editText);
-        String mnemonicSearch = mnemonic.getText().toString();
+        //Get the strings you need for the api
+        String username = mUsername.getText().toString();
+        String fname = mFname.getText().toString();
+        String lname = mLname.getText().toString();
+        String email = mEmail.getText().toString();
+        String password = mPassword.getText().toString();
 
-        Call<List<Section>> call = apiService.sectionList(mnemonicSearch);
-        call.enqueue(new Callback<List<Section>>() {
+        Call<User> call = apiService.signup(username, fname, lname, email, password);
+
+
+        call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<List<Section>> call, Response<List<Section>> response) {
-                List<Section> sections = response.body();
-                String courseDisplay = "";
-                for(Section s : sections) {
-                    Log.d("LousList", "Received: " + s);
-                    courseDisplay += s + "\n";
+            public void onResponse(Call<User> call, Response<User> response) {
+                User u  = response.body();
+                if(u.getPassed().equals('y')){
+                    //bring them to login page
                 }
-                TextView display = (TextView)findViewById(R.id.textview);
-                display.setText(courseDisplay);
+                else {
+                    //return them to the page with an error
+                }
             }
 
             @Override
-            public void onFailure(Call<List<Section>> call, Throwable t) {
+            public void onFailure(Call<User> call, Throwable t) {
                 // Log error here since request failed
-                Log.e("LousList", t.toString());
+                Log.e("API Call:", t.toString());
             }
         });
-
     }
+
+//    public void callAPI(View view) {
+//
+//        SafeNightsAPIInterface apiService =
+//                SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
+//
+//        EditText mnemonic = (EditText)findViewById(R.id.editText);
+//        String mnemonicSearch = mnemonic.getText().toString();
+//
+//        Call<List<Section>> call = apiService.sectionList(mnemonicSearch);
+//        call.enqueue(new Callback<List<Section>>() {
+//            @Override
+//            public void onResponse(Call<List<Section>> call, Response<List<Section>> response) {
+//                List<Section> sections = response.body();
+//                String courseDisplay = "";
+//                for(Section s : sections) {
+//                    Log.d("LousList", "Received: " + s);
+//                    courseDisplay += s + "\n";
+//                }
+//                TextView display = (TextView)findViewById(R.id.textview);
+//                display.setText(courseDisplay);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Section>> call, Throwable t) {
+//                // Log error here since request failed
+//                Log.e("LousList", t.toString());
+//            }
+//        });
+//
+//    }
 }

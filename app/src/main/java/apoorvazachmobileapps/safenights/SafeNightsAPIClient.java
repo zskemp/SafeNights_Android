@@ -11,7 +11,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class SafeNightsAPIClient {
-//    public static final String BASE_URL = "http://stardock.cs.virginia.edu/louslist/Courses/view/";
     public static final String BASE_URL = "https://gentle-badlands-54918.herokuapp.com/";
     private static Retrofit retrofit = null;
 
