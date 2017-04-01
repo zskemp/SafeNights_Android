@@ -1,6 +1,7 @@
 package apoorvazachmobileapps.safenights;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import retrofit2.Call;
@@ -27,6 +29,7 @@ public class SignUp extends Fragment {
     private EditText mLname;
     private EditText mEmail;
     private EditText mPassword;
+    private TextView appname;
     Button mSignUp;
 
     public SignUp() {
@@ -43,8 +46,10 @@ public class SignUp extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootview = inflater.inflate(R.layout.fragment_sign_up, container, false);
-
+        Typeface tf = Typeface.createFromAsset(this.getContext().getAssets(),"fonts/angelina.TTF");
         mUsername   = (EditText)rootview.findViewById(R.id.username);
+        appname = (TextView)rootview.findViewById(R.id.appname);
+        appname.setTypeface(tf);
         mFname   = (EditText)rootview.findViewById(R.id.fname);
         mLname   = (EditText)rootview.findViewById(R.id.lname);
         mEmail   = (EditText)rootview.findViewById(R.id.email);

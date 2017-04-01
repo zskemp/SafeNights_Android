@@ -1,16 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="apoorvazachmobileapps.safenights.SplashScreen">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="apoorvazachmobileapps.safenights.SplashScreen"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#143f66"
+    android:fitsSystemWindows="true">
+
+
+
+    <LinearLayout
+
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="hello"
-        tools:layout_editor_absoluteX="150dp"
-        tools:layout_editor_absoluteY="120dp" />
-</android.support.constraint.ConstraintLayout>
+        android:paddingTop="56dp"
+        android:paddingLeft="24dp"
+        android:textColor="#FFFFFF"
+
+        android:paddingRight="24dp"
+        android:weightSum="1">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="131dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp"
+            android:layout_weight="0.21"
+            android:src="@drawable/logo1" />
+        <TextView android:id="@+id/appname"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#02D4F1"
+            android:layout_marginBottom="24dp"
+            android:text="SafeNights"
+            android:gravity="center"
+            android:textSize="50dp"/>
+
+
+
+        <TextView
+            android:id="@+id/loading"
+            android:paddingTop="20dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:text="Loading..."
+            android:textColor="#FFFFFF"
+            android:textSize="30dip" />
+
+    </LinearLayout>
+</ScrollView>

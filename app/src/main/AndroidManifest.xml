@@ -79,7 +79,11 @@
                 android:value="apoorvazachmobileapps.safenights.MainActivity" />
         </activity>
         <activity android:name=".testwebservice" />
-        <activity android:name=".Login"></activity>
+        <activity
+            android:name=".Login"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
     </application>
 
 </manifest>
