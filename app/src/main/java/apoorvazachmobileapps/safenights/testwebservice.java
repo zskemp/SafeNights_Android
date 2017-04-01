@@ -18,7 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class testwebservice extends AppCompatActivity {
 
-    public static final String BASE_URL = "http://stardock.cs.virginia.edu/louslist/Courses/view/";
+    //public static final String BASE_URL = "http://stardock.cs.virginia.edu/louslist/Courses/view/";
 
     private EditText mUsername;
     private EditText mFname;
@@ -71,35 +71,4 @@ public class testwebservice extends AppCompatActivity {
             }
         });
     }
-
-//    public void callAPI(View view) {
-//
-//        SafeNightsAPIInterface apiService =
-//                SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
-//
-//        EditText mnemonic = (EditText)findViewById(R.id.editText);
-//        String mnemonicSearch = mnemonic.getText().toString();
-//
-//        Call<List<Section>> call = apiService.sectionList(mnemonicSearch);
-//        call.enqueue(new Callback<List<Section>>() {
-//            @Override
-//            public void onResponse(Call<List<Section>> call, Response<List<Section>> response) {
-//                List<Section> sections = response.body();
-//                String courseDisplay = "";
-//                for(Section s : sections) {
-//                    Log.d("LousList", "Received: " + s);
-//                    courseDisplay += s + "\n";
-//                }
-//                TextView display = (TextView)findViewById(R.id.textview);
-//                display.setText(courseDisplay);
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<Section>> call, Throwable t) {
-//                // Log error here since request failed
-//                Log.e("LousList", t.toString());
-//            }
-//        });
-//
-//    }
 }

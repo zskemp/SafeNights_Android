@@ -19,53 +19,17 @@ import retrofit2.Response;
 
 public class Login extends AppCompatActivity {
 
-    private EditText username;
-    private EditText password;
-    public static final String PREFS_NAME = "CoreSkillsPrefsFile";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        username   = (EditText)findViewById(R.id.username);
-        password   = (EditText)findViewById(R.id.password);
+
+        if (savedInstanceState == null) {
+            SignIn firstFragment = new SignIn();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment, firstFragment).commit();
+        }
     }
 
-    public void Login (View view){
-        SafeNightsAPIInterface apiService =
-                SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
-
-        final String uname = username.getText().toString();
-        final String pword = password.getText().toString();
-
-
-        Call<User> call = apiService.signin(uname, pword);
-
-
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                User u  = response.body();
-                if(u.getPassed().equals("y")){
-                    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putString("username", uname);
-                    editor.putString("password", pword);
-                    editor.commit();
-                    Intent intent = new Intent(Login.this, MainActivity.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(getApplicationContext(), "Incorrect Credentials!", Toast.LENGTH_LONG).show();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                // Log error here since request failed
-                Log.e("LousList", t.toString());
-            }
-        });
-    }
 }

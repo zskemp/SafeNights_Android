@@ -4,6 +4,7 @@ package apoorvazachmobileapps.safenights;
  * Created by nanditakannapadi on 3/31/17.
  */
 
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -33,6 +34,8 @@ public interface SafeNightsAPIInterface {
     @POST("api/v1/signup/")
     Call<User> signup(@Field("username") String username, @Field("fname") String fname, @Field("lname") String lname, @Field("email") String email, @Field("pwd") String password);
 
-
+    @FormUrlEncoded
+    @POST("api/v1/addrinks/")
+    Call<User> adddrinks(@Field("id") String username, @Field("day") Date day, @Field("beer") Double beer, @Field("wine") Double wine, @Field("shots") Double shots, @Field("liquor") Double liquor, @Field("money") Double money);
 
 }
