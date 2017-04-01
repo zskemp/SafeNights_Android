@@ -106,6 +106,7 @@ public class SignIn extends Fragment {
 
                     Intent intent = new Intent(SignIn.this.getActivity(), MainActivity.class);
                     startActivity(intent);
+                    getActivity().finish();
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "Incorrect Credentials!", Toast.LENGTH_LONG).show();
                 }
