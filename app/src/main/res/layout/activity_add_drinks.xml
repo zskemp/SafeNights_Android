@@ -25,13 +25,27 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">>
 
-        <TextView
-            android:id="@+id/latTextView"
+
+        <DatePicker
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/datepicker"
+            android:endYear="2100"
             android:layout_centerHorizontal="true"
-
-            android:text="Hello World!" />
+            android:startYear="2017" >
+        </DatePicker>
+        
+        <SeekBar
+            android:layout_width="300dp"
+            android:id="@+id/seekbar"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/datepicker"
+            android:max="10"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/moneycount"
+            android:layout_below="@id/seekbar"/>
 
 
     </RelativeLayout>
