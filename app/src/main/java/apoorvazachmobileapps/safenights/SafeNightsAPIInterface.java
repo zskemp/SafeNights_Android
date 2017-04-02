@@ -7,6 +7,7 @@ package apoorvazachmobileapps.safenights;
 import java.util.Date;
 import java.util.List;
 
+import apoorvazachmobileapps.safenights.DrinkHistory.Example;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -35,7 +36,10 @@ public interface SafeNightsAPIInterface {
     Call<User> signup(@Field("username") String username, @Field("fname") String fname, @Field("lname") String lname, @Field("email") String email, @Field("pwd") String password);
 
     @FormUrlEncoded
-    @POST("api/v1/addrinks/")
+    @POST("api/v1/adddrinks/")
     Call<User> adddrinks(@Field("username") String username, @Field("pwd") String password, @Field("day") Date day, @Field("beer") Double beer, @Field("wine") Double wine, @Field("shots") Double shots, @Field("liquor") Double liquor, @Field("money") int money);
 
+    @FormUrlEncoded
+    @POST("api/v1/gethistory/")
+    Call<Example> gethistory(@Field("username") String username, @Field("pwd") String password);
 }
