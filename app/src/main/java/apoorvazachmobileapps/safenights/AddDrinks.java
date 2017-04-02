@@ -51,6 +51,22 @@ public class AddDrinks extends AppCompatActivity {
         setSupportActionBar(toolbar);
         money = 0;
 
+        Calendar mcurrentDate=Calendar.getInstance();
+        int mYear=mcurrentDate.get(Calendar.YEAR);
+        int mMonth=mcurrentDate.get(Calendar.MONTH);
+        int mDay=mcurrentDate.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog mDatePicker=new DatePickerDialog(AddDrinks.this, new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+                // TODO Auto-generated method stub
+                    /*      Your code   to get date and time    */
+                date = new GregorianCalendar(selectedyear, selectedmonth, selectedday).getTime();
+                datePicker.setText(selectedmonth + "/" + selectedday + "/" + selectedyear);
+            }
+        },mYear, mMonth, mDay);
+        mDatePicker.setTitle("Select date");
+        mDatePicker.show();
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         datePicker = (EditText) findViewById(R.id.datepicker);
         seekBar = (SeekBar)findViewById(R.id.seekbar);

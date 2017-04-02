@@ -1,10 +1,12 @@
 package apoorvazachmobileapps.safenights;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -17,14 +19,36 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.http.Field;
 
+import static java.security.AccessController.getContext;
+
 
 public class MainActivity extends AppCompatActivity {
 
+    private TextView appname;
+    Button getStarted;
+    Button addDrinks;
+    Button History;
+    Button lastNight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        appname = (TextView)findViewById(R.id.appname);
+        Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/angelina.TTF");
+        appname.setTypeface(tf);
+        getStarted = (Button)findViewById(R.id.getStarted);
+        addDrinks = (Button)findViewById(R.id.addDrinks);
+        History = (Button)findViewById(R.id.History);
+        lastNight = (Button)findViewById(R.id.lastNight);
+        getStarted.setTypeface(tf);
+        addDrinks.setTypeface(tf);
+        History.setTypeface(tf);
+
+        lastNight.setTypeface(tf);
+
+
+
 
 
     }

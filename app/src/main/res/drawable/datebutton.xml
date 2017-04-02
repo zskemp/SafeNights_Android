@@ -8,8 +8,11 @@
         android:topLeftRadius="25dp"
         android:topRightRadius="25dp"/>
     <size
-        android:width="50dp"></size>
-    <stroke
-        android:width="50dp"></stroke>
+        android:width="200dp"/>
+    <item
+        android:width="40dp"
+        android:height="40dp"/>
+
+
 
 </shape>

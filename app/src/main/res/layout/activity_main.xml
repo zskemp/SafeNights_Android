@@ -1,81 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="apoorvazachmobileapps.safenights.MainActivity">
+    tools:context="apoorvazachmobileapps.safenights.MainActivity"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+
+    android:fitsSystemWindows="true">
 
 
 
+    <LinearLayout
 
-    <Button
-
-        android:id="@+id/startButton"
-        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Get Started"
-        android:onClick="getStarted"
-        tools:layout_editor_absoluteY="207dp"
-        tools:layout_editor_absoluteX="160dp"
-        android:layout_alignBottom="@+id/addDrinks"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="54dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:textColor="#FFFFFF"
 
-    <Button
-        android:id="@+id/addDrinks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="143dp"
-        android:onClick="addDrinks"
-        android:text="Add Drinks"
-        tools:layout_editor_absoluteX="160dp"
-        tools:layout_editor_absoluteY="207dp" />
+        android:weightSum="1">
+    <LinearLayout
 
-    <Button
-        android:id="@+id/historyButton"
-        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="History"
-        android:onClick="History"
-        android:layout_below="@+id/startButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:paddingTop="56dp"
+        android:paddingLeft="24dp"
+        android:textColor="#FFFFFF"
 
-    <Button
-        android:id="@+id/lastNight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/historyButton"
-        android:layout_marginTop="21dp"
-        android:text="Last Night"
-        android:onClick="lastNight"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:paddingRight="24dp"
+        android:weightSum="1"
+        android:background="#143f66">
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="131dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp"
+            android:layout_weight="0.21"
+            android:src="@drawable/logo1" />
+        <TextView android:id="@+id/appname"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#02D4F1"
+            android:layout_marginBottom="24dp"
+            android:text="SafeNights"
+            android:gravity="center"
+            android:textSize="50dip"/>
 
-    <Button
-        android:id="@+id/test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/lastNight"
-        android:layout_marginTop="21dp"
-        android:text="Test WebService"
-        android:onClick="testwebservice"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-</RelativeLayout>
+    </LinearLayout>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/getStarted"
+            android:layout_width="fill_parent"
+            android:layout_marginBottom="-3dip"
+            android:layout_marginTop="-3dip"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:onClick="getStarted"
+            android:text="Get Started"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="#8e13df" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/addDrinks"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="addDrinks"
+            android:text="Add Drinks"
+            android:background="#FFFFFF"
+            android:textAlignment="center"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:textAllCaps="false"
+            android:textColor="#8e13df" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/History"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:onClick="History"
+            android:background="#FFFFFF"
+            android:text="History"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="#8e13df" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/lastNight"
+            android:layout_width="fill_parent"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:layout_height="wrap_content"
+            android:onClick="lastNight"
+            android:textColor="#8e13df"
+            android:textAlignment="center"
+            android:background="#FFFFFF"
+            android:textAllCaps="false"
+            android:text="Last Night"/>
+
+    </LinearLayout>
+</ScrollView>
