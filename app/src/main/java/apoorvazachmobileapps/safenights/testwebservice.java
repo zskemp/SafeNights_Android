@@ -37,6 +37,13 @@ public class testwebservice extends AppCompatActivity {
 //        super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_testwebservice);
 //
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_testwebservice);
+
 //        mBeer   = (EditText)findViewById(R.id.beer);
 //        mWine   = (EditText)findViewById(R.id.wine);
 //        mShots   = (EditText)findViewById(R.id.shots);
@@ -44,6 +51,8 @@ public class testwebservice extends AppCompatActivity {
 //        mMoney   = (EditText)findViewById(R.id.money);
 //    }
 //
+    }
+
 //    public void callAddDrinksAPI(View view) {
 //        SafeNightsAPIInterface apiService =
 //                SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
