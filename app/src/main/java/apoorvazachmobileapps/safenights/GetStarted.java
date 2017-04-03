@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +27,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.http.GET;
 
 import static java.security.AccessController.getContext;
 
@@ -209,10 +215,41 @@ public class GetStarted extends AppCompatActivity  {
     }
 
 
-    public void startNight(View view) {
-        Intent intent = new Intent(this, TrackingActivity.class);
-        intent.putExtra("location", title.getText());
-        intent.putExtra("pNum", contactNumber.getText());
-        startActivity(intent);
+    public void callNightAPI(View view){
+        SafeNightsAPIInterface apiService =
+                SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
+        final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        String username = settings.getString("username", "");
+        String password = settings.getString("password", "");
+        Call<User> call = apiService.startnight(username, password);
+        Log.i("u", username + password);
+
+
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                User u  = response.body();
+                if(u.getPassed().equals("n")){
+                    //bring them to home page, let them know a problem
+                    Toast.makeText(getApplicationContext(), "There has been a problem starting your night! Please try again", Toast.LENGTH_LONG).show();
+
+                }
+                else {
+                    SharedPreferences.Editor editor = settings.edit();
+                    String id = u.getPassed();
+                    editor.putString("id", id);
+                    Intent intent = new Intent(GetStarted.this, TrackingActivity.class);
+                    intent.putExtra("location", title.getText());
+                    intent.putExtra("pNum", contactNumber.getText());
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                // Log error here since request failed
+                Log.e("API Call:", t.toString());
+            }
+        });
     }
 }

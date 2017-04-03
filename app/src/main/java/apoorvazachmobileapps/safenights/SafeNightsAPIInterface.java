@@ -42,4 +42,12 @@ public interface SafeNightsAPIInterface {
     @FormUrlEncoded
     @POST("api/v1/gethistory/")
     Call<Example> gethistory(@Field("username") String username, @Field("pwd") String password);
+
+    @FormUrlEncoded
+    @POST("api/v1/startnight/")
+    Call<User> startnight(@Field("username") String username, @Field("pwd") String password);
+
+
+
+
 }
