@@ -22,7 +22,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static java.security.AccessController.getContext;
 
@@ -31,13 +34,17 @@ public class GetStarted extends AppCompatActivity  {
     private Button title;
     private CharSequence[] a;
     private TextView latitude;
+    public static final String PREFS_NAME = "CoreSkillsPrefsFile";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_started);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        a = new CharSequence[]{};
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        Set<String> h = settings.getStringSet("locations", new HashSet<String>());
+        a = h.toArray(new CharSequence[h.size()]);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -124,7 +131,16 @@ public class GetStarted extends AppCompatActivity  {
                         a = Arrays.copyOf(a, a.length+1);
                         a[a.length -1] = p;
                         title.setText(p);
-                    }
+                        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                        SharedPreferences.Editor editor = settings.edit();
+                        String[] locations = new String[a.length];
+                        int i=0;
+                        for(CharSequence ch: a){
+                            locations[i++] = ch.toString();
+                        }
+                        Set<String> mySet = new HashSet<String>(Arrays.asList(locations));
+                        editor.putStringSet("locations", mySet);
+                        editor.commit();                    }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override

@@ -21,6 +21,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -102,7 +105,8 @@ public class SignIn extends Fragment {
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putString("username", uname);
                     editor.putString("password", pword);
-                    CharSequence[] locations = {};
+                    Set<String> locations = new HashSet<String>();
+                    editor.putStringSet("locations", locations);
                     editor.commit();
 
                     Intent intent = new Intent(SignIn.this.getActivity(), MainActivity.class);
