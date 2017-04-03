@@ -102,6 +102,7 @@ public class SignIn extends Fragment {
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putString("username", uname);
                     editor.putString("password", pword);
+                    CharSequence[] locations = {};
                     editor.commit();
 
                     Intent intent = new Intent(SignIn.this.getActivity(), MainActivity.class);

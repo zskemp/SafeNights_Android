@@ -1,6 +1,7 @@
 package apoorvazachmobileapps.safenights;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -35,9 +36,11 @@ public class TrackingActivity extends AppCompatActivity implements LocationListe
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
+        Intent intent = getIntent();
+        String location = intent.getExtras().getString("location");
         latTextView = (TextView)findViewById(R.id.latTextView);
         lonTextView = (TextView)findViewById(R.id.lonTextView);
+        latTextView.setText(location);
     }
 
 
@@ -58,17 +61,18 @@ public class TrackingActivity extends AppCompatActivity implements LocationListe
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
 
+
     }
 
 
     @Override
     public void onLocationChanged(Location location) {
-        // Add code here to do stuff when the location changes
-        currentLon = location.getLongitude();
-        currentLat = location.getLatitude();
-        //Change the views
-        lonTextView.setText(currentLon.toString());
-        latTextView.setText(currentLat.toString());
+//        // Add code here to do stuff when the location changes
+//        currentLon = location.getLongitude();
+//        currentLat = location.getLatitude();
+//        //Change the views
+//        lonTextView.setText(currentLon.toString());
+//        latTextView.setText(currentLat.toString());
     }
 
     @Override

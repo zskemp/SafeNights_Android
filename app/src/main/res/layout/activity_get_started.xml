@@ -26,7 +26,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">>
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/contactnumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -44,6 +44,27 @@
             android:layout_centerVertical="true"
             android:onClick="startNight"
             android:text="Start" />
+
+        <Button
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/homebutton"
+            android:onClick="pickLocation"
+            android:layout_marginTop="31dp"
+            android:text="Where will you end up?" />
+
+        <TextView
+            android:id="@+id/latlong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="21dp"
+            android:text="TextView" />
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

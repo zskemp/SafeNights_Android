@@ -1,6 +1,7 @@
 package apoorvazachmobileapps.safenights;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     Button addDrinks;
     Button History;
     Button lastNight;
+    public static final String PREFS_NAME = "CoreSkillsPrefsFile";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
         History.setTypeface(tf);
 
         lastNight.setTypeface(tf);
+
+
 
 
 
