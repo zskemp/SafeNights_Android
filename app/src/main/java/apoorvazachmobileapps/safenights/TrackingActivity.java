@@ -71,6 +71,7 @@ public class TrackingActivity extends AppCompatActivity implements LocationListe
             latTextView.setText("" + latitude);
             lonTextView.setText("" + longitude);
         }
+        final View v = this.findViewById(android.R.id.content);
 
         Timer timer = new Timer ();
         TimerTask hourlyTask = new TimerTask () {
@@ -86,11 +87,11 @@ public class TrackingActivity extends AppCompatActivity implements LocationListe
                 Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 currentLon = location.getLongitude();
                 currentLat = location.getLatitude();
-
+                callAddLocationAPI(v);
             }
         };
 
-        timer.schedule (hourlyTask, 0l, 1000*10*60);
+        timer.schedule (hourlyTask, 0l, 1000*1*5);
     }
 
 
