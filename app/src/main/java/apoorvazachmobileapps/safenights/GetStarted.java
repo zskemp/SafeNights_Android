@@ -110,13 +110,33 @@ public class GetStarted extends AppCompatActivity  {
 
 
     public void addNewLocation(View view){
-        final EditText input = new EditText(GetStarted.this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        input.setLayoutParams(lp);
+        final EditText address = new EditText(GetStarted.this);
+        final EditText city = new EditText(GetStarted.this);
+        final EditText state = new EditText(GetStarted.this);
+        final EditText zip = new EditText(GetStarted.this);
+        TextView addr = new TextView(GetStarted.this);
+        addr.setText("Address");
+        TextView cityy = new TextView(GetStarted.this);
+        cityy.setText("City");
+        TextView statee = new TextView(GetStarted.this);
+        statee.setText("State");
+        TextView zipp = new TextView(GetStarted.this);
+        zipp.setText("Zip");
+        LinearLayout lp = new LinearLayout(this);
+        lp.setOrientation(LinearLayout.VERTICAL);
+        lp.addView(addr);
+        lp.addView(address);
+        lp.addView(cityy);
+        lp.addView(city);
+        lp.addView(statee);
+        lp.addView(state);
+        lp.addView(zipp);
+        lp.addView(zip);
+
+
+
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(input);
+        builder.setView(lp);
         builder.setTitle("Add a new location")
                 // Specify the list array, the items to be selected by default (null for none),
                 // and the listener through which to receive callbacks when items are selected
@@ -127,7 +147,7 @@ public class GetStarted extends AppCompatActivity  {
                     public void onClick(DialogInterface dialog, int id) {
                         // User clicked OK, so save the mSelectedItems results somewhere
                         // or return them to the component that opened the dialog
-                        String p = input.getText().toString();
+                        String p = ""+address.getText() + " " + city.getText() + " " + state.getText() + " " + zip.getText();
                         a = Arrays.copyOf(a, a.length+1);
                         a[a.length -1] = p;
                         title.setText(p);
