@@ -2,6 +2,7 @@ package apoorvazachmobileapps.safenights;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -16,8 +17,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,6 +29,10 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class TrackingActivity extends AppCompatActivity implements LocationListener {
 
     LocationManager locationManager;
@@ -33,6 +40,7 @@ public class TrackingActivity extends AppCompatActivity implements LocationListe
     private String location;
     TextView latTextView;
     TextView lonTextView;
+    public static final String PREFS_NAME = "CoreSkillsPrefsFile";
 
     Double currentLat;
     Double currentLon;
@@ -76,13 +84,45 @@ public class TrackingActivity extends AppCompatActivity implements LocationListe
                     ActivityCompat.requestPermissions(TrackingActivity.this, new String[] { android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION }, GPS_PERMISSION);
                 }
                 Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                double longitude = location.getLongitude();
-                double latitude = location.getLatitude();
+                currentLon = location.getLongitude();
+                currentLat = location.getLatitude();
 
             }
         };
 
         timer.schedule (hourlyTask, 0l, 1000*10*60);
+    }
+
+
+    public void callAddLocationAPI(View view){
+        SafeNightsAPIInterface apiService =
+                SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
+        final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        String username = settings.getString("username", "");
+        String password = settings.getString("password", "");
+        String id = settings.getString("id", "");
+        Call<User> call = apiService.addlocation(username, password, id, currentLat, currentLon);
+        Log.i("u", username + password + id + currentLat + currentLon);
+
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                User u  = response.body();
+                if(u.getPassed().equals("y")){
+                    //bring them to home page, let them know a problem
+                    Toast.makeText(getApplicationContext(), "You uploaded another location successfully :)", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "There has been a problem uploading your location!\nDo you have service?", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                // Log error here since request failed
+                Log.e("API Call:", t.toString());
+            }
+        });
     }
 
 
@@ -101,12 +141,6 @@ public class TrackingActivity extends AppCompatActivity implements LocationListe
         // Register the listener with the Location Manager to receive location updates
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-
-
-
-
-
-
 
 
     }

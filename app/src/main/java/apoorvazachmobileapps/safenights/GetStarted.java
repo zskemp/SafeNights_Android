@@ -215,7 +215,7 @@ public class GetStarted extends AppCompatActivity  {
     }
 
 
-    public void callNightAPI(View view){
+    public void callStartNightAPI(View view){
         SafeNightsAPIInterface apiService =
                 SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
         final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);

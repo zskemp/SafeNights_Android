@@ -47,6 +47,10 @@ public interface SafeNightsAPIInterface {
     @POST("api/v1/startnight/")
     Call<User> startnight(@Field("username") String username, @Field("pwd") String password);
 
+    @FormUrlEncoded
+    @POST("api/v1/addloc/")
+    Call<User> addlocation(@Field("username") String username, @Field("pwd") String password, @Field("id") String id, @Field("xcord") Double xcord, @Field("ycord") Double ycord);
+
 
 
 
