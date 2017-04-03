@@ -3,6 +3,8 @@ package apoorvazachmobileapps.safenights;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -17,11 +19,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 public class TrackingActivity extends AppCompatActivity implements LocationListener {
 
     LocationManager locationManager;
     private static final int GPS_PERMISSION = 1;
-
+    private String location;
     TextView latTextView;
     TextView lonTextView;
 
@@ -37,10 +44,23 @@ public class TrackingActivity extends AppCompatActivity implements LocationListe
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        String location = intent.getExtras().getString("location");
+        location = intent.getExtras().getString("location");
         latTextView = (TextView)findViewById(R.id.latTextView);
         lonTextView = (TextView)findViewById(R.id.lonTextView);
-        latTextView.setText(location);
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses = new ArrayList<Address>();
+        try {
+            addresses = geocoder.getFromLocationName(location, 1);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(addresses.size() > 0) {
+            double latitude= addresses.get(0).getLatitude();
+            double longitude= addresses.get(0).getLongitude();
+            latTextView.setText("" + latitude);
+            lonTextView.setText("" + longitude);
+        }
     }
 
 
@@ -59,6 +79,10 @@ public class TrackingActivity extends AppCompatActivity implements LocationListe
         // Register the listener with the Location Manager to receive location updates
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
+
+
+
 
 
 
