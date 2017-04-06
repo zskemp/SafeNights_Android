@@ -7,13 +7,11 @@ package apoorvazachmobileapps.safenights.DrinkHistory;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import apoorvazachmobileapps.safenights.*;
-
 public class Alcoholtable {
 
     @SerializedName("fields")
     @Expose
-    private apoorvazachmobileapps.safenights.DrinkHistory.Fields fields;
+    private Fields fields;
     @SerializedName("model")
     @Expose
     private String model;
@@ -21,11 +19,11 @@ public class Alcoholtable {
     @Expose
     private Integer pk;
 
-    public apoorvazachmobileapps.safenights.DrinkHistory.Fields getFields() {
+    public Fields getFields() {
         return fields;
     }
 
-    public void setFields(apoorvazachmobileapps.safenights.DrinkHistory.Fields fields) {
+    public void setFields(Fields fields) {
         this.fields = fields;
     }
 
