@@ -1,6 +1,7 @@
 package apoorvazachmobileapps.safenights;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,6 +15,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -73,7 +77,7 @@ public class SignUp extends Fragment {
 
         //Get the strings you need for the api
         String username = mUsername.getText().toString();
-        String fname = mFname.getText().toString();
+        final String fname = mFname.getText().toString();
         String lname = mLname.getText().toString();
         String email = mEmail.getText().toString();
         String password = mPassword.getText().toString();
@@ -88,6 +92,10 @@ public class SignUp extends Fragment {
                 Log.i("Body", u.toString());
                 Log.i("y/n", u.getPassed());
                 if(u.getPassed().equals("y")){
+                    SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString("firstname", fname);
+                    editor.commit();
                     //bring them to login page
                     Fragment fragment = new SignIn();
                     // Insert the fragment by replacing any existing fragment
