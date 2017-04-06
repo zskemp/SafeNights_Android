@@ -131,6 +131,7 @@ public class AddDrinks extends AppCompatActivity {
                     /*      Your code   to get date and time    */
                         date = new GregorianCalendar(selectedyear, selectedmonth, selectedday).getTime();
                         datePicker.setText(selectedmonth + "/" + selectedday + "/" + selectedyear);
+                        Log.i("Date...", date.toString());
                     }
                 },mYear, mMonth, mDay);
                 mDatePicker.setTitle("Select date");
@@ -147,10 +148,10 @@ public class AddDrinks extends AppCompatActivity {
         String username = settings.getString("username", "");
         String password = settings.getString("password", "");
         Date day = date;
-        Double mbeer = (double)beer.getValue();
-        Double mwine = (double)wine.getValue();
-        Double mshots = (double)shots.getValue();
-        Double mliquor = (double)liquor.getValue();
+        int mbeer = beer.getValue();
+        int mwine = wine.getValue();
+        int mshots = shots.getValue();
+        int mliquor = liquor.getValue();
         int Mmoney = money;
 
         Call<User> call = apiService.adddrinks(username, password, day, mbeer, mwine, mshots, mliquor, Mmoney);

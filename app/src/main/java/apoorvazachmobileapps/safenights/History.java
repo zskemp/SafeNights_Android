@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -32,6 +33,7 @@ public class History extends AppCompatActivity {
 
     private LineChart mChart;
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
+    private ArrayList<Fields> nights = new ArrayList<Fields>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +44,26 @@ public class History extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mChart = (LineChart) findViewById(R.id.chart);
-        populatechart();
         View v = this.findViewById(android.R.id.content);
+        //Note: We add to the nights array list in this method call
         callHistoryAPI(v);
+
+        //Plotting stuff. nights has been updated from callHistoryAPI
+//        mChart = (LineChart) findViewById(R.id.chart);
+//        populatechart();
+
+        test();
+    }
+
+    public void test() {
+//        Log.i("nights:", "" + nights.size());
+//        String courseDisplay = "";
+//        for(Fields s : nights) {
+//            Log.d("Field", "Received: " + s.getBeer());
+//            courseDisplay += s + "beer:" + s.getBeer() + "wine:" + s.getWine() +  "shots:" + s.getShots() + "\n" +  "money:" + s.getMoney() + "time:" + s.getDay() +  "\n" + "\n";
+//        }
+//        TextView display = (TextView)findViewById(R.id.textview);
+//        display.setText(courseDisplay);
     }
 
     public void populatechart() {
@@ -90,12 +108,28 @@ public class History extends AppCompatActivity {
             @Override
             public void onResponse(Call<Example> call, Response<Example> response) {
                 Example table  = response.body();
-                //OMG
-                Log.i("Help:", table.toString());
-                Alcoholtable trial = table.getAlcoholtable().get(0);
-                Fields f = trial.getFields();
-                String beer = f.getBeer();
-                Toast.makeText(getApplicationContext(), "" + beer, Toast.LENGTH_LONG).show();
+                //Parse response.body() and add to nights
+                Log.i("Size:", "" + table.getAlcoholtable().size());
+                for(int i = 0; i < table.getAlcoholtable().size(); i++) {
+                    Alcoholtable trial = table.getAlcoholtable().get(i);
+                    Fields fields = trial.getFields();
+                    nights.add(fields);
+                    Log.i("night.size:", "" + nights.size());
+                }
+                Log.i("nights:", "" + nights.size());
+                String courseDisplay = "";
+                for(Fields s : nights) {
+                    Log.d("Field", "Received: " + s.getBeer());
+                    courseDisplay += s + "beer:" + s.getBeer() + "wine:" + s.getWine() +  "shots:" + s.getShots() + "\n" +  "money:" + s.getMoney() + "time:" + s.getDay() +  "\n" + "\n";
+                }
+                TextView display = (TextView)findViewById(R.id.textview);
+                display.setText(courseDisplay);
+//                Log.i("Help:", table.toString());
+//                Alcoholtable trial = table.getAlcoholtable().get(0);
+//                Fields f = trial.getFields();
+//                String beer = f.getBeer();
+//                Log.i("Beer for 1", beer);
+//                Toast.makeText(getApplicationContext(), "" + beer, Toast.LENGTH_LONG).show();
             }
 
             @Override
