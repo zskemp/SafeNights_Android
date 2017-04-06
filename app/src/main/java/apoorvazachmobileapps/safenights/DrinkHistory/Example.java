@@ -12,13 +12,13 @@ public class Example {
 
     @SerializedName("alcoholtable")
     @Expose
-    private List<apoorvazachmobileapps.safenights.DrinkHistory.Alcoholtable> alcoholtable = null;
+    private List<Alcoholtable> alcoholtable = null;
 
-    public List<apoorvazachmobileapps.safenights.DrinkHistory.Alcoholtable> getAlcoholtable() {
+    public List<Alcoholtable> getAlcoholtable() {
         return alcoholtable;
     }
 
-    public void setAlcoholtable(List<apoorvazachmobileapps.safenights.DrinkHistory.Alcoholtable> alcoholtable) {
+    public void setAlcoholtable(List<Alcoholtable> alcoholtable) {
         this.alcoholtable = alcoholtable;
     }
 

@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import apoorvazachmobileapps.safenights.DrinkHistory.Example;
+import apoorvazachmobileapps.safenights.LocationHistory.Location;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -51,7 +52,8 @@ public interface SafeNightsAPIInterface {
     @POST("api/v1/addloc/")
     Call<User> addlocation(@Field("username") String username, @Field("pwd") String password, @Field("id") String id, @Field("xcord") Double xcord, @Field("ycord") Double ycord);
 
-
-
+    @FormUrlEncoded
+    @POST("api/v1/getnight/")
+    Call<Location> getnight(@Field("username") String username, @Field("pwd") String password, @Field("id") String id);
 
 }
