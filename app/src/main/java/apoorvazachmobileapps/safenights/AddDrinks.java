@@ -37,6 +37,9 @@ public class AddDrinks extends AppCompatActivity {
     private Date date;
     private DatePickerDialog datePickerDialog;
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
+    private int mYear;
+    private int mMonth;
+    private int mDay;
 
     private Calendar dateSelected;
     NumberPicker beer;
@@ -50,22 +53,26 @@ public class AddDrinks extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         money = 0;
-
         Calendar mcurrentDate=Calendar.getInstance();
-        int mYear=mcurrentDate.get(Calendar.YEAR);
-        int mMonth=mcurrentDate.get(Calendar.MONTH);
-        int mDay=mcurrentDate.get(Calendar.DAY_OF_MONTH);
+        mYear=mcurrentDate.get(Calendar.YEAR);
+        mMonth=mcurrentDate.get(Calendar.MONTH);
+        mDay=mcurrentDate.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog mDatePicker=new DatePickerDialog(AddDrinks.this, new DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
-                // TODO Auto-generated method stub
-                    /*      Your code   to get date and time    */
-                date = new GregorianCalendar(selectedyear, selectedmonth, selectedday).getTime();
-                datePicker.setText(selectedmonth + "/" + selectedday + "/" + selectedyear);
-            }
-        },mYear, mMonth, mDay);
-        mDatePicker.setTitle("Select date");
-        mDatePicker.show();
+//        Calendar mcurrentDate=Calendar.getInstance();
+//        int mYear=mcurrentDate.get(Calendar.YEAR);
+//        int mMonth=mcurrentDate.get(Calendar.MONTH);
+//        int mDay=mcurrentDate.get(Calendar.DAY_OF_MONTH);
+//
+//        DatePickerDialog mDatePicker=new DatePickerDialog(AddDrinks.this, new DatePickerDialog.OnDateSetListener() {
+//            public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+//                // TODO Auto-generated method stub
+//                    /*      Your code   to get date and time    */
+//                date = new GregorianCalendar(selectedyear, selectedmonth, selectedday).getTime();
+//                datePicker.setText(selectedmonth + "/" + selectedday + "/" + selectedyear);
+//            }
+//        },mYear, mMonth, mDay);
+//        mDatePicker.setTitle("Select date");
+//        mDatePicker.show();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         datePicker = (EditText) findViewById(R.id.datepicker);
@@ -118,26 +125,20 @@ public class AddDrinks extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
-                //To show current date in the datepicker
-                Calendar mcurrentDate=Calendar.getInstance();
-                int mYear=mcurrentDate.get(Calendar.YEAR);
-                int mMonth=mcurrentDate.get(Calendar.MONTH);
-                int mDay=mcurrentDate.get(Calendar.DAY_OF_MONTH);
-
                 DatePickerDialog mDatePicker=new DatePickerDialog(AddDrinks.this, new DatePickerDialog.OnDateSetListener() {
                     public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
                         // TODO Auto-generated method stub
                     /*      Your code   to get date and time    */
+                        mYear = selectedyear;
+                        mMonth = selectedmonth;
+                        mDay = selectedday;
                         date = new GregorianCalendar(selectedyear, selectedmonth, selectedday).getTime();
                         datePicker.setText(selectedmonth + "/" + selectedday + "/" + selectedyear);
-                        Log.i("Date...", date.toString());
                     }
                 },mYear, mMonth, mDay);
                 mDatePicker.setTitle("Select date");
                 mDatePicker.show();  }
         });
-
     }
 
     public void callAddDrinksAPI(View view) {
@@ -147,15 +148,17 @@ public class AddDrinks extends AppCompatActivity {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         String username = settings.getString("username", "");
         String password = settings.getString("password", "");
-        Date day = date;
+        //Date day = date;
+        SimpleDateFormat sdfr = new SimpleDateFormat("yyyy-MM-dd");
+        String mday = sdfr.format( date );
         int mbeer = beer.getValue();
         int mwine = wine.getValue();
         int mshots = shots.getValue();
         int mliquor = liquor.getValue();
         int Mmoney = money;
 
-        Call<User> call = apiService.adddrinks(username, password, day, mbeer, mwine, mshots, mliquor, Mmoney);
-        Log.i("u", username + password + day + mbeer + mwine + mshots+ mliquor + Mmoney);
+        Call<User> call = apiService.adddrinks(username, password, mday, mbeer, mwine, mshots, mliquor, Mmoney);
+        Log.i("u", username + password + mday + mbeer + mwine + mshots+ mliquor + Mmoney);
 
 
         call.enqueue(new Callback<User>() {

@@ -37,7 +37,7 @@ public interface SafeNightsAPIInterface {
 
     @FormUrlEncoded
     @POST("api/v1/adddrinks/")
-    Call<User> adddrinks(@Field("username") String username, @Field("pwd") String password, @Field("day") Date day, @Field("beer") int beer, @Field("wine") int wine, @Field("shots") int shots, @Field("liquor") int liquor, @Field("money") int money);
+    Call<User> adddrinks(@Field("username") String username, @Field("pwd") String password, @Field("day") String day, @Field("beer") int beer, @Field("wine") int wine, @Field("shots") int shots, @Field("liquor") int liquor, @Field("money") int money);
 
     @FormUrlEncoded
     @POST("api/v1/gethistory/")

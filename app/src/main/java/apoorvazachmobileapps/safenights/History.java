@@ -109,14 +109,12 @@ public class History extends AppCompatActivity {
             public void onResponse(Call<Example> call, Response<Example> response) {
                 Example table  = response.body();
                 //Parse response.body() and add to nights
-                Log.i("Size:", "" + table.getAlcoholtable().size());
                 for(int i = 0; i < table.getAlcoholtable().size(); i++) {
                     Alcoholtable trial = table.getAlcoholtable().get(i);
                     Fields fields = trial.getFields();
                     nights.add(fields);
-                    Log.i("night.size:", "" + nights.size());
                 }
-                Log.i("nights:", "" + nights.size());
+                //For testing purposes
                 String courseDisplay = "";
                 for(Fields s : nights) {
                     Log.d("Field", "Received: " + s.getBeer());
@@ -124,12 +122,6 @@ public class History extends AppCompatActivity {
                 }
                 TextView display = (TextView)findViewById(R.id.textview);
                 display.setText(courseDisplay);
-//                Log.i("Help:", table.toString());
-//                Alcoholtable trial = table.getAlcoholtable().get(0);
-//                Fields f = trial.getFields();
-//                String beer = f.getBeer();
-//                Log.i("Beer for 1", beer);
-//                Toast.makeText(getApplicationContext(), "" + beer, Toast.LENGTH_LONG).show();
             }
 
             @Override
