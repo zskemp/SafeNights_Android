@@ -105,6 +105,7 @@ public class SignIn extends Fragment {
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putString("username", uname);
                     editor.putString("password", pword);
+                    editor.putString("id", "");
                     Set<String> locations = new HashSet<String>();
                     editor.putStringSet("locations", locations);
                     editor.commit();

@@ -218,7 +218,7 @@ public class GetStarted extends AppCompatActivity  {
     public void callStartNightAPI(View view){
         SafeNightsAPIInterface apiService =
                 SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
-        final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        final SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
         String username = settings.getString("username", "");
         String password = settings.getString("password", "");
         Call<User> call = apiService.startnight(username, password);
@@ -236,8 +236,9 @@ public class GetStarted extends AppCompatActivity  {
                 }
                 else {
                     SharedPreferences.Editor editor = settings.edit();
-                    String id = u.getPassed();
-                    editor.putString("id", id);
+                    String uniqueID = u.getPassed();
+                    editor.putString("id", uniqueID);
+                    editor.commit();
                     Intent intent = new Intent(GetStarted.this, TrackingActivity.class);
                     intent.putExtra("location", title.getText());
                     intent.putExtra("pNum", contactNumber.getText());

@@ -91,19 +91,19 @@ public class TrackingActivity extends AppCompatActivity implements LocationListe
             }
         };
 
-        timer.schedule (hourlyTask, 0l, 1000*1*5);
+        timer.schedule (hourlyTask, 0l, 1000*1*10);
     }
 
 
     public void callAddLocationAPI(View view){
         SafeNightsAPIInterface apiService =
                 SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
-        final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         String username = settings.getString("username", "");
         String password = settings.getString("password", "");
         String id = settings.getString("id", "");
         Call<User> call = apiService.addlocation(username, password, id, currentLat, currentLon);
-        Log.i("u", username + password + id + currentLat + currentLon);
+        Log.i("u", id + username + password +  currentLat + currentLon);
 
         call.enqueue(new Callback<User>() {
             @Override
