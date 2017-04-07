@@ -13,8 +13,7 @@ import android.location.LocationManager;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -48,7 +47,6 @@ public class TrackingActivity extends AppCompatActivity implements LocationListe
     private String location;
     private String phone_number;
     private String name;
-    private boolean toggle;
     TextView latTextView;
     TextView lonTextView;
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
@@ -86,7 +84,6 @@ public class TrackingActivity extends AppCompatActivity implements LocationListe
             lonTextView.setText("" + longitude);
         }
         final View v = this.findViewById(android.R.id.content);
-        toggle = false;
         Timer timer = new Timer ();
         final double[] lonArray = {0,0,0,0};
         final double[] latArray = {0,0,0,0};
@@ -101,17 +98,6 @@ public class TrackingActivity extends AppCompatActivity implements LocationListe
                     ActivityCompat.requestPermissions(TrackingActivity.this, new String[] { android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION }, GPS_PERMISSION);
                 }
                 Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                Double testLat = 0.00000;
-                Double testLon = 0.00000;
-                if(!toggle){
-                    testLat = BigDecimal.valueOf(location.getLatitude())
-                            .setScale(5, RoundingMode.HALF_UP)
-                            .doubleValue();
-                    testLon = BigDecimal.valueOf(location.getLongitude())
-                            .setScale(5, RoundingMode.HALF_UP)
-                            .doubleValue();
-                    toggle = true;
-                }
                 currentLon = BigDecimal.valueOf(location.getLongitude())
                         .setScale(5, RoundingMode.HALF_UP)
                         .doubleValue();
