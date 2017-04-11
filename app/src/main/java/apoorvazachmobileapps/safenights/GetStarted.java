@@ -196,13 +196,13 @@ public class GetStarted extends AppCompatActivity  {
                     c = getContentResolver().query(uri, new String[]{
                                     ContactsContract.CommonDataKinds.Phone.NUMBER,
                                     ContactsContract.CommonDataKinds.Phone.TYPE,
-                            ContactsContract.CommonDataKinds.Phone.SEARCH_DISPLAY_NAME_KEY
+//                            ContactsContract.CommonDataKinds.Phone.SEARCH_DISPLAY_NAME_KEY
                             },
                             null, null, null);
 
                     if (c != null && c.moveToFirst()) {
                         String number = c.getString(0);
-                        String name = c.getString(2);
+//                        String name = c.getString(2);
                         contactNumber.setText(number);
                     }
                 } finally {

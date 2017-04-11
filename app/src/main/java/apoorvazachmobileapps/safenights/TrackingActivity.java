@@ -113,7 +113,7 @@ public class TrackingActivity extends AppCompatActivity implements LocationListe
                 int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 
                 if(hour > 2 && ((latArray[0]==latArray[1] && latArray[0]==latArray[2] && latArray[0]==latArray[3])||
-                    (lonArray[0]==lonArray[1]&&lonArray[0]==lonArray[2]&&lonArray[0]==lonArray[3])) &&
+                        (lonArray[0]==lonArray[1]&&lonArray[0]==lonArray[2]&&lonArray[0]==lonArray[3])) &&
                         ((Math.abs(latitude-currentLat)>0.00001)||Math.abs(longitude-currentLon)>0.00001)){
                     sendSMSMessage("location");
                 } else {
@@ -162,9 +162,9 @@ public class TrackingActivity extends AppCompatActivity implements LocationListe
         try {
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(phone_number, null, text, null, null);
-            Toast.makeText(getApplicationContext(), "SMS sent.", Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), "SMS sent.", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "SMS failed, please try again.", Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), "SMS failed, please try again.", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }

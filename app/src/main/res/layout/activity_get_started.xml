@@ -33,6 +33,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="160dp"
             android:text="GetStarted"
+            android:onClick="pickContact"
             tools:layout_editor_absoluteX="162dp"
             tools:layout_editor_absoluteY="85dp" />
 
