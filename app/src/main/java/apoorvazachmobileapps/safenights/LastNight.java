@@ -13,7 +13,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import apoorvazachmobileapps.safenights.LocationHistory.Fields;
-import apoorvazachmobileapps.safenights.LocationHistory.LocTable;
+import apoorvazachmobileapps.safenights.LocationHistory.Locationtable;
 import apoorvazachmobileapps.safenights.LocationHistory.Location;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,6 +46,7 @@ public class LastNight extends AppCompatActivity {
         String username = settings.getString("username", "");
         String password = settings.getString("password", "");
         String id = settings.getString("id", "");
+        Log.i("Id", id);
 
         Call<Location> call = apiService.getnight(username, password, id);
 
@@ -55,8 +56,8 @@ public class LastNight extends AppCompatActivity {
             public void onResponse(Call<Location> call, Response<Location> response) {
                 Location table  = response.body();
                 //Parse response.body() and add to nights
-                for(int i = 0; i < table.getLocTable().size(); i++) {
-                    LocTable trial = table.getLocTable().get(i);
+                for(int i = 0; i < table.getLocationtable().size(); i++) {
+                    Locationtable trial = table.getLocationtable().get(i);
                     Fields fields = trial.getFields();
                     locations.add(fields);
                 }

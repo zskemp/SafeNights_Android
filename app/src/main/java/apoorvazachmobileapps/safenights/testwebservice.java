@@ -53,6 +53,114 @@ public class testwebservice extends AppCompatActivity {
 //
     }
 
+
+//    public void callLastNightAPI (View view) {
+//        SafeNightsAPIInterface apiService =
+//                SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
+//
+//        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+//        String username = settings.getString("username", "");
+//        String password = settings.getString("password", "");
+//        String id = settings.getString("id", "");
+//
+//        Call<Object> call = apiService.getnight(username, password, id);
+//
+//
+//        call.enqueue(new Callback<Object>() {
+//            @Override
+//            public void onResponse(Call<Object> call, Response<Object> response) {
+//                if (response.body() instanceof Location )
+//                {
+//                    Location table  = (Location)response.body();
+//                    //Parse response.body() and add to nights
+//                    for(int i = 0; i < table.getLocTable().size(); i++) {
+//                        LocTable trial = table.getLocTable().get(i);
+//                        Fields fields = trial.getFields();
+//                        locations.add(fields);
+//                    }
+//                    //For testing purposes
+//                    String courseDisplay = "";
+//                    for(Fields s : locations) {
+//                        Log.d("Field", "Received: " + s.getAdventureID());
+//                        courseDisplay += s + "adventureID:" + s.getAdventureID() + "time:" + s.getTime() +  "\n" +  "x:" + s.getXcord() + "    y:" + s.getYcord() +  "\n" + "\n";
+//                    }
+//                    TextView display = (TextView)findViewById(R.id.textview);
+//                    display.setText(courseDisplay);
+//                }
+//                else  //must be error object
+//                {
+//                    User u = (User) response.body();
+//                    TextView display = (TextView)findViewById(R.id.textview);
+//                    display.setText("OH NO, an error!! :(" + u);
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Object> call, Throwable t) {
+//                // Log error here since request failed
+//                Log.e("API Call:", t.toString());
+//            }
+//        });
+//    }
+
+
+//Tried to make object generalizeation for gethistory
+//    public void callHistoryAPI (View view) {
+//        SafeNightsAPIInterface apiService =
+//                SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
+//
+//        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+//        String username = settings.getString("username", "");
+//        String password = settings.getString("password", "");
+//
+//        Call<Object> call = apiService.gethistory(username, password);
+//
+//
+//        call.enqueue(new Callback<Object>() {
+//            @Override
+//            public void onResponse(Call<Object> call, Response<Object> response) {
+//                if (response.body() instanceof Example )
+//                {
+//                    Example table  = (Example) response.body();
+//                    //Parse response.body() and add to nights
+//                    for(int i = 0; i < table.getAlcoholtable().size(); i++) {
+//                        Alcoholtable trial = table.getAlcoholtable().get(i);
+//                        Fields fields = trial.getFields();
+//                        nights.add(fields);
+//                    }
+//                    //For testing purposes
+//                    String courseDisplay = "";
+//                    for(Fields s : nights) {
+//                        Log.d("Field", "Received: " + s.getBeer());
+//                        courseDisplay += s + "beer:" + s.getBeer() + "wine:" + s.getWine() +  "shots:" + s.getShots() + "\n" +  "money:" + s.getMoney() + "time:" + s.getDay() +  "\n" + "\n";
+//                    }
+//                    TextView display = (TextView)findViewById(R.id.textview);
+//                    display.setText(courseDisplay);
+//                }
+//                else  //must be error object
+//                {
+//                    TextView display = (TextView)findViewById(R.id.textview);
+//                    display.setText("OH NO, an error!! :(");
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Object> call, Throwable t) {
+//                // Log error here since request failed
+//                Log.e("API Call:", t.toString());
+//            }
+//        });
+//    }
+
+
+
+
+
+
+
+
 //    public void callAddDrinksAPI(View view) {
 //        SafeNightsAPIInterface apiService =
 //                SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
