@@ -5,6 +5,9 @@ package apoorvazachmobileapps.safenights;
         import android.app.Activity;
         import android.content.Intent;
         import android.content.SharedPreferences;
+        import android.graphics.Color;
+        import android.graphics.LinearGradient;
+        import android.graphics.Shader;
         import android.graphics.Typeface;
         import android.os.Bundle;
         import android.widget.TextView;
@@ -22,10 +25,11 @@ public class SplashScreen extends Activity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/angelina.TTF");
+        Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/Arciform.otf");
 
         appname = (TextView)findViewById(R.id.appname);
         appname.setTypeface(tf);
+        appname.getPaint().setShader(new LinearGradient(0,0,0,appname.getLineHeight(), Color.parseColor("#6FDA9C"), Color.parseColor("#56C5EF"), Shader.TileMode.REPEAT));
         loading = (TextView)findViewById(R.id.loading);
         loading.setTypeface(tf);
 

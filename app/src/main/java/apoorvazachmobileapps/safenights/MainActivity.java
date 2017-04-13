@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         appname = (TextView)findViewById(R.id.appname);
-        Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/angelina.TTF");
+        Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/Arciform.otf");
         appname.setTypeface(tf);
         getStarted = (Button)findViewById(R.id.getStarted);
         addDrinks = (Button)findViewById(R.id.addDrinks);

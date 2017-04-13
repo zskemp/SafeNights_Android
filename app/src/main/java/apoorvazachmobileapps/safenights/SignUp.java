@@ -2,6 +2,9 @@ package apoorvazachmobileapps.safenights;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -50,10 +53,11 @@ public class SignUp extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootview = inflater.inflate(R.layout.fragment_sign_up, container, false);
-        Typeface tf = Typeface.createFromAsset(this.getContext().getAssets(),"fonts/angelina.TTF");
+        Typeface tf = Typeface.createFromAsset(this.getContext().getAssets(),"fonts/Arciform.otf");
         mUsername   = (EditText)rootview.findViewById(R.id.username);
         appname = (TextView)rootview.findViewById(R.id.appname);
         appname.setTypeface(tf);
+        appname.getPaint().setShader(new LinearGradient(0,0,0,appname.getLineHeight(), Color.parseColor("#6FDA9C"), Color.parseColor("#56C5EF"), Shader.TileMode.REPEAT));
         mFname   = (EditText)rootview.findViewById(R.id.fname);
         mLname   = (EditText)rootview.findViewById(R.id.lname);
         mEmail   = (EditText)rootview.findViewById(R.id.email);

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
@@ -56,9 +58,11 @@ public class SignIn extends Fragment {
         // Inflate the layout for this fragmen
         View rootview = inflater.inflate(R.layout.fragment_sign_in, container, false);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        Typeface tf = Typeface.createFromAsset(this.getContext().getAssets(),"fonts/angelina.TTF");
+        Typeface tf = Typeface.createFromAsset(this.getContext().getAssets(),"fonts/Arciform.otf");
         appname = (TextView)rootview.findViewById(R.id.appname);
         appname.setTypeface(tf);
+        //Next line does the gradient thing. Idk...
+        appname.getPaint().setShader(new LinearGradient(0,0,0,appname.getLineHeight(), Color.parseColor("#6FDA9C"), Color.parseColor("#56C5EF"), Shader.TileMode.REPEAT));
         mUsername   = (EditText)rootview.findViewById(R.id.username);
         mPassword   = (EditText)rootview.findViewById(R.id.password);
         mSignIn = (Button)rootview.findViewById(R.id.login_button);
