@@ -4,7 +4,7 @@
     tools:context="apoorvazachmobileapps.safenights.SignUp"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#143f66"
+    android:background="#211E36"
     android:fitsSystemWindows="true">
 
     <LinearLayout
@@ -50,7 +50,7 @@
             android:backgroundTint="#FFFFFF"
             android:textColorLink="#737f82">
 
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/fname"
                 android:backgroundTint="#FFFFFF"
                 android:layout_width="match_parent"
@@ -80,7 +80,8 @@
             android:background="@drawable/roundshapebtn"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/lname"
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/lname"
                 android:layout_width="match_parent"
                 android:textColor="#737f82"
                 android:backgroundTint="#FFFFFF"
@@ -107,7 +108,8 @@
             android:background="@drawable/roundshapebtn"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/email"
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:textColor="#737f82"
                 android:backgroundTint="#FFFFFF"
@@ -135,7 +137,8 @@
             android:background="@drawable/roundshapebtn"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/username"
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/username"
                 android:layout_width="match_parent"
                 android:textColor="#737f82"
                 android:backgroundTint="#FFFFFF"
@@ -162,7 +165,8 @@
             android:background="@drawable/roundshapebtn"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/password"
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:textColor="#737f82"
                 android:backgroundTint="#FFFFFF"

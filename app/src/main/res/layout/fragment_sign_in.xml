@@ -5,7 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
 
-    android:background="#143f66"
+    android:background="#211E36"
     android:fitsSystemWindows="true">
 
 
@@ -18,9 +18,11 @@
         android:paddingTop="56dp"
         android:paddingLeft="24dp"
         android:textColor="#FFFFFF"
-
         android:paddingRight="24dp"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        >
 
         <ImageView
             android:id="@+id/imageView"
@@ -36,10 +38,11 @@
             android:textColor="#02D4F1"
             android:layout_marginBottom="24dp"
             android:text="SafeNights"
+            android:fontFamily=""
             android:gravity="center"
             android:textSize="50dip"/>
 
-        <!-- Email Label -->
+        <!-- Username Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -53,14 +56,14 @@
             android:backgroundTint="#FFFFFF"
             android:textColorLink="#737f82">
 
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/username"
                 android:backgroundTint="#FFFFFF"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Username"
                 android:paddingLeft="5dp"
-                android:inputType="textEmailAddress"
+                android:inputType="text"
                 android:shadowColor="#737f82"
                 android:ellipsize="start"
                 android:gravity="center_horizontal"
@@ -83,7 +86,8 @@
             android:background="@drawable/roundshapebtn"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/password"
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:textColor="#737f82"
                 android:backgroundTint="#FFFFFF"

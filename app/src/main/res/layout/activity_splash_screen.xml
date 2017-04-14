@@ -5,7 +5,7 @@
     tools:context="apoorvazachmobileapps.safenights.SplashScreen"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#143f66"
+    android:background="#211E36"
     android:fitsSystemWindows="true">
 
 

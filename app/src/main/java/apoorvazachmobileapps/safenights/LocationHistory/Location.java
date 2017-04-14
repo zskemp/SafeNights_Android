@@ -6,22 +6,21 @@ package apoorvazachmobileapps.safenights.LocationHistory;
 
 
 import java.util.List;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Location {
 
-    @SerializedName("loc_table")
+    @SerializedName("locationtable")
     @Expose
-    private List<LocTable> locTable = null;
+    private List<Locationtable> locationtable = null;
 
-    public List<LocTable> getLocTable() {
-        return locTable;
+    public List<Locationtable> getLocationtable() {
+        return locationtable;
     }
 
-    public void setLocTable(List<LocTable> locTable) {
-        this.locTable = locTable;
+    public void setLocationtable(List<Locationtable> locationtable) {
+        this.locationtable = locationtable;
     }
 
 }

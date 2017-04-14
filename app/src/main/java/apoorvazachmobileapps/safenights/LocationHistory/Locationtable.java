@@ -8,24 +8,24 @@ package apoorvazachmobileapps.safenights.LocationHistory;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class LocTable {
+public class Locationtable {
 
-    @SerializedName("pk")
-    @Expose
-    private Integer pk;
-    @SerializedName("model")
-    @Expose
-    private String model;
     @SerializedName("fields")
     @Expose
     private Fields fields;
+    @SerializedName("model")
+    @Expose
+    private String model;
+    @SerializedName("pk")
+    @Expose
+    private Integer pk;
 
-    public Integer getPk() {
-        return pk;
+    public Fields getFields() {
+        return fields;
     }
 
-    public void setPk(Integer pk) {
-        this.pk = pk;
+    public void setFields(Fields fields) {
+        this.fields = fields;
     }
 
     public String getModel() {
@@ -36,12 +36,12 @@ public class LocTable {
         this.model = model;
     }
 
-    public Fields getFields() {
-        return fields;
+    public Integer getPk() {
+        return pk;
     }
 
-    public void setFields(Fields fields) {
-        this.fields = fields;
+    public void setPk(Integer pk) {
+        this.pk = pk;
     }
 
 }
