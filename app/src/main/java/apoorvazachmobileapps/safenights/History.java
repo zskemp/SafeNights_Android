@@ -14,26 +14,37 @@ import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.EntryXComparator;
+
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import apoorvazachmobileapps.safenights.DrinkHistory.*;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Field;
-
-import static java.security.AccessController.getContext;
 
 public class History extends AppCompatActivity {
 
     private LineChart mChart;
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
-    private ArrayList<Fields> nights = new ArrayList<Fields>();
+    private ArrayList<Fields> nights;
+    private HashMap<String, ArrayList<Fields>> months;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,53 +55,96 @@ public class History extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // Initialize Global Variables
+        nights = new ArrayList<Fields>();
+        months = new HashMap<>();
+
         View v = this.findViewById(android.R.id.content);
         //Note: We add to the nights array list in this method call
         callHistoryAPI(v);
 
-        //Plotting stuff. nights has been updated from callHistoryAPI
-//        mChart = (LineChart) findViewById(R.id.chart);
-//        populatechart();
+        //NOTE: All the remaining calls needed to be handeled in the callHistoryAPI() because
+        // they were dependent on the response call form the HTTP request
+        // (these are handeled asychronously and so could not just call afterwards on main thread)
 
-        test();
+        //TODO: Make a button that toggles the months
     }
 
-    public void test() {
-//        Log.i("nights:", "" + nights.size());
-//        String courseDisplay = "";
-//        for(Fields s : nights) {
-//            Log.d("Field", "Received: " + s.getBeer());
-//            courseDisplay += s + "beer:" + s.getBeer() + "wine:" + s.getWine() +  "shots:" + s.getShots() + "\n" +  "money:" + s.getMoney() + "time:" + s.getDay() +  "\n" + "\n";
-//        }
-//        TextView display = (TextView)findViewById(R.id.textview);
-//        display.setText(courseDisplay);
+    //TODO:Make a good algorithm for calculating a persons drunkness (how much to weigh each drink)
+    public float calculateDrunkness(Fields field) {
+        float total = 0;
+        total = total + Float.parseFloat(field.getBeer()) + Float.parseFloat(field.getWine()) + Float.parseFloat(field.getShots()) + Float.parseFloat(field.getHardliquor());
+        return total;
     }
 
     public void populatechart() {
 
-        List<Entry> entries = new ArrayList<Entry>();
+        List<Entry> alcohol = new ArrayList<Entry>();
+        List<Entry> money = new ArrayList<Entry>();
 
-        Entry c2e1 = new Entry(0.05f, 130000f); // 0 == quarter 1
-        entries.add(c2e1);
-        Entry c1e1 = new Entry(0.1f, 100000f); // 0 == quarter 1
-        entries.add(c1e1);
-        Entry c1e2 = new Entry(0.9f, 140000f); // 1 == quarter 2 ...
-        entries.add(c1e2);
-        Entry c2e2 = new Entry(0.95f, 115000f); // 1 == quarter 2 ...
-        entries.add(c2e2);
+        //TODO: Will need to create a method to select and get the current date. Maybe return list of that month's hash
+        Date now = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+        String thisMonthKey = Integer.toString(cal.get(Calendar.MONTH)) + Integer.toString(cal.get(Calendar.YEAR));
+        ArrayList<Fields> thisMonth = months.get(thisMonthKey);
 
-//        for (YourData data : dataObjects) {
-//
-//            // turn your data into Entry objects
-//            entries.add(new Entry(data.getValueX(), data.getValueY()));
-//        }
+        for (Fields data : thisMonth) {
+            //Algorithm for computing "drunkness"
+            float alcoholY = calculateDrunkness(data);
+            // turn your data into Entry objects
+            alcohol.add(new Entry(Float.parseFloat(data.getDay()), alcoholY));
+            money.add(new Entry(Float.parseFloat(data.getDay()), (float)data.getMoney()));
+        }
 
-        LineDataSet dataSet = new LineDataSet(entries, "Label");
-        LineData lineData = new LineData(dataSet);
-        dataSet.setColor(R.color.colorPrimary);
-        dataSet.setValueTextColor(R.color.colorPrimaryDark);
+        //Needs to be sorted to work :)
+        Collections.sort(alcohol, new EntryXComparator());
+        Collections.sort(money, new EntryXComparator());
+
+        LineDataSet alcoholSet = new LineDataSet(alcohol, "alcohol");
+        alcoholSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        LineDataSet moneySet = new LineDataSet(money, "money");
+        moneySet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        dataSets.add(alcoholSet);
+        dataSets.add(moneySet);
+
+//        LineDataSet dataSet = new LineDataSet(alcohol, "alcohol");
+        LineData lineData = new LineData(dataSets);
+//        dataSet.setColor(R.color.colorPrimary);
+//        dataSet.setValueTextColor(R.color.colorPrimaryDark);
         mChart.setData(lineData);
         mChart.invalidate(); // refresh
+    }
+
+    public void parseDataByMonths() {
+        for (Fields data : nights) {
+            // Parse Date
+            String day = data.getDay();
+            int thisMonth = 0;
+            int thisYear = 0;
+            try {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = format.parse(day);
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(date);
+                thisMonth = cal.get(Calendar.MONTH);
+                thisYear = cal.get(Calendar.YEAR);
+                //Changing the full day which we just got to just the date (1st-31st)
+                data.setDay(Integer.toString(cal.get(Calendar.DAY_OF_MONTH)));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            String key = Integer.toString(thisMonth) + Integer.toString(thisYear);
+            if (months.containsKey(key)) {
+                months.get(key).add(data);
+            } else {
+                ArrayList<Fields> newMonth = new ArrayList<>();
+                newMonth.add(data);
+                months.put(key, newMonth);
+            }
+        }
+        return;
     }
 
     public void callHistoryAPI (View view) {
@@ -114,20 +168,19 @@ public class History extends AppCompatActivity {
                     Fields fields = trial.getFields();
                     nights.add(fields);
                 }
-                //For testing purposes
-                String courseDisplay = "";
-                for(Fields s : nights) {
-                    Log.d("Field", "Received: " + s.getBeer());
-                    courseDisplay += s + "beer:" + s.getBeer() + "wine:" + s.getWine() +  "shots:" + s.getShots() + "\n" +  "money:" + s.getMoney() + "time:" + s.getDay() +  "\n" + "\n";
-                }
-                TextView display = (TextView)findViewById(R.id.textview);
-                display.setText(courseDisplay);
+                //Load Hashmap of Dates by Month+Year with array list of just days
+                parseDataByMonths();
+
+                //Plotting the Data for a particular month
+                mChart = (LineChart) findViewById(R.id.chart);
+                populatechart();
             }
 
             @Override
             public void onFailure(Call<Example> call, Throwable t) {
                 // Log error here since request failed
                 Log.e("API Call:", t.toString());
+                //TODO: Make a cool page saying not connected to internet, there was a problem...
             }
         });
     }

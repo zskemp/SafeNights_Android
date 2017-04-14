@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -56,19 +57,24 @@ public class LastNight extends AppCompatActivity {
             public void onResponse(Call<Location> call, Response<Location> response) {
                 Location table  = response.body();
                 //Parse response.body() and add to nights
-                for(int i = 0; i < table.getLocationtable().size(); i++) {
-                    Locationtable trial = table.getLocationtable().get(i);
-                    Fields fields = trial.getFields();
-                    locations.add(fields);
+                if(table != null) {
+                    for(int i = 0; i < table.getLocationtable().size(); i++) {
+                        Locationtable trial = table.getLocationtable().get(i);
+                        Fields fields = trial.getFields();
+                        locations.add(fields);
+                    }
+                    //For testing purposes
+                    String courseDisplay = "";
+                    for(Fields s : locations) {
+                        Log.d("Field", "Received: " + s.getAdventureID());
+                        courseDisplay += s + "adventureID:" + s.getAdventureID() + "time:" + s.getTime() +  "\n" +  "x:" + s.getXcord() + "    y:" + s.getYcord() +  "\n" + "\n";
+                    }
+                    TextView display = (TextView)findViewById(R.id.textview);
+                    display.setText(courseDisplay);
                 }
-                //For testing purposes
-                String courseDisplay = "";
-                for(Fields s : locations) {
-                    Log.d("Field", "Received: " + s.getAdventureID());
-                    courseDisplay += s + "adventureID:" + s.getAdventureID() + "time:" + s.getTime() +  "\n" +  "x:" + s.getXcord() + "    y:" + s.getYcord() +  "\n" + "\n";
+                else {
+                    Toast.makeText(getApplicationContext(), "You have no data for last night! Please check the website or begin a new night", Toast.LENGTH_LONG).show();
                 }
-                TextView display = (TextView)findViewById(R.id.textview);
-                display.setText(courseDisplay);
             }
 
             @Override

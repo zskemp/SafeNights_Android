@@ -44,7 +44,7 @@
             android:layout_marginBottom="24dp"
             android:text="SafeNights"
             android:gravity="center"
-            android:textSize="50dip"/>
+            android:textSize="50sp"/>
 
     </LinearLayout>
 
