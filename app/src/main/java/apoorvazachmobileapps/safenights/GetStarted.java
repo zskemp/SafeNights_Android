@@ -242,7 +242,7 @@ public class GetStarted extends AppCompatActivity  {
                     Intent intent = new Intent(GetStarted.this, TrackingActivity.class);
                     intent.putExtra("location", title.getText());
                     intent.putExtra("pNum", contactNumber.getText());
-                    startActivity(intent);
+                    startService(intent);
                 }
             }
 
