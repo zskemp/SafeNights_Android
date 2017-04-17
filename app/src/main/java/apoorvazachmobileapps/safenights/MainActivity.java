@@ -39,35 +39,42 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         appname = (TextView)findViewById(R.id.appname);
         Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/Arciform.otf");
         appname.setTypeface(tf);
+
         getStarted = (Button)findViewById(R.id.getStarted);
         addDrinks = (Button)findViewById(R.id.addDrinks);
         History = (Button)findViewById(R.id.History);
         lastNight = (Button)findViewById(R.id.lastNight);
+
         getStarted.setTypeface(tf);
         addDrinks.setTypeface(tf);
         History.setTypeface(tf);
-
         lastNight.setTypeface(tf);
 
+        /** Permissions **/
         ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.SEND_SMS},
+                new String[]{Manifest.permission.SEND_SMS, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                 1);
         ActivityCompat.requestPermissions(MainActivity.this, new String[] { android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION }, 1);
 
 
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                1);
+        ActivityCompat.requestPermissions(MainActivity.this, new String[] { android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION }, 1);
 
-
-
-
-
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                1);
+        ActivityCompat.requestPermissions(MainActivity.this, new String[] { android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION }, 1);
 
     }
 
+    //Four Main Buttons
     public void getStarted(View view) {
-
         Intent intent = new Intent(this, GetStarted.class);
         startActivity(intent);
     }
@@ -83,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LastNight.class);
         startActivity(intent);
     }
-
     public void testwebservice(View view) {
         Intent intent = new Intent(this, testwebservice.class);
         startActivity(intent);

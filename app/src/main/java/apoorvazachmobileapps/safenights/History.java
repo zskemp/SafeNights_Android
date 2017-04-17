@@ -89,6 +89,12 @@ public class History extends AppCompatActivity {
         String thisMonthKey = Integer.toString(cal.get(Calendar.MONTH)) + Integer.toString(cal.get(Calendar.YEAR));
         ArrayList<Fields> thisMonth = months.get(thisMonthKey);
 
+        if(thisMonth == null){
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
+            Toast.makeText(getApplicationContext(), "You have no history  yet!", Toast.LENGTH_SHORT);
+            return;
+        }
         for (Fields data : thisMonth) {
             //Algorithm for computing "drunkness"
             float alcoholY = calculateDrunkness(data);

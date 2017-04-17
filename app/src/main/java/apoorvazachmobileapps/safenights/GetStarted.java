@@ -1,12 +1,9 @@
 package apoorvazachmobileapps.safenights;
 
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.location.Address;
-import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -20,55 +17,46 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.GET;
 
-import static java.security.AccessController.getContext;
 
 public class GetStarted extends AppCompatActivity  {
-    private TextView contactNumber;
-    private Button title;
-    private CharSequence[] a;
-    private TextView latitude;
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
+    private boolean started;
+    private CharSequence[] a;
+    private Button StartStopButton;
+    private Button title;
+    private TextView contactNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_started);
+        StartStopButton = (Button)findViewById(R.id.start);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         Set<String> h = settings.getStringSet("locations", new HashSet<String>());
         a = h.toArray(new CharSequence[h.size()]);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        started = false;
         contactNumber = (TextView)findViewById(R.id.contactnumber);
         title = (Button)findViewById(R.id.title);
-        latitude = (TextView)findViewById(R.id.latlong);
-
-
     }
-    public void pickLocation(final View view) {
 
+    public void pickLocation(final View view) {
 
         final ArrayList mSelectedItems = new ArrayList();  // Where we track the selected items
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        // Set the dialog title
         builder.setTitle("Select a location")
-                // Specify the list array, the items to be selected by default (null for none),
-                // and the listener through which to receive callbacks when items are selected
                 .setMultiChoiceItems(a, null,
                         new DialogInterface.OnMultiChoiceClickListener() {
                             @Override
@@ -93,10 +81,7 @@ public class GetStarted extends AppCompatActivity  {
                         for(Object a : mSelectedItems){
                             p+=a;
                         }
-
                         title.setText(p);
-
-
                     }
                 }).setNeutralButton("Add a new location", new DialogInterface.OnClickListener() {
                     @Override
@@ -111,23 +96,24 @@ public class GetStarted extends AppCompatActivity  {
                 });
         AlertDialog alert = builder.create();
         alert.show();
-
     }
-
 
     public void addNewLocation(View view){
         final EditText address = new EditText(GetStarted.this);
         final EditText city = new EditText(GetStarted.this);
         final EditText state = new EditText(GetStarted.this);
         final EditText zip = new EditText(GetStarted.this);
+
         TextView addr = new TextView(GetStarted.this);
-        addr.setText("Address");
         TextView cityy = new TextView(GetStarted.this);
-        cityy.setText("City");
         TextView statee = new TextView(GetStarted.this);
-        statee.setText("State");
         TextView zipp = new TextView(GetStarted.this);
+
+        addr.setText("Address");
+        cityy.setText("City");
+        statee.setText("State");
         zipp.setText("Zip");
+
         LinearLayout lp = new LinearLayout(this);
         lp.setOrientation(LinearLayout.VERTICAL);
         lp.addView(addr);
@@ -138,8 +124,6 @@ public class GetStarted extends AppCompatActivity  {
         lp.addView(state);
         lp.addView(zipp);
         lp.addView(zip);
-
-
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(lp);
@@ -184,7 +168,6 @@ public class GetStarted extends AppCompatActivity  {
         startActivityForResult(intent, 1);
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null) {
@@ -196,13 +179,11 @@ public class GetStarted extends AppCompatActivity  {
                     c = getContentResolver().query(uri, new String[]{
                                     ContactsContract.CommonDataKinds.Phone.NUMBER,
                                     ContactsContract.CommonDataKinds.Phone.TYPE,
-//                            ContactsContract.CommonDataKinds.Phone.SEARCH_DISPLAY_NAME_KEY
                             },
                             null, null, null);
 
                     if (c != null && c.moveToFirst()) {
                         String number = c.getString(0);
-//                        String name = c.getString(2);
                         contactNumber.setText(number);
                     }
                 } finally {
@@ -216,41 +197,51 @@ public class GetStarted extends AppCompatActivity  {
 
 
     public void callStartNightAPI(View view){
-        SafeNightsAPIInterface apiService =
-                SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
-        final SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
-        String username = settings.getString("username", "");
-        String password = settings.getString("password", "");
-        Call<User> call = apiService.startnight(username, password);
-        Log.i("u", username + password);
+        if (!started) {
+            SafeNightsAPIInterface apiService =
+                    SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
+            final SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+            String username = settings.getString("username", "");
+            String password = settings.getString("password", "");
+            Call<User> call = apiService.startnight(username, password);
+            Log.i("u", username + password);
 
 
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                User u  = response.body();
-                if(u.getPassed().equals("n")){
-                    //bring them to home page, let them know a problem
-                    Toast.makeText(getApplicationContext(), "There has been a problem starting your night! Please try again", Toast.LENGTH_LONG).show();
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    User u = response.body();
+                    if (u.getPassed().equals("n")) {
+                        //bring them to home page, let them know a problem
+                        Toast.makeText(getApplicationContext(), "There has been a problem starting your night! Please try again", Toast.LENGTH_LONG).show();
 
+                    } else {
+                        SharedPreferences.Editor editor = settings.edit();
+                        String uniqueID = u.getPassed();
+                        editor.putString("id", uniqueID);
+                        editor.commit();
+                        Intent intent = new Intent(GetStarted.this, TrackingActivity.class);
+                        intent.putExtra("location", title.getText());
+                        intent.putExtra("pNum", contactNumber.getText());
+                        started = true;
+                        StartStopButton.setText("Stop Night");
+                        startService(intent);
+                    }
                 }
-                else {
-                    SharedPreferences.Editor editor = settings.edit();
-                    String uniqueID = u.getPassed();
-                    editor.putString("id", uniqueID);
-                    editor.commit();
-                    Intent intent = new Intent(GetStarted.this, TrackingActivity.class);
-                    intent.putExtra("location", title.getText());
-                    intent.putExtra("pNum", contactNumber.getText());
-                    startService(intent);
-                }
-            }
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                // Log error here since request failed
-                Log.e("API Call:", t.toString());
-            }
-        });
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    // Log error here since request failed
+                    Log.e("API Call:", t.toString());
+                }
+            });
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "Your night has finished!", Toast.LENGTH_LONG).show();
+            started = false;
+            Intent intent = new Intent(GetStarted.this, MainActivity.class);
+            StartStopButton.setText("Start Night");
+            stopService(intent);
+        }
     }
 }

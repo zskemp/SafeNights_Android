@@ -32,7 +32,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="160dp"
-            android:text="GetStarted"
+            android:text="Pick a Contact"
             android:onClick="pickContact"
             tools:layout_editor_absoluteX="162dp"
             tools:layout_editor_absoluteY="85dp" />
@@ -58,14 +58,7 @@
             android:layout_marginTop="31dp"
             android:text="Where will you end up?" />
 
-        <TextView
-            android:id="@+id/latlong"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/title"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="21dp"
-            android:text="TextView" />
+
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

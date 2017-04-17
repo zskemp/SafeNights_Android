@@ -17,14 +17,11 @@ import android.os.Bundle;
 
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
 import android.telephony.SmsManager;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -43,15 +40,13 @@ import retrofit2.Response;
 
 public class TrackingActivity extends Service implements LocationListener {
 
-    LocationManager locationManager;
-    private static final int GPS_PERMISSION = 1;
+
     double latitude;
     double longitude;
     private String location;
     private String phone_number;
     private String name;
-    TextView latTextView;
-    TextView lonTextView;
+
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
 
     Double currentLat;
@@ -70,27 +65,24 @@ public class TrackingActivity extends Service implements LocationListener {
         List<Address> addresses = new ArrayList<Address>();
         try {
             addresses = geocoder.getFromLocationName(location, 1);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        if(addresses.size() > 0) {
-            latitude= addresses.get(0).getLatitude();
-            longitude= addresses.get(0).getLongitude();
-//            latTextView.setText("" + latitude);
-//            lonTextView.setText("" + longitude);
+        if (addresses.size() > 0) {
+            latitude = addresses.get(0).getLatitude();
+            longitude = addresses.get(0).getLongitude();
         }
-        Timer timer = new Timer ();
-        final double[] lonArray = {0,0,0,0};
-        final double[] latArray = {0,0,0,0};
-        TimerTask hourlyTask = new TimerTask () {
+        Timer timer = new Timer();
+        final double[] lonArray = {0, 0, 0, 0};
+        final double[] latArray = {0, 0, 0, 0};
+        TimerTask hourlyTask = new TimerTask() {
             @Override
-            public void run () {
+            public void run() {
                 // CALL METHOD HERE FOR API pushLocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-                LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-                if ( Build.VERSION.SDK_INT >= 23 &&
-                        ContextCompat.checkSelfPermission( TrackingActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED &&
-                        ContextCompat.checkSelfPermission( TrackingActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                if (Build.VERSION.SDK_INT >= 23 &&
+                        ContextCompat.checkSelfPermission(TrackingActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(TrackingActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 }
                 Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 currentLon = BigDecimal.valueOf(location.getLongitude())
@@ -106,27 +98,18 @@ public class TrackingActivity extends Service implements LocationListener {
                 int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
                 int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 
-                float batteryPct = level / (float)scale;
+                float batteryPct = level / (float) scale;
                 int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-                Log.i("here", "no");
-                if(hour > 2 && ((latArray[0]==latArray[1] && latArray[0]==latArray[2] && latArray[0]==latArray[3])||
-                        (lonArray[0]==lonArray[1]&&lonArray[0]==lonArray[2]&&lonArray[0]==lonArray[3])) &&
-                        ((Math.abs(latitude-currentLat)>0.003)||Math.abs(longitude-currentLon)>0.003)){
-                    Log.i("lat", ""+currentLat);
-                    Log.i("long", currentLon.toString());
-                    Log.i("test", "" + latitude + longitude);
-                    Log.i("goo","goo");
-//                    sendSMSMessage("location");
+                if (hour > 2 && ((latArray[0] == latArray[1] && latArray[0] == latArray[2] && latArray[0] == latArray[3]) ||
+                        (lonArray[0] == lonArray[1] && lonArray[0] == lonArray[2] && lonArray[0] == lonArray[3])) &&
+                        ((Math.abs(latitude - currentLat) > 0.003) || Math.abs(longitude - currentLon) > 0.003)) {
                     try {
                         SmsManager smsManager = SmsManager.getDefault();
-                        Log.i("sent","sent");
-                        smsManager.sendTextMessage(phone_number, null, ""+currentLat+currentLon + "   " + latitude+longitude, null, null);
+                        smsManager.sendTextMessage(phone_number, null, "Location Message", null, null);
                     } catch (Exception e) {
-//                            latTextView.setText("bee");
                         e.printStackTrace();
                     }
                 } else {
-                    Log.i("worked","man");
                     latArray[0] = latArray[1];
                     latArray[1] = latArray[2];
                     latArray[2] = latArray[3];
@@ -138,13 +121,11 @@ public class TrackingActivity extends Service implements LocationListener {
 
 
                 }
-                if(batteryPct*100 < 60){
-                    Log.i("Hue", "he");
+                if (batteryPct * 100 < 85) {
                     try {
                         SmsManager smsManager = SmsManager.getDefault();
-                        smsManager.sendTextMessage(phone_number, null, "bank" + batteryPct, null, null);
+                        smsManager.sendTextMessage(phone_number, null, "Battery Message", null, null);
                     } catch (Exception e) {
-//                            latTextView.setText("bee");
                         e.printStackTrace();
                     }
                 }
@@ -153,15 +134,13 @@ public class TrackingActivity extends Service implements LocationListener {
         };
 
 
-        timer.schedule (hourlyTask, 0l, 1000*1*5);
+        timer.schedule(hourlyTask, 0l, 1000 * 1 * 05);
 
-        return super.onStartCommand(intent,flags,startId);
+        return super.onStartCommand(intent, flags, startId);
     }
 
 
-
-
-    public void callAddLocationAPI(){
+    public void callAddLocationAPI() {
         SafeNightsAPIInterface apiService =
                 SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
@@ -169,17 +148,16 @@ public class TrackingActivity extends Service implements LocationListener {
         String password = settings.getString("password", "");
         String id = settings.getString("id", "");
         Call<User> call = apiService.addlocation(username, password, id, currentLat, currentLon);
-        Log.i("u", id + username + password +  currentLat + currentLon);
+        Log.i("u", id + username + password + currentLat + currentLon);
 
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                User u  = response.body();
-                if(u.getPassed().equals("y")){
+                User u = response.body();
+                if (u.getPassed().equals("y")) {
                     //bring them to home page, let them know a problem
                     Toast.makeText(getApplicationContext(), "You uploaded another location successfully :)", Toast.LENGTH_LONG).show();
-                }
-                else {
+                } else {
                     Toast.makeText(getApplicationContext(), "There has been a problem uploading your location!\nDo you have service?", Toast.LENGTH_LONG).show();
                 }
             }
@@ -193,27 +171,23 @@ public class TrackingActivity extends Service implements LocationListener {
     }
 
 
-
-
-
     @Override
     public void onLocationChanged(Location location) {
 //        // Add code here to do stuff when the location changes
-//        currentLon = location.getLongitude();
-//        currentLat = location.getLatitude();
-//        //Change the views
-//        lonTextView.setText(currentLon.toString());
-//        latTextView.setText(currentLat.toString());
+
     }
 
     @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {}
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+    }
 
     @Override
-    public void onProviderEnabled(String s) {}
+    public void onProviderEnabled(String s) {
+    }
 
     @Override
-    public void onProviderDisabled(String s) {}
+    public void onProviderDisabled(String s) {
+    }
 
 
     @Nullable
@@ -227,15 +201,11 @@ public class TrackingActivity extends Service implements LocationListener {
         super.onTaskRemoved(rootIntent);
         try {
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(phone_number, null, "it destroyed", null, null);
-//            Toast.makeText(getApplicationContext(), "SMS sent.", Toast.LENGTH_LONG).show();
+            smsManager.sendTextMessage(phone_number, null, "Destroy Message", null, null);
         } catch (Exception e) {
-//            Toast.makeText(getApplicationContext(), "SMS failed, please try again.", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
-        // Handle application closing
 
-        // Destroy the service
         stopSelf();
     }
 
