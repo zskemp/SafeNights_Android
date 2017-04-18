@@ -85,12 +85,17 @@ public class TrackingActivity extends Service implements LocationListener {
                         ContextCompat.checkSelfPermission(TrackingActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 }
                 Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                currentLon = BigDecimal.valueOf(location.getLongitude())
-                        .setScale(5, RoundingMode.HALF_UP)
-                        .doubleValue();
-                currentLat = BigDecimal.valueOf(location.getLatitude())
-                        .setScale(5, RoundingMode.HALF_UP)
-                        .doubleValue();
+                if(location!=null) {
+                    currentLon = BigDecimal.valueOf(location.getLongitude())
+                            .setScale(5, RoundingMode.HALF_UP)
+                            .doubleValue();
+                    currentLat = BigDecimal.valueOf(location.getLatitude())
+                            .setScale(5, RoundingMode.HALF_UP)
+                            .doubleValue();
+                } else {
+                    currentLon = latitude;
+                    currentLat = longitude;
+                }
                 latArray[3] = currentLat;
                 lonArray[3] = currentLon;
                 IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
@@ -113,15 +118,15 @@ public class TrackingActivity extends Service implements LocationListener {
                     latArray[0] = latArray[1];
                     latArray[1] = latArray[2];
                     latArray[2] = latArray[3];
-                    latArray[3] = location.getLatitude();
+                    latArray[3] = currentLat;
                     lonArray[0] = lonArray[1];
                     lonArray[1] = lonArray[2];
                     lonArray[2] = lonArray[3];
-                    lonArray[3] = location.getLongitude();
+                    lonArray[3] = currentLon;
 
 
                 }
-                if (batteryPct * 100 < 85) {
+                if (batteryPct * 100 < 10) {
                     try {
                         SmsManager smsManager = SmsManager.getDefault();
                         smsManager.sendTextMessage(phone_number, null, "Battery Message", null, null);
