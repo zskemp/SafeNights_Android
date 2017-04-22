@@ -104,7 +104,7 @@ public class AddDrinks extends AppCompatActivity {
                         mMonth = selectedmonth;
                         mDay = selectedday;
                         date = new GregorianCalendar(selectedyear, selectedmonth, selectedday).getTime();
-                        datePicker.setText(selectedmonth + "/" + selectedday + "/" + selectedyear);
+                        datePicker.setText(selectedmonth+1 + "/" + selectedday + "/" + selectedyear);
                     }
                 }, mYear, mMonth, mDay);
                 mDatePicker.setTitle("Select date");
