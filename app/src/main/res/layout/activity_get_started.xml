@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="#211E36"
     android:layout_height="match_parent"
     tools:context="apoorvazachmobileapps.safenights.GetStarted">
 
@@ -29,34 +30,72 @@
             android:id="@+id/contactnumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="160dp"
             android:text="Pick a Contact"
-            android:onClick="pickContact"
+            android:textColor="#FFFFFF"
             tools:layout_editor_absoluteX="162dp"
-            tools:layout_editor_absoluteY="85dp" />
+            tools:layout_editor_absoluteY="85dp"
+            android:layout_centerVertical="true"
+            android:layout_alignLeft="@+id/startstop"
+            android:layout_alignStart="@+id/startstop" />
+
 
         <Button
             android:id="@+id/start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:background="@drawable/datebutton"
             android:onClick="callStartNightAPI"
-            android:text="Start" />
+            android:text="Start"
+            android:layout_below="@+id/contactName"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="65dp" />
 
         <Button
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/datebutton"
+            android:onClick="pickLocation"
+            android:text="Location"
+            android:textAllCaps="false"
+            android:textColor="#000000"
+            android:layout_marginTop="28dp"
+            android:layout_below="@+id/locationTitle"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:id="@+id/contactName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/datebutton"
+            android:onClick="pickContact"
+            android:text="Contact Name"
+            android:textAllCaps="false"
+            android:textColor="#000000"
+            android:layout_marginTop="27dp"
+            android:layout_alignTop="@+id/contactnumber"
+            android:layout_alignLeft="@+id/start"
+            android:layout_alignStart="@+id/start" />
+
+        <TextView
+            android:id="@+id/locationTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter Target Location Below"
+            android:textColor="#FFFFFF"
+            android:layout_below="@+id/startstop"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="47dp" />
+
+        <TextView
+            android:id="@+id/startstop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/homebutton"
-            android:onClick="pickLocation"
-            android:layout_marginTop="31dp"
-            android:text="Where will you end up?" />
+            android:layout_marginTop="13dp"
+            android:text="Start Your Night!"
+            android:textColor="#FFFFFF" />
 
 
     </RelativeLayout>

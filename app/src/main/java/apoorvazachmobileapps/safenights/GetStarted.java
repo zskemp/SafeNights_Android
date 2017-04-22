@@ -1,9 +1,12 @@
 package apoorvazachmobileapps.safenights;
 
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -34,7 +37,11 @@ public class GetStarted extends AppCompatActivity  {
     private CharSequence[] a;
     private Button StartStopButton;
     private Button title;
-    private TextView contactNumber;
+    private String contactNumber;
+    private Button contactName;
+    private TextView startstop;
+    private TextView locationTitle;
+    private TextView contactnumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +57,15 @@ public class GetStarted extends AppCompatActivity  {
         Set<String> h = settings.getStringSet("locations", new HashSet<String>());
         a = h.toArray(new CharSequence[h.size()]);
         started = false;
-        contactNumber = (TextView)findViewById(R.id.contactnumber);
+        contactNumber = "";
+        contactName = (Button)findViewById(R.id.contactName);
         title = (Button)findViewById(R.id.title);
+        startstop = (TextView)findViewById(R.id.startstop);
+        locationTitle = (TextView)findViewById(R.id.locationTitle);
+        contactnumber = (TextView)findViewById(R.id.contactnumber);
+        Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/Arciform.otf");
+        startstop.setTypeface(tf);
+
     }
 
     public void pickLocation(final View view) {
@@ -165,7 +179,6 @@ public class GetStarted extends AppCompatActivity  {
 
     public void pickContact(View view) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        // BoD con't: CONTENT_TYPE instead of CONTENT_ITEM_TYPE
         intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
         startActivityForResult(intent, 1);
     }
@@ -186,7 +199,9 @@ public class GetStarted extends AppCompatActivity  {
 
                     if (c != null && c.moveToFirst()) {
                         String number = c.getString(0);
-                        contactNumber.setText(number);
+                        contactNumber = number;
+                        contactName.setText(getContactName(getApplicationContext(), number));
+
                     }
                 } finally {
                     if (c != null) {
@@ -195,6 +210,24 @@ public class GetStarted extends AppCompatActivity  {
                 }
             }
         }
+    }
+    public static String getContactName(Context context, String phoneNumber) {
+        ContentResolver cr = context.getContentResolver();
+        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
+        Cursor cursor = cr.query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME}, null, null, null);
+        if (cursor == null) {
+            return null;
+        }
+        String contactName = null;
+        if(cursor.moveToFirst()) {
+            contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
+        }
+
+        if(cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+
+        return contactName;
     }
 
 
@@ -224,9 +257,13 @@ public class GetStarted extends AppCompatActivity  {
                         editor.commit();
                         Intent intent = new Intent(GetStarted.this, TrackingActivity.class);
                         intent.putExtra("location", title.getText());
-                        intent.putExtra("pNum", contactNumber.getText());
+                        intent.putExtra("pNum", contactNumber);
+                        intent.putExtra("cName", contactName.getText());
                         started = true;
                         StartStopButton.setText("Stop Night");
+                        startstop.setText("Your Night Is Underway!");
+                        locationTitle.setText("End Destination");
+                        contactnumber.setText("Emergency Contact");
                         startService(intent);
                     }
                 }
@@ -240,10 +277,14 @@ public class GetStarted extends AppCompatActivity  {
         }
         else {
             Toast.makeText(getApplicationContext(), "Your night has finished!", Toast.LENGTH_LONG).show();
+            stopService(new Intent(GetStarted.this, TrackingActivity.class));
             started = false;
-            Intent intent = new Intent(GetStarted.this, MainActivity.class);
+            Intent intent = new Intent(this, TrackingActivity.class);
             StartStopButton.setText("Start Night");
             stopService(intent);
+            Intent i = new Intent(GetStarted.this, MainActivity.class);
+            startActivity(i);
+
         }
     }
 }
