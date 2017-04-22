@@ -107,7 +107,7 @@
             app:wheel_active_color="#000000"
             app:wheel_unactive_color="#3981c2"/>
 
-        
+
 
         <com.jesusm.holocircleseekbar.lib.HoloCircleSeekBar
             android:id="@+id/winePicker"
