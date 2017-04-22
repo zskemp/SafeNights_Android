@@ -10,6 +10,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +23,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -42,6 +49,11 @@ public class GetStarted extends AppCompatActivity  {
     private TextView startstop;
     private TextView locationTitle;
     private TextView contactnumber;
+    private String emerContactName;
+    private TextView finalLocation;
+    private String locationAddress;
+    private ArrayList mSelectedItems; // Where we track the selected items
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,25 +64,46 @@ public class GetStarted extends AppCompatActivity  {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
+        mSelectedItems = new ArrayList();
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         Set<String> h = settings.getStringSet("locations", new HashSet<String>());
         a = h.toArray(new CharSequence[h.size()]);
         started = false;
         contactNumber = "";
+        emerContactName = "";
         contactName = (Button)findViewById(R.id.contactName);
         title = (Button)findViewById(R.id.title);
         startstop = (TextView)findViewById(R.id.startstop);
         locationTitle = (TextView)findViewById(R.id.locationTitle);
         contactnumber = (TextView)findViewById(R.id.contactnumber);
+        finalLocation = (TextView)findViewById(R.id.finalLocation);
         Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/Arciform.otf");
         startstop.setTypeface(tf);
+
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place
+                Log.i("hi", "Place: " + place.getAddress());
+                finalLocation.setText("Final Location: " + place.getAddress());
+                locationAddress = "" + place.getAddress();
+                a  = Arrays.copyOf(a, a.length + 1);
+                a[a.length - 1] = place.getAddress();
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i("hi", "An error occurred: " + status);
+            }
+        });
 
     }
 
     public void pickLocation(final View view) {
 
-        final ArrayList mSelectedItems = new ArrayList();  // Where we track the selected items
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select a location")
                 .setMultiChoiceItems(a, null,
@@ -97,76 +130,10 @@ public class GetStarted extends AppCompatActivity  {
                         for(Object a : mSelectedItems){
                             p+=a;
                         }
-                        title.setText(p);
+                        finalLocation.setText("Final Location: " + p);
+                        locationAddress = "" + p;
+                        mSelectedItems.clear();
                     }
-                }).setNeutralButton("Add a new location", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        addNewLocation(view);
-                    }
-                    })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
-
-    public void addNewLocation(View view){
-        final EditText address = new EditText(GetStarted.this);
-        final EditText city = new EditText(GetStarted.this);
-        final EditText state = new EditText(GetStarted.this);
-        final EditText zip = new EditText(GetStarted.this);
-
-        TextView addr = new TextView(GetStarted.this);
-        TextView cityy = new TextView(GetStarted.this);
-        TextView statee = new TextView(GetStarted.this);
-        TextView zipp = new TextView(GetStarted.this);
-
-        addr.setText("Address");
-        cityy.setText("City");
-        statee.setText("State");
-        zipp.setText("Zip");
-
-        LinearLayout lp = new LinearLayout(this);
-        lp.setOrientation(LinearLayout.VERTICAL);
-        lp.addView(addr);
-        lp.addView(address);
-        lp.addView(cityy);
-        lp.addView(city);
-        lp.addView(statee);
-        lp.addView(state);
-        lp.addView(zipp);
-        lp.addView(zip);
-
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(lp);
-        builder.setTitle("Add a new location")
-                // Specify the list array, the items to be selected by default (null for none),
-                // and the listener through which to receive callbacks when items are selected
-
-                // Set the action buttons
-                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User clicked OK, so save the mSelectedItems results somewhere
-                        // or return them to the component that opened the dialog
-                        String p = ""+address.getText() + " " + city.getText() + " " + state.getText() + " " + zip.getText();
-                        a = Arrays.copyOf(a, a.length+1);
-                        a[a.length -1] = p;
-                        title.setText(p);
-                        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-                        SharedPreferences.Editor editor = settings.edit();
-                        String[] locations = new String[a.length];
-                        int i=0;
-                        for(CharSequence ch: a){
-                            locations[i++] = ch.toString();
-                        }
-                        Set<String> mySet = new HashSet<String>(Arrays.asList(locations));
-                        editor.putStringSet("locations", mySet);
-                        editor.commit();                    }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
@@ -176,6 +143,69 @@ public class GetStarted extends AppCompatActivity  {
         AlertDialog alert = builder.create();
         alert.show();
     }
+
+//    public void addNewLocation(View view){
+//        final EditText address = new EditText(GetStarted.this);
+//        final EditText city = new EditText(GetStarted.this);
+//        final EditText state = new EditText(GetStarted.this);
+//        final EditText zip = new EditText(GetStarted.this);
+//
+//        TextView addr = new TextView(GetStarted.this);
+//        TextView cityy = new TextView(GetStarted.this);
+//        TextView statee = new TextView(GetStarted.this);
+//        TextView zipp = new TextView(GetStarted.this);
+//
+//        addr.setText("Address");
+//        cityy.setText("City");
+//        statee.setText("State");
+//        zipp.setText("Zip");
+//
+//        LinearLayout lp = new LinearLayout(this);
+//        lp.setOrientation(LinearLayout.VERTICAL);
+//        lp.addView(addr);
+//        lp.addView(address);
+//        lp.addView(cityy);
+//        lp.addView(city);
+//        lp.addView(statee);
+//        lp.addView(state);
+//        lp.addView(zipp);
+//        lp.addView(zip);
+//
+//        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setView(lp);
+//        builder.setTitle("Add a new location")
+//                // Specify the list array, the items to be selected by default (null for none),
+//                // and the listener through which to receive callbacks when items are selected
+//
+//                // Set the action buttons
+//                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        // User clicked OK, so save the mSelectedItems results somewhere
+//                        // or return them to the component that opened the dialog
+//                        String p = ""+address.getText() + " " + city.getText() + " " + state.getText() + " " + zip.getText();
+//                        a = Arrays.copyOf(a, a.length+1);
+//                        a[a.length -1] = p;
+//                        title.setText(p);
+//                        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+//                        SharedPreferences.Editor editor = settings.edit();
+//                        String[] locations = new String[a.length];
+//                        int i=0;
+//                        for(CharSequence ch: a){
+//                            locations[i++] = ch.toString();
+//                        }
+//                        Set<String> mySet = new HashSet<String>(Arrays.asList(locations));
+//                        editor.putStringSet("locations", mySet);
+//                        editor.commit();                    }
+//                })
+//                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int id) {
+//                    }
+//                });
+//        AlertDialog alert = builder.create();
+//        alert.show();
+//    }
 
     public void pickContact(View view) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -200,8 +230,8 @@ public class GetStarted extends AppCompatActivity  {
                     if (c != null && c.moveToFirst()) {
                         String number = c.getString(0);
                         contactNumber = number;
-                        contactName.setText(getContactName(getApplicationContext(), number));
-
+                        emerContactName = getContactName(getApplicationContext(), number);
+                        contactnumber.setText("Contact: " + emerContactName);
                     }
                 } finally {
                     if (c != null) {
@@ -256,14 +286,12 @@ public class GetStarted extends AppCompatActivity  {
                         editor.putString("id", uniqueID);
                         editor.commit();
                         Intent intent = new Intent(GetStarted.this, TrackingActivity.class);
-                        intent.putExtra("location", title.getText());
+                        intent.putExtra("location", locationAddress);
                         intent.putExtra("pNum", contactNumber);
-                        intent.putExtra("cName", contactName.getText());
+                        intent.putExtra("cName", emerContactName);
                         started = true;
                         StartStopButton.setText("Stop Night");
                         startstop.setText("Your Night Is Underway!");
-                        locationTitle.setText("End Destination");
-                        contactnumber.setText("Emergency Contact");
                         startService(intent);
                     }
                 }

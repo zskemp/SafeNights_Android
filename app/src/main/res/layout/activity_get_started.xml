@@ -30,13 +30,12 @@
             android:id="@+id/contactnumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pick a Contact"
+            android:text="Contact: TBD"
             android:textColor="#FFFFFF"
             tools:layout_editor_absoluteX="162dp"
             tools:layout_editor_absoluteY="85dp"
             android:layout_centerVertical="true"
-            android:layout_alignLeft="@+id/startstop"
-            android:layout_alignStart="@+id/startstop" />
+            android:layout_centerHorizontal="true" />
 
 
         <Button
@@ -56,12 +55,12 @@
             android:layout_height="wrap_content"
             android:background="@drawable/datebutton"
             android:onClick="pickLocation"
-            android:text="Location"
+            android:text="My Locations"
             android:textAllCaps="false"
             android:textColor="#000000"
-            android:layout_marginTop="28dp"
-            android:layout_below="@+id/locationTitle"
-            android:layout_centerHorizontal="true" />
+            android:layout_marginTop="16dp"
+            android:layout_below="@+id/finalLocation"
+            android:layout_alignStart="@+id/contactName" />
 
         <Button
             android:id="@+id/contactName"
@@ -69,7 +68,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/datebutton"
             android:onClick="pickContact"
-            android:text="Contact Name"
+            android:text="Select a Contact"
             android:textAllCaps="false"
             android:textColor="#000000"
             android:layout_marginTop="27dp"
@@ -81,11 +80,18 @@
             android:id="@+id/locationTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Enter Target Location Below"
+            android:text="Search for a destination, or pick on from My Locations!"
             android:textColor="#FFFFFF"
             android:layout_below="@+id/startstop"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="47dp" />
+        <fragment
+            android:id="@+id/place_autocomplete_fragment"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/locationTitle"
+            android:layout_height="wrap_content"
+            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+            />
 
         <TextView
             android:id="@+id/startstop"
@@ -96,6 +102,15 @@
             android:layout_marginTop="13dp"
             android:text="Start Your Night!"
             android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/finalLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:layout_below="@+id/place_autocomplete_fragment"
+            android:layout_centerHorizontal="true"
+            android:text="Final Location: TBD" />
 
 
     </RelativeLayout>

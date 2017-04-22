@@ -90,6 +90,9 @@
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCz3sz3mVVVOCmiHC93yGEky6EPNR82lb8"/>
     </application>
 
 </manifest>
