@@ -22,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:textSize="35dp"
+                android:textSize="25dp"
                 android:text="Money Spent" />
 
             <com.github.mikephil.charting.charts.LineChart
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/chartMoney"
                 android:layout_centerHorizontal="true"
-                android:textSize="35dp"
+                android:textSize="25dp"
                 android:text="Alcohol Consumption" />
 
             <com.github.mikephil.charting.charts.LineChart
@@ -46,6 +46,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/titleAlcohol" />
+
+            <TextView
+                android:id="@+id/month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/chartAlcohol"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/colorTitle"
+                android:textSize="25dp" />
+
+            <Button
+                android:id="@+id/lastMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/chartAlcohol"
+                android:layout_toLeftOf="@id/month"
+                android:background="@android:color/transparent"
+                android:textColor="@color/colorTitle"
+                android:text="-"/>
+
+            <Button
+                android:id="@+id/nextMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/chartAlcohol"
+                android:layout_toRightOf="@id/month"
+                android:background="@android:color/transparent"
+                android:textColor="@color/colorTitle"
+                android:text="+"/>
 
         </RelativeLayout>
 

@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ import com.github.mikephil.charting.utils.EntryXComparator;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 
+import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -58,6 +60,12 @@ public class History extends AppCompatActivity {
     private HashMap<String, ArrayList<Fields>> months;
     TextView titleMoney;
     TextView titleAlcohol;
+    TextView month;
+    Button nextMonth;
+    Button lastMonth;
+
+    private int displayMonth;
+    private int displayYear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +75,8 @@ public class History extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        View v = this.findViewById(android.R.id.content);
+
         Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/Arciform.otf");
         titleMoney = (TextView)findViewById(R.id.titleMoney);
         titleMoney.setTypeface(tf);
@@ -75,19 +85,40 @@ public class History extends AppCompatActivity {
         titleAlcohol.setTypeface(tf);
         titleAlcohol.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorTitle, null));
 
-        // Initialize Global Variables
-        nights = new ArrayList<Fields>();
-        months = new HashMap<>();
+        month = (TextView)findViewById(R.id.month);
+        Date today = new Date();
+        final Calendar cal = Calendar.getInstance();
+        cal.setTime(today);
+        displayMonth = cal.get(Calendar.MONTH);
+        displayYear = cal.get(Calendar.YEAR);
+        month.setText(getMonthForInt(displayMonth));
+        nextMonth = (Button) findViewById(R.id.nextMonth);
+        nextMonth.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                cal.set(displayYear, displayMonth, 1);
+                cal.add(Calendar.MONTH, 1);
+                displayMonth = cal.get(Calendar.MONTH);
+                displayYear = cal.get(Calendar.YEAR);
+                //callHistoryAPI(v);
+                Log.i("Why", "Why would leave us");
+            }
+        });
+        lastMonth = (Button) findViewById(R.id.lastMonth);
+        lastMonth.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                cal.set(displayYear, displayMonth, 1);
+                cal.add(Calendar.MONTH, -1);
+                displayMonth = cal.get(Calendar.MONTH);
+                displayYear = cal.get(Calendar.YEAR);
+                callHistoryAPI(v);
+            }
+        });
 
-        View v = this.findViewById(android.R.id.content);
         //Note: We add to the nights array list in this method call
         callHistoryAPI(v);
-
         //NOTE: All the remaining calls needed to be handeled in the callHistoryAPI() because
         // they were dependent on the response call form the HTTP request
         // (these are handeled asychronously and so could not just call afterwards on main thread)
-
-        //TODO: Make a button that toggles the months
     }
 
     //TODO:Make a good algorithm for calculating a persons drunkness (how much to weigh each drink)
@@ -102,11 +133,11 @@ public class History extends AppCompatActivity {
         List<Entry> alcohol = new ArrayList<Entry>();
         List<Entry> money = new ArrayList<Entry>();
 
-        //TODO: Will need to create a method to select and get the current date. Maybe return list of that month's hash
-        Date now = new Date();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(now);
-        String thisMonthKey = Integer.toString(cal.get(Calendar.MONTH)) + Integer.toString(cal.get(Calendar.YEAR));
+//        //TODO: Will need to create a method to select and get the current date. Maybe return list of that month's hash
+//        Date now = new Date();
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTime(now);
+        String thisMonthKey = Integer.toString(displayMonth) + Integer.toString(displayYear);
         ArrayList<Fields> thisMonth = months.get(thisMonthKey);
 
         if(thisMonth == null){
@@ -188,7 +219,7 @@ public class History extends AppCompatActivity {
         mChart.getXAxis().setAxisMaximum(31f);
         mChart.getXAxis().setLabelCount(3, true);
         mChart.getAxisLeft().setLabelCount(5, true);
-        mChart.getXAxis().setTextSize(14f);
+        mChart.getXAxis().setTextSize(10f);
         mChart.getAxisLeft().setTextSize(14f);
         mChart.getAxisLeft().setTextColor(Color.WHITE);
         mChart.getXAxis().setTextColor(Color.WHITE);
@@ -207,7 +238,7 @@ public class History extends AppCompatActivity {
         aChart.getXAxis().setAxisMaximum(31f);
         aChart.getXAxis().setLabelCount(3, true);
         aChart.getAxisLeft().setLabelCount(5, true);
-        aChart.getXAxis().setTextSize(14f);
+        aChart.getXAxis().setTextSize(10f);
         aChart.getAxisLeft().setTextSize(14f);
         aChart.getAxisLeft().setTextColor(Color.WHITE);
         aChart.getXAxis().setTextColor(Color.WHITE);
@@ -319,6 +350,11 @@ public class History extends AppCompatActivity {
             @Override
             public void onResponse(Call<Example> call, Response<Example> response) {
                 Example table  = response.body();
+
+                // Initialize Global Variables
+                nights = new ArrayList<Fields>();
+                months = new HashMap<>();
+
                 //Parse response.body() and add to nights
                 for(int i = 0; i < table.getAlcoholtable().size(); i++) {
                     Alcoholtable trial = table.getAlcoholtable().get(i);
@@ -345,6 +381,16 @@ public class History extends AppCompatActivity {
                 //TODO: Make a cool page saying not connected to internet, there was a problem...
             }
         });
+    }
+
+    String getMonthForInt(int num) {
+        String month = "wrong";
+        DateFormatSymbols dfs = new DateFormatSymbols();
+        String[] months = dfs.getMonths();
+        if (num >= 0 && num <= 11 ) {
+            month = months[num];
+        }
+        return month;
     }
 
 }
