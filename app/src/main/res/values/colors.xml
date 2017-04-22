@@ -3,4 +3,16 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#143f66</color>
+
+    <color name="colorBackground">#211E36</color>
+
+    <color name="colorMoneyLine">#4CAF50</color>
+    <color name="colorMoneyFill">#6FDA9C</color>
+    <color name="colorMoneyPoint">#388E3C</color>
+    <color name="colorMoneyPointHole">#FAFAFA</color>
+
+    <color name="colorAlcoholLine">#03A9F4</color>
+    <color name="colorAlcoholFill">#56C5EF</color>
+    <color name="colorAlcoholPoint">#1565C0</color>
+    <color name="colorAlcoholPointHole">#FAFAFA</color>
 </resources>

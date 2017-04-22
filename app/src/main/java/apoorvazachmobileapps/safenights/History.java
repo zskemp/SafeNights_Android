@@ -70,8 +70,10 @@ public class History extends AppCompatActivity {
         Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/Arciform.otf");
         titleMoney = (TextView)findViewById(R.id.titleMoney);
         titleMoney.setTypeface(tf);
+        titleMoney.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorMoneyLine, null));
         titleAlcohol = (TextView)findViewById(R.id.titleAlcohol);
         titleAlcohol.setTypeface(tf);
+        titleAlcohol.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorAlcoholLine, null));
 
         // Initialize Global Variables
         nights = new ArrayList<Fields>();
@@ -150,18 +152,18 @@ public class History extends AppCompatActivity {
         alcoholSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         alcoholSet.setLineWidth(2f);
         alcoholSet.setDrawFilled(true);
-        alcoholSet.setColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimaryDark, null));
-        alcoholSet.setFillColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
-        alcoholSet.setCircleColor(Color.BLUE);
-        alcoholSet.setCircleColorHole(Color.BLUE);
+        alcoholSet.setColor(ResourcesCompat.getColor(getResources(), R.color.colorAlcoholLine, null));
+        alcoholSet.setFillColor(ResourcesCompat.getColor(getResources(), R.color.colorAlcoholFill, null));
+        alcoholSet.setCircleColor(ResourcesCompat.getColor(getResources(), R.color.colorAlcoholPoint, null));
+        alcoholSet.setCircleColorHole(ResourcesCompat.getColor(getResources(), R.color.colorAlcoholPointHole, null));
         alcoholSet.setDrawValues(false);
         moneySet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         moneySet.setLineWidth(2f);
         moneySet.setDrawFilled(true);
-        moneySet.setColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimaryDark, null));
-        moneySet.setFillColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
-        moneySet.setCircleColor(Color.BLUE);
-        moneySet.setCircleColorHole(Color.BLUE);
+        moneySet.setColor(ResourcesCompat.getColor(getResources(), R.color.colorMoneyLine, null));
+        moneySet.setFillColor(ResourcesCompat.getColor(getResources(), R.color.colorMoneyFill, null));
+        moneySet.setCircleColor(ResourcesCompat.getColor(getResources(), R.color.colorMoneyPoint, null));
+        moneySet.setCircleColorHole(ResourcesCompat.getColor(getResources(), R.color.colorMoneyPointHole, null));
         moneySet.setDrawValues(false);
 
         LineData lineDataAlcohol = new LineData(alcoholSet);
@@ -183,6 +185,10 @@ public class History extends AppCompatActivity {
         mChart.getXAxis().setAxisMinimum(0f);
         mChart.getXAxis().setAxisMaximum(31f);
         mChart.getXAxis().setLabelCount(5, true);
+        mChart.getAxisLeft().setTextColor(Color.WHITE);
+        mChart.getXAxis().setTextColor(Color.WHITE);
+        mChart.getAxisLeft().setAxisLineColor(Color.WHITE);
+        mChart.getXAxis().setAxisLineColor(Color.WHITE);
 
         aChart.getXAxis().setDrawGridLines(false);
         aChart.getAxisLeft().setDrawGridLines(false);
@@ -194,6 +200,10 @@ public class History extends AppCompatActivity {
         aChart.getXAxis().setAxisMinimum(0f);
         aChart.getXAxis().setAxisMaximum(31f);
         aChart.getXAxis().setLabelCount(5, true);
+        aChart.getAxisLeft().setTextColor(Color.WHITE);
+        aChart.getXAxis().setTextColor(Color.WHITE);
+        aChart.getAxisLeft().setAxisLineColor(Color.WHITE);
+        aChart.getXAxis().setAxisLineColor(Color.WHITE);
 
         mChart.setAutoScaleMinMaxEnabled(true);
         mChart.getAxisLeft().setValueFormatter(new DollarFormatter());
@@ -203,7 +213,7 @@ public class History extends AppCompatActivity {
         aChart.getAxisLeft().setLabelCount(5, true);
         aChart.getAxisLeft().setValueFormatter(new PercentFormatter());
 
-//        mChart.setBackgroundColor("#211E36");
+        mChart.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorBackground, null));
 
 
         // WHAT IF THERE IS NO DATA?!?!?!
