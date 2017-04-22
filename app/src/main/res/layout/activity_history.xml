@@ -6,6 +6,51 @@
     android:layout_height="match_parent"
     tools:context="apoorvazachmobileapps.safenights.History">
 
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorBackground">
+
+            <TextView
+                android:id="@+id/titleMoney"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:textSize="35dp"
+                android:text="Money Spent" />
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/chartMoney"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/titleMoney"
+                android:paddingBottom="20dp"/>
+
+            <TextView
+                android:id="@+id/titleAlcohol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/chartMoney"
+                android:layout_centerHorizontal="true"
+                android:textSize="35dp"
+                android:text="Alcohol Consumption" />
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/chartAlcohol"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/titleAlcohol" />
+
+        </RelativeLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,44 +65,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorBackground"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:id="@+id/titleMoney"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:textSize="35dp"
-            android:text="Money Spent" />
-
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chartMoney"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:layout_below="@id/titleMoney"/>
-
-        <TextView
-            android:id="@+id/titleAlcohol"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/chartMoney"
-            android:layout_centerHorizontal="true"
-            android:textSize="35dp"
-            android:text="Alcohol Consumption" />
-
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chartAlcohol"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/titleAlcohol" />
-
-
-
-
-    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>
