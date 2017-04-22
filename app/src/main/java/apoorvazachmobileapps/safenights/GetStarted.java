@@ -277,6 +277,7 @@ public class GetStarted extends AppCompatActivity  {
         }
         else {
             Toast.makeText(getApplicationContext(), "Your night has finished!", Toast.LENGTH_LONG).show();
+            stopService(new Intent(GetStarted.this, TrackingActivity.class));
             started = false;
             Intent intent = new Intent(this, TrackingActivity.class);
             StartStopButton.setText("Start Night");

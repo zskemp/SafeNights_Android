@@ -15,6 +15,7 @@ import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -47,6 +48,10 @@ public class TrackingActivity extends Service implements LocationListener {
     private String phone_number;
     private String name;
     private String cName;
+    private Handler handler = new Handler();
+    private Timer timer;
+    private TimerTask hourlyTask;
+
 
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
 
@@ -74,10 +79,10 @@ public class TrackingActivity extends Service implements LocationListener {
             latitude = addresses.get(0).getLatitude();
             longitude = addresses.get(0).getLongitude();
         }
-        Timer timer = new Timer();
+        timer = new Timer();
         final double[] lonArray = {0, 0, 0, 0};
         final double[] latArray = {0, 0, 0, 0};
-        TimerTask hourlyTask = new TimerTask() {
+        hourlyTask = new TimerTask() {
             @Override
             public void run() {
                 // CALL METHOD HERE FOR API pushLocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
@@ -213,6 +218,7 @@ public class TrackingActivity extends Service implements LocationListener {
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
+        timer.cancel();
         super.onTaskRemoved(rootIntent);
         try {
             SmsManager smsManager = SmsManager.getDefault();
@@ -225,7 +231,30 @@ public class TrackingActivity extends Service implements LocationListener {
             e.printStackTrace();
         }
 
-        stopSelf();
+        this.stopSelf();
+    }
+
+    @Override
+    public void onDestroy() {
+        handler.removeCallbacksAndMessages(null);
+        timer.cancel();
+        try {
+            SmsManager smsManager = SmsManager.getDefault();
+            String message = "Hey " + cName + ", " + name + " went out for a " +
+                    "fun night tonight but his tracking app SafeNights just crashed! He said he was going to " +
+                    userLocation + ", and his last known location was at " + currentLat + ", " + currentLon + ".";
+            ArrayList<String> parts = smsManager.divideMessage(message);
+            smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
+            stopSelf();
+            Intent i = new Intent(this, TrackingActivity.class);
+            stopService(i);
+            super.onDestroy();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        this.stopSelf();
+        super.onDestroy();
     }
 
 }
