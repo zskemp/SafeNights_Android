@@ -23,25 +23,39 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorBackground"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <TextView
+            android:id="@+id/titleMoney"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textSize="35dp"
+            android:text="Money Spent" />
+
         <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/chart"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+            android:id="@+id/chartMoney"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_below="@id/titleMoney"/>
 
-        <!--<TextView-->
-            <!--android:id="@+id/holder"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentTop="true"-->
-            <!--android:text="HELLO WORLD!"/>-->
+        <TextView
+            android:id="@+id/titleAlcohol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/chartMoney"
+            android:layout_centerHorizontal="true"
+            android:textSize="35dp"
+            android:text="Alcohol Consumption" />
 
-        <!--<TextView-->
-            <!--android:id="@+id/textview"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_below="@id/holder"/>-->
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chartAlcohol"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/titleAlcohol" />
+
+
 
 
     </RelativeLayout>
