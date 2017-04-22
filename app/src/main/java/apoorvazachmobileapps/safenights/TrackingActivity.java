@@ -43,9 +43,10 @@ public class TrackingActivity extends Service implements LocationListener {
 
     double latitude;
     double longitude;
-    private String location;
+    private String userLocation;
     private String phone_number;
     private String name;
+    private String cName;
 
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
 
@@ -59,12 +60,13 @@ public class TrackingActivity extends Service implements LocationListener {
 
         name = settings.getString("firstname", "");
 
-        location = intent.getExtras().getString("location");
+        userLocation = intent.getExtras().getString("location");
         phone_number = intent.getExtras().getString("pNum");
+        cName = intent.getExtras().getString("cName");
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         List<Address> addresses = new ArrayList<Address>();
         try {
-            addresses = geocoder.getFromLocationName(location, 1);
+            addresses = geocoder.getFromLocationName(userLocation, 1);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -93,8 +95,8 @@ public class TrackingActivity extends Service implements LocationListener {
                             .setScale(5, RoundingMode.HALF_UP)
                             .doubleValue();
                 } else {
-                    currentLon = latitude;
-                    currentLat = longitude;
+                    currentLon = longitude;
+                    currentLat = latitude;
                 }
                 latArray[3] = currentLat;
                 lonArray[3] = currentLon;
@@ -110,7 +112,11 @@ public class TrackingActivity extends Service implements LocationListener {
                         ((Math.abs(latitude - currentLat) > 0.003) || Math.abs(longitude - currentLon) > 0.003)) {
                     try {
                         SmsManager smsManager = SmsManager.getDefault();
-                        smsManager.sendTextMessage(phone_number, null, "Location Message", null, null);
+                        String message = "Hey " + latitude + ", " + longitude + " went out for a " +
+                                "fun night tonight but his phone battery is almost dead! He said he was going to " +
+                                userLocation + ", and his last known location was at " + currentLat + ", " + currentLon + ".";
+                        ArrayList<String> parts = smsManager.divideMessage(message);
+                        smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -129,7 +135,11 @@ public class TrackingActivity extends Service implements LocationListener {
                 if (batteryPct * 100 < 10) {
                     try {
                         SmsManager smsManager = SmsManager.getDefault();
-                        smsManager.sendTextMessage(phone_number, null, "Battery Message", null, null);
+                        String message = "Hey " + cName + ", " + name + " went out for a " +
+                                "fun night tonight but his phone battery is almost dead! He said he was going to " +
+                                userLocation + ", and his last known location was at " + currentLat + ", " + currentLon + ".";
+                        ArrayList<String> parts = smsManager.divideMessage(message);
+                        smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -206,7 +216,11 @@ public class TrackingActivity extends Service implements LocationListener {
         super.onTaskRemoved(rootIntent);
         try {
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(phone_number, null, "Destroy Message", null, null);
+            String message = "Hey " + cName + ", " + name + " went out for a " +
+                    "fun night tonight but his tracking app SafeNights just crashed! He said he was going to " +
+                    userLocation + ", and his last known location was at " + currentLat + ", " + currentLon + ".";
+            ArrayList<String> parts = smsManager.divideMessage(message);
+            smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
