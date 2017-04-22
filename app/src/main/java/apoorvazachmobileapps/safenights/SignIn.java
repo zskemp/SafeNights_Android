@@ -10,6 +10,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -22,6 +23,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -40,10 +43,13 @@ public class SignIn extends Fragment {
     TextView appname;
     TextView mRegister;
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
+    private AVLoadingIndicatorView indicator;
 
     public SignIn() {
         // Required empty public constructor
     }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +63,8 @@ public class SignIn extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragmen
         View rootview = inflater.inflate(R.layout.fragment_sign_in, container, false);
+        indicator = (AVLoadingIndicatorView)rootview.findViewById(R.id.avi);
+
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         Typeface tf = Typeface.createFromAsset(this.getContext().getAssets(),"fonts/Arciform.otf");
         appname = (TextView)rootview.findViewById(R.id.appname);
@@ -90,6 +98,8 @@ public class SignIn extends Fragment {
     }
 
     public void callSignInAPI (View view) {
+        indicator.show();
+        indicator.setVisibility(View.VISIBLE);
         SafeNightsAPIInterface apiService =
                 SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
 
