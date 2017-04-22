@@ -70,10 +70,10 @@ public class History extends AppCompatActivity {
         Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/Arciform.otf");
         titleMoney = (TextView)findViewById(R.id.titleMoney);
         titleMoney.setTypeface(tf);
-        titleMoney.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorMoneyLine, null));
+        titleMoney.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorTitle, null));
         titleAlcohol = (TextView)findViewById(R.id.titleAlcohol);
         titleAlcohol.setTypeface(tf);
-        titleAlcohol.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorAlcoholLine, null));
+        titleAlcohol.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorTitle, null));
 
         // Initialize Global Variables
         nights = new ArrayList<Fields>();
@@ -149,7 +149,7 @@ public class History extends AppCompatActivity {
         LineDataSet moneySet = new LineDataSet(money, "money");
 
         //STYLING Part 1!
-        alcoholSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        //alcoholSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         alcoholSet.setLineWidth(2f);
         alcoholSet.setDrawFilled(true);
         alcoholSet.setColor(ResourcesCompat.getColor(getResources(), R.color.colorAlcoholLine, null));
@@ -157,7 +157,7 @@ public class History extends AppCompatActivity {
         alcoholSet.setCircleColor(ResourcesCompat.getColor(getResources(), R.color.colorAlcoholPoint, null));
         alcoholSet.setCircleColorHole(ResourcesCompat.getColor(getResources(), R.color.colorAlcoholPointHole, null));
         alcoholSet.setDrawValues(false);
-        moneySet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        //moneySet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         moneySet.setLineWidth(2f);
         moneySet.setDrawFilled(true);
         moneySet.setColor(ResourcesCompat.getColor(getResources(), R.color.colorMoneyLine, null));
@@ -175,6 +175,8 @@ public class History extends AppCompatActivity {
         //STYLING Part 2!
         alcoholSet.setAxisDependency(YAxis.AxisDependency.LEFT);
         moneySet.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+        mChart.setTouchEnabled(false);
         mChart.getXAxis().setDrawGridLines(false);
         mChart.getAxisLeft().setDrawGridLines(false);
         mChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -184,12 +186,16 @@ public class History extends AppCompatActivity {
         mDes.setEnabled(false);
         mChart.getXAxis().setAxisMinimum(0f);
         mChart.getXAxis().setAxisMaximum(31f);
-        mChart.getXAxis().setLabelCount(5, true);
+        mChart.getXAxis().setLabelCount(3, true);
+        mChart.getAxisLeft().setLabelCount(5, true);
+        mChart.getXAxis().setTextSize(14f);
+        mChart.getAxisLeft().setTextSize(14f);
         mChart.getAxisLeft().setTextColor(Color.WHITE);
         mChart.getXAxis().setTextColor(Color.WHITE);
         mChart.getAxisLeft().setAxisLineColor(Color.WHITE);
         mChart.getXAxis().setAxisLineColor(Color.WHITE);
 
+        aChart.setTouchEnabled(false);
         aChart.getXAxis().setDrawGridLines(false);
         aChart.getAxisLeft().setDrawGridLines(false);
         aChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -199,18 +205,21 @@ public class History extends AppCompatActivity {
         aDesc.setEnabled(false);
         aChart.getXAxis().setAxisMinimum(0f);
         aChart.getXAxis().setAxisMaximum(31f);
-        aChart.getXAxis().setLabelCount(5, true);
+        aChart.getXAxis().setLabelCount(3, true);
+        aChart.getAxisLeft().setLabelCount(5, true);
+        aChart.getXAxis().setTextSize(14f);
+        aChart.getAxisLeft().setTextSize(14f);
         aChart.getAxisLeft().setTextColor(Color.WHITE);
         aChart.getXAxis().setTextColor(Color.WHITE);
         aChart.getAxisLeft().setAxisLineColor(Color.WHITE);
         aChart.getXAxis().setAxisLineColor(Color.WHITE);
 
         mChart.setAutoScaleMinMaxEnabled(true);
+        mChart.getAxisLeft().setAxisMinimum(0f);
         mChart.getAxisLeft().setValueFormatter(new DollarFormatter());
 
         aChart.getAxisLeft().setAxisMinimum(0f);
         aChart.getAxisLeft().setAxisMaximum(100f);
-        aChart.getAxisLeft().setLabelCount(5, true);
         aChart.getAxisLeft().setValueFormatter(new PercentFormatter());
 
         mChart.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorBackground, null));
@@ -245,7 +254,7 @@ public class History extends AppCompatActivity {
     {
         protected DecimalFormat mFormat;
         public PercentFormatter() {
-            mFormat = new DecimalFormat("###,###,##0.0");
+            mFormat = new DecimalFormat("###,###,##0");
         }
         public PercentFormatter(DecimalFormat format) {
             this.mFormat = format;
@@ -324,8 +333,8 @@ public class History extends AppCompatActivity {
                 aChart = (LineChart) findViewById(R.id.chartAlcohol);
                 DisplayMetrics metrics = new DisplayMetrics();
                 getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                mChart.setMinimumHeight((int)(metrics.heightPixels*0.4));
-                aChart.setMinimumHeight((int)(metrics.heightPixels*0.4));
+                mChart.setMinimumHeight((int)(metrics.heightPixels*0.35));
+                aChart.setMinimumHeight((int)(metrics.heightPixels*0.35));
                 populatechart();
             }
 
