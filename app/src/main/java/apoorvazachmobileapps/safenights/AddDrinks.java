@@ -3,6 +3,7 @@ package apoorvazachmobileapps.safenights;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import com.jesusm.holocircleseekbar.lib.HoloCircleSeekBar;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -42,6 +43,11 @@ public class AddDrinks extends AppCompatActivity {
     NumberPicker wine;
     NumberPicker liquor;
     NumberPicker shots;
+    private HoloCircleSeekBar beerPicker;
+    private HoloCircleSeekBar winePicker;
+    private HoloCircleSeekBar shotPicker;
+    private HoloCircleSeekBar liquorPicker;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,30 +63,15 @@ public class AddDrinks extends AppCompatActivity {
         mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
         money = 0;
 
+        beerPicker = (HoloCircleSeekBar) findViewById(R.id.beerPicker);
+        liquorPicker = (HoloCircleSeekBar) findViewById(R.id.liquorPicker);
+        winePicker = (HoloCircleSeekBar) findViewById(R.id.winePicker);
+        shotPicker = (HoloCircleSeekBar) findViewById(R.id.shotPicker);
+
+
         datePicker = (EditText) findViewById(R.id.datepicker);
         seekBar = (SeekBar) findViewById(R.id.seekbar);
         moneycount = (TextView) findViewById(R.id.moneycount);
-        beer = (NumberPicker) findViewById(R.id.beercount);
-        wine = (NumberPicker) findViewById(R.id.winecount);
-        liquor = (NumberPicker) findViewById(R.id.liquorcount);
-        shots = (NumberPicker) findViewById(R.id.shotcout);
-
-        beer.setMinValue(0);
-        beer.setMaxValue(10);
-        beer.setWrapSelectorWheel(true);
-
-        wine.setMinValue(0);
-        wine.setMaxValue(10);
-        wine.setWrapSelectorWheel(true);
-
-        liquor.setMinValue(0);
-        liquor.setMaxValue(10);
-        liquor.setWrapSelectorWheel(true);
-
-        shots.setMinValue(0);
-        shots.setMaxValue(10);
-        shots.setWrapSelectorWheel(true);
-        shots.getValue();
 
         /** Money Seek Bar Logic **/
         moneycount.setText("Money Spent: $" + seekBar.getProgress());
@@ -131,10 +122,10 @@ public class AddDrinks extends AppCompatActivity {
         SimpleDateFormat sdfr = new SimpleDateFormat("yyyy-MM-dd");
         String mday = sdfr.format(date);
 
-        int mbeer = beer.getValue();
-        int mwine = wine.getValue();
-        int mshots = shots.getValue();
-        int mliquor = liquor.getValue();
+        int mbeer = beerPicker.getValue();
+        int mwine = winePicker.getValue();
+        int mshots = shotPicker.getValue();
+        int mliquor = liquorPicker.getValue();
         int Mmoney = money;
 
         Call<User> call = apiService.adddrinks(username, password, mday, mbeer, mwine, mshots, mliquor, Mmoney);
