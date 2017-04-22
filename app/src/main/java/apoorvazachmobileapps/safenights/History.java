@@ -66,6 +66,7 @@ public class History extends AppCompatActivity {
 
     private int displayMonth;
     private int displayYear;
+    private View v;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +76,7 @@ public class History extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        View v = this.findViewById(android.R.id.content);
+        v = this.findViewById(android.R.id.content);
 
         Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/Arciform.otf");
         titleMoney = (TextView)findViewById(R.id.titleMoney);
@@ -95,22 +96,26 @@ public class History extends AppCompatActivity {
         nextMonth = (Button) findViewById(R.id.nextMonth);
         nextMonth.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                cal.set(displayYear, displayMonth, 1);
                 cal.add(Calendar.MONTH, 1);
                 displayMonth = cal.get(Calendar.MONTH);
                 displayYear = cal.get(Calendar.YEAR);
-                //callHistoryAPI(v);
+                cal.set(displayYear, displayMonth, 1);
+                month.setText(getMonthForInt(displayMonth));
+
+                callHistoryAPI(v);
                 Log.i("Why", "Why would leave us");
             }
         });
         lastMonth = (Button) findViewById(R.id.lastMonth);
         lastMonth.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                cal.set(displayYear, displayMonth, 1);
+            public void onClick(View view) {
                 cal.add(Calendar.MONTH, -1);
                 displayMonth = cal.get(Calendar.MONTH);
                 displayYear = cal.get(Calendar.YEAR);
-                callHistoryAPI(v);
+                cal.set(displayYear, displayMonth, 1);
+                month.setText(getMonthForInt(displayMonth));
+
+                callCallHistory(v);
             }
         });
 
@@ -120,6 +125,10 @@ public class History extends AppCompatActivity {
         // they were dependent on the response call form the HTTP request
         // (these are handeled asychronously and so could not just call afterwards on main thread)
     }
+    public void callCallHistory(View v){
+        callHistoryAPI(v);
+    }
+
 
     //TODO:Make a good algorithm for calculating a persons drunkness (how much to weigh each drink)
     public float calculateDrunkness(Fields field) {
@@ -141,8 +150,10 @@ public class History extends AppCompatActivity {
         ArrayList<Fields> thisMonth = months.get(thisMonthKey);
 
         if(thisMonth == null){
-            Intent i = new Intent(this, MainActivity.class);
-            startActivity(i);
+            mChart.clear();
+            aChart.clear();
+            mChart.setNoDataText("You have no data for this month" + '\n' + "Please record any activity in Add Drinks");
+            aChart.setNoDataText("You have no data for this month" + '\n' + "Please record any activity in Add Drinks");
             Toast.makeText(getApplicationContext(), "You have no history  yet!", Toast.LENGTH_SHORT);
             return;
         }
