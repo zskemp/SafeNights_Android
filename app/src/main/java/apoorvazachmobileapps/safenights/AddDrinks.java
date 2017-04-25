@@ -29,7 +29,7 @@ import retrofit2.Response;
 public class AddDrinks extends AppCompatActivity {
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
     private SeekBar seekBar;
-    private EditText datePicker;
+    private DatePicker datePicker;
     private TextView moneycount;
     private Date date;
     private DatePickerDialog datePickerDialog;
@@ -68,8 +68,8 @@ public class AddDrinks extends AppCompatActivity {
         winePicker = (HoloCircleSeekBar) findViewById(R.id.winePicker);
         shotPicker = (HoloCircleSeekBar) findViewById(R.id.shotPicker);
 
-
-        datePicker = (EditText) findViewById(R.id.datepicker);
+        date = new GregorianCalendar(mYear, mMonth, mDay).getTime();
+        datePicker = (DatePicker) findViewById(R.id.datepicker);
         seekBar = (SeekBar) findViewById(R.id.seekbar);
         moneycount = (TextView) findViewById(R.id.moneycount);
 
@@ -95,22 +95,17 @@ public class AddDrinks extends AppCompatActivity {
             }
         });
 
-        datePicker.setOnClickListener(new View.OnClickListener() {
+        datePicker.init(mYear, mMonth, mDay, new DatePicker.OnDateChangedListener(){
             @Override
-            public void onClick(View v) {
-                DatePickerDialog mDatePicker = new DatePickerDialog(AddDrinks.this, new DatePickerDialog.OnDateSetListener() {
-                    public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
-                        mYear = selectedyear;
-                        mMonth = selectedmonth;
-                        mDay = selectedday;
-                        date = new GregorianCalendar(selectedyear, selectedmonth, selectedday).getTime();
-                        datePicker.setText(selectedmonth+1 + "/" + selectedday + "/" + selectedyear);
-                    }
-                }, mYear, mMonth, mDay);
-                mDatePicker.setTitle("Select date");
-                mDatePicker.show();
+            public void onDateChanged(DatePicker v, int year, int month, int day) {
+                mYear = year;
+                mMonth = month;
+                mDay = day;
+                date = new GregorianCalendar(mYear, mMonth, mDay).getTime();
             }
         });
+
+
     }
 
     public void callAddDrinksAPI(View view) {
