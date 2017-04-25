@@ -51,13 +51,33 @@ public class GetStarted extends AppCompatActivity  {
     private TextView contactnumber;
     private String emerContactName;
     private TextView finalLocation;
+    private Boolean locationWasSet;
+    private Boolean nameWasSet;
     private String locationAddress;
+    Set<String> h;
     private ArrayList mSelectedItems; // Where we track the selected items
 
+    public void onSaveInstanceState(Bundle savedState) {
 
+        super.onSaveInstanceState(savedState);
+
+        // Note: getValues() is a method in your ArrayAdapter subclass
+        boolean test  = started;
+        String saveLocation = locationAddress;
+        String saveNumber = contactNumber;
+        String saveName = emerContactName;
+        savedState.putBoolean("test", test);
+        savedState.putBoolean("nameSet", nameWasSet);
+        savedState.putBoolean("locationSet", locationWasSet);
+
+        savedState.putString("location", saveLocation);
+        savedState.putString("number", saveNumber);
+        savedState.putString("name", saveName);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_get_started);
         StartStopButton = (Button)findViewById(R.id.start);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -66,9 +86,11 @@ public class GetStarted extends AppCompatActivity  {
 
         mSelectedItems = new ArrayList();
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        Set<String> h = settings.getStringSet("locations", new HashSet<String>());
+        h = settings.getStringSet("locations", new HashSet<String>());
         a = h.toArray(new CharSequence[h.size()]);
         started = false;
+        nameWasSet = false;
+        locationWasSet = false;
         contactNumber = "";
         emerContactName = "";
         contactName = (Button)findViewById(R.id.contactName);
@@ -91,6 +113,12 @@ public class GetStarted extends AppCompatActivity  {
                 locationAddress = "" + place.getAddress();
                 a  = Arrays.copyOf(a, a.length + 1);
                 a[a.length - 1] = place.getAddress();
+                locationWasSet = true;
+                final SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+                SharedPreferences.Editor editor = settings.edit();
+                h.add(locationAddress);
+                editor.putStringSet("locations", h);
+                editor.commit();
             }
 
             @Override
@@ -100,10 +128,37 @@ public class GetStarted extends AppCompatActivity  {
             }
         });
 
+        if (savedInstanceState != null) {
+            locationAddress = savedInstanceState.getString("location");
+            emerContactName = savedInstanceState.getString("name");
+            contactNumber = savedInstanceState.getString("number");
+            started = savedInstanceState.getBoolean("test");
+            if (started) {
+                started = true;
+                startstop.setText("Your Night Is Underway!");
+                StartStopButton.setText("Stop Night");
+            }
+
+            nameWasSet = savedInstanceState.getBoolean("nameSet");
+            if (nameWasSet){
+                contactnumber.setText("Contact: " + emerContactName);
+            }
+
+            locationWasSet = savedInstanceState.getBoolean("locationSet");
+            if (locationWasSet){
+                finalLocation.setText("Final Location: " + locationAddress);
+            } else {
+                finalLocation.setText("Swag");
+            }
+
+        }
+
     }
 
     public void pickLocation(final View view) {
-
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        h = settings.getStringSet("locations", new HashSet<String>());
+        a = h.toArray(new CharSequence[h.size()]);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select a location")
                 .setMultiChoiceItems(a, null,
@@ -131,7 +186,13 @@ public class GetStarted extends AppCompatActivity  {
                             p+=a;
                         }
                         finalLocation.setText("Final Location: " + p);
+                        locationWasSet = true;
                         locationAddress = "" + p;
+                        final SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+                        SharedPreferences.Editor editor = settings.edit();
+                        h.add(locationAddress);
+                        editor.putStringSet("locations", h);
+                        editor.commit();
                         mSelectedItems.clear();
                     }
                 })
@@ -144,68 +205,7 @@ public class GetStarted extends AppCompatActivity  {
         alert.show();
     }
 
-//    public void addNewLocation(View view){
-//        final EditText address = new EditText(GetStarted.this);
-//        final EditText city = new EditText(GetStarted.this);
-//        final EditText state = new EditText(GetStarted.this);
-//        final EditText zip = new EditText(GetStarted.this);
-//
-//        TextView addr = new TextView(GetStarted.this);
-//        TextView cityy = new TextView(GetStarted.this);
-//        TextView statee = new TextView(GetStarted.this);
-//        TextView zipp = new TextView(GetStarted.this);
-//
-//        addr.setText("Address");
-//        cityy.setText("City");
-//        statee.setText("State");
-//        zipp.setText("Zip");
-//
-//        LinearLayout lp = new LinearLayout(this);
-//        lp.setOrientation(LinearLayout.VERTICAL);
-//        lp.addView(addr);
-//        lp.addView(address);
-//        lp.addView(cityy);
-//        lp.addView(city);
-//        lp.addView(statee);
-//        lp.addView(state);
-//        lp.addView(zipp);
-//        lp.addView(zip);
-//
-//        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setView(lp);
-//        builder.setTitle("Add a new location")
-//                // Specify the list array, the items to be selected by default (null for none),
-//                // and the listener through which to receive callbacks when items are selected
-//
-//                // Set the action buttons
-//                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        // User clicked OK, so save the mSelectedItems results somewhere
-//                        // or return them to the component that opened the dialog
-//                        String p = ""+address.getText() + " " + city.getText() + " " + state.getText() + " " + zip.getText();
-//                        a = Arrays.copyOf(a, a.length+1);
-//                        a[a.length -1] = p;
-//                        title.setText(p);
-//                        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-//                        SharedPreferences.Editor editor = settings.edit();
-//                        String[] locations = new String[a.length];
-//                        int i=0;
-//                        for(CharSequence ch: a){
-//                            locations[i++] = ch.toString();
-//                        }
-//                        Set<String> mySet = new HashSet<String>(Arrays.asList(locations));
-//                        editor.putStringSet("locations", mySet);
-//                        editor.commit();                    }
-//                })
-//                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int id) {
-//                    }
-//                });
-//        AlertDialog alert = builder.create();
-//        alert.show();
-//    }
+
 
     public void pickContact(View view) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -232,6 +232,7 @@ public class GetStarted extends AppCompatActivity  {
                         contactNumber = number;
                         emerContactName = getContactName(getApplicationContext(), number);
                         contactnumber.setText("Contact: " + emerContactName);
+                        nameWasSet = true;
                     }
                 } finally {
                     if (c != null) {

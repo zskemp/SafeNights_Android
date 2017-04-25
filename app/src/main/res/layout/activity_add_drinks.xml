@@ -133,7 +133,6 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:max="500"
-            android:layout_marginBottom="23dp"
             android:layout_above="@+id/textView3"
             android:layout_centerHorizontal="true" />
 
@@ -209,6 +208,7 @@
             android:layout_above="@+id/winePicker"
             android:layout_alignLeft="@+id/shotPicker"
             android:layout_alignStart="@+id/shotPicker" />
+
 
 
     </RelativeLayout>
