@@ -51,6 +51,8 @@ public class TrackingActivity extends Service implements LocationListener {
     private Handler handler = new Handler();
     private Timer timer;
     private TimerTask hourlyTask;
+    Double tempLat;
+    Double tempLon;
 
 
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
@@ -61,6 +63,26 @@ public class TrackingActivity extends Service implements LocationListener {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+// Define a listener that responds to location updates
+        LocationListener locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                // Called when a new location is found by the network location provider.
+                tempLat = location.getLatitude();
+                tempLon = location.getLongitude();
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+            public void onProviderEnabled(String provider) {}
+
+            public void onProviderDisabled(String provider) {}
+        };
+
+// Register the listener with the Location Manager to receive location updates
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         final SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
 
         name = settings.getString("firstname", "");
@@ -99,10 +121,16 @@ public class TrackingActivity extends Service implements LocationListener {
                 }
                 Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 if(location!=null) {
-                    currentLon = BigDecimal.valueOf(location.getLongitude()).doubleValue();
-                    currentLat = BigDecimal.valueOf(location.getLatitude())
-                            .doubleValue();
-                    Log.i("logthis", ""+currentLon+currentLat);
+                    if(tempLat != null){
+                        currentLat = tempLat;
+                        currentLon = tempLon;
+                    } else {
+                        currentLon = BigDecimal.valueOf(location.getLongitude()).doubleValue();
+                        currentLat = BigDecimal.valueOf(location.getLatitude())
+                                .doubleValue();
+                        Log.i("logthis", ""+currentLon+currentLat);
+                    }
+
                 } else {
                     Log.i("sucky", "summer");
                     currentLon = longitude;
@@ -118,9 +146,11 @@ public class TrackingActivity extends Service implements LocationListener {
 
                 float batteryPct = level / (float) scale;
                 int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+
                 if (hour > 2 && ((latArray[0] == latArray[1] && latArray[0] == latArray[2] && latArray[0] == latArray[3]) ||
                         (lonArray[0] == lonArray[1] && lonArray[0] == lonArray[2] && lonArray[0] == lonArray[3])) &&
                         ((Math.abs(latitude - currentLat) > 0.0001) || Math.abs(longitude - currentLon) > 0.0001)) {
+                    Log.i("inhere", "ok");
                     try {
                         SmsManager smsManager = SmsManager.getDefault();
                         String message = "Hey " + latitude + ", " + longitude + " went out for a " +
@@ -129,6 +159,7 @@ public class TrackingActivity extends Service implements LocationListener {
                         ArrayList<String> parts = smsManager.divideMessage(message);
                         smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
                     } catch (Exception e) {
+                        Log.i("gotcaught","k");
                         e.printStackTrace();
                     }
                 } else {
