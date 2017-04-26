@@ -98,6 +98,7 @@ public class TrackingActivity extends Service implements LocationListener {
                         ContextCompat.checkSelfPermission(TrackingActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 }
                 Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                Log.i("kelp",""+location.getLongitude());
                 if(location!=null) {
                     currentLon = BigDecimal.valueOf(location.getLongitude()).doubleValue();
                     currentLat = BigDecimal.valueOf(location.getLatitude())
