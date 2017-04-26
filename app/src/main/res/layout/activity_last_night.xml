@@ -22,51 +22,21 @@
 
         <LinearLayout
             android:id="@+id/timelineLayout"
-            android:layout_width="100dp"
+            android:layout_width="115dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:background="@color/colorBackground"
             android:layout_alignParentLeft="true"
-            android:gravity="center_vertical" >
+            android:gravity="center_vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
-            <RelativeLayout
-                android:id="@+id/item1"
+            <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/listview"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent">
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:background="@android:color/black" />
-
-                <View
-                    android:id="@+id/view1"
-                    android:layout_width="7dp"
-                    android:layout_height="7dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="7dp"
-                    android:background="@drawable/dot" />
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:padding="20dp"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-        <!--</LinearLayout>-->
+                android:layout_height="match_parent" />
 
     </LinearLayout>
-
-    <!--<View-->
-        <!--android:id="@+id/secondView"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_centerHorizontal="true" />-->
 
 
     <fragment android:id="@+id/map"
