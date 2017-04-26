@@ -2,20 +2,19 @@ package apoorvazachmobileapps.safenights;
 
 
 //Imports
-        import android.app.Activity;
-        import android.content.Intent;
-        import android.content.SharedPreferences;
-        import android.graphics.Color;
-        import android.graphics.LinearGradient;
-        import android.graphics.Shader;
-        import android.graphics.Typeface;
-        import android.os.Bundle;
-        import android.view.View;
-        import android.widget.TextView;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
-        import com.wang.avi.AVLoadingIndicatorView;
+import com.wang.avi.AVLoadingIndicatorView;
 
-        import static java.security.AccessController.getContext;
 
 //Splash Screen!
 public class SplashScreen extends Activity {

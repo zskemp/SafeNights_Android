@@ -21,9 +21,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.NumberPicker;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,27 +30,34 @@ import retrofit2.Response;
 
 public class AddDrinks extends AppCompatActivity {
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
-    private SeekBar seekBar;
-    private DatePicker datePicker2;
     private TextView moneycount;
     private Date date;
     private Button datePicker;
-    private DatePickerDialog datePickerDialog;
     private int mYear;
     private int mMonth;
     private int mDay;
     private int money;
-    private Calendar dateSelected;
 
-    NumberPicker beer;
-    NumberPicker wine;
-    NumberPicker liquor;
-    NumberPicker shots;
+
     private HoloCircleSeekBar beerPicker;
     private HoloCircleSeekBar winePicker;
     private HoloCircleSeekBar shotPicker;
     private HoloCircleSeekBar liquorPicker;
+    CrystalSeekbar seekbar;
 
+    public void onSaveInstanceState(Bundle savedState) {
+        super.onSaveInstanceState(savedState);
+
+        int seekMoney = money;
+        int year = mYear;
+        int month = mMonth;
+        int day = mDay;
+
+        savedState.putInt("money", seekMoney);
+        savedState.putInt("year", year);
+        savedState.putInt("month", month);
+        savedState.putInt("day", day);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,17 +78,14 @@ public class AddDrinks extends AppCompatActivity {
         winePicker = (HoloCircleSeekBar) findViewById(R.id.winePicker);
         shotPicker = (HoloCircleSeekBar) findViewById(R.id.shotPicker);
 
-        //date = new GregorianCalendar(mYear, mMonth, mDay).getTime();
-//        datePicker = (DatePicker) findViewById(R.id.datepicker);
-//        datePicker.setMaxDate(date.getTime());
         datePicker = (Button)  findViewById(R.id.datepicker);
-        datePicker.setText(mMonth + "/" + mDay + "/" + mYear);
+        datePicker.setText(mMonth+1 + "/" + mDay + "/" + mYear);
 
         moneycount = (TextView) findViewById(R.id.moneycount);
 
         /** Money Seek Bar Logic **/
         // get seekbar from view
-        CrystalSeekbar seekbar = (CrystalSeekbar) findViewById(R.id.seekbar);
+        seekbar = (CrystalSeekbar) findViewById(R.id.seekbar);
 
         // set listener
         seekbar.setOnSeekbarChangeListener(new OnSeekbarChangeListener() {
@@ -115,7 +116,7 @@ public class AddDrinks extends AppCompatActivity {
                     public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
                     /*      Your code   to get date and time    */
                         date = new GregorianCalendar(selectedyear, selectedmonth, selectedday).getTime();
-                        datePicker.setText(selectedmonth + "/" + selectedday + "/" + selectedyear);
+                        datePicker.setText(selectedmonth+1 + "/" + selectedday + "/" + selectedyear);
                         mDay = selectedday;
                         mMonth = selectedmonth;
                         mYear = selectedyear;
@@ -126,7 +127,16 @@ public class AddDrinks extends AppCompatActivity {
                 mDatePicker.show();  }
         });
 
+        if (savedInstanceState != null) {
+            money = savedInstanceState.getInt("money");
+            mDay = savedInstanceState.getInt("day");
+            mYear = savedInstanceState.getInt("year");
+            mMonth = savedInstanceState.getInt("month");
 
+            date = new GregorianCalendar(mYear, mMonth, mDay).getTime();
+            moneycount.setText("Money Spent: $" + money);
+            datePicker.setText(mMonth+1 + "/" + mDay + "/" + mYear);
+        }
     }
 
     public void callAddDrinksAPI(View view) {
@@ -168,5 +178,4 @@ public class AddDrinks extends AppCompatActivity {
             }
         });
     }
-
 }

@@ -2,27 +2,13 @@ package apoorvazachmobileapps.safenights;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.http.Field;
-
-import static java.security.AccessController.getContext;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -93,10 +79,6 @@ public class MainActivity extends AppCompatActivity {
     }
     public void lastNight(View view) {
         Intent intent = new Intent(this, LastNight.class);
-        startActivity(intent);
-    }
-    public void testwebservice(View view) {
-        Intent intent = new Intent(this, testwebservice.class);
         startActivity(intent);
     }
 }

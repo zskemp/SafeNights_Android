@@ -1,12 +1,9 @@
 package apoorvazachmobileapps.safenights;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -27,7 +24,6 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.EntryXComparator;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
@@ -43,8 +39,6 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 import apoorvazachmobileapps.safenights.DrinkHistory.*;
 import retrofit2.Call;
@@ -58,15 +52,15 @@ public class History extends AppCompatActivity {
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
     private ArrayList<Fields> nights;
     private HashMap<String, ArrayList<Fields>> months;
+    private int displayMonth;
+    private int displayYear;
+    private View v;
+
     TextView titleMoney;
     TextView titleAlcohol;
     TextView month;
     Button nextMonth;
     Button lastMonth;
-
-    private int displayMonth;
-    private int displayYear;
-    private View v;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +97,6 @@ public class History extends AppCompatActivity {
                 month.setText(getMonthForInt(displayMonth));
 
                 callHistoryAPI(v);
-                Log.i("Why", "Why would leave us");
             }
         });
         lastMonth = (Button) findViewById(R.id.lastMonth);
@@ -114,7 +107,6 @@ public class History extends AppCompatActivity {
                 displayYear = cal.get(Calendar.YEAR);
                 cal.set(displayYear, displayMonth, 1);
                 month.setText(getMonthForInt(displayMonth));
-
                 callCallHistory(v);
             }
         });
@@ -125,10 +117,10 @@ public class History extends AppCompatActivity {
         // they were dependent on the response call form the HTTP request
         // (these are handeled asychronously and so could not just call afterwards on main thread)
     }
+
     public void callCallHistory(View v){
         callHistoryAPI(v);
     }
-
 
     //TODO:Make a good algorithm for calculating a persons drunkness (how much to weigh each drink)
     public float calculateDrunkness(Fields field) {
@@ -157,6 +149,7 @@ public class History extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "You have no history  yet!", Toast.LENGTH_SHORT);
             return;
         }
+
         boolean missing1st = true;
         boolean missing31st = true;
         for (Fields data : thisMonth) {

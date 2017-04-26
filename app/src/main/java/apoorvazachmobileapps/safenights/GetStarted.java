@@ -10,17 +10,12 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import retrofit2.http.GET;
 import android.view.View;
 import android.widget.Button;
-import static java.security.AccessController.getContext;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,14 +53,13 @@ public class GetStarted extends AppCompatActivity  {
     private ArrayList mSelectedItems; // Where we track the selected items
 
     public void onSaveInstanceState(Bundle savedState) {
-
         super.onSaveInstanceState(savedState);
 
-        // Note: getValues() is a method in your ArrayAdapter subclass
         boolean test  = started;
         String saveLocation = locationAddress;
         String saveNumber = contactNumber;
         String saveName = emerContactName;
+
         savedState.putBoolean("test", test);
         savedState.putBoolean("nameSet", nameWasSet);
         savedState.putBoolean("locationSet", locationWasSet);
@@ -74,25 +68,28 @@ public class GetStarted extends AppCompatActivity  {
         savedState.putString("number", saveNumber);
         savedState.putString("name", saveName);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_get_started);
-        StartStopButton = (Button)findViewById(R.id.start);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mSelectedItems = new ArrayList();
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        h = settings.getStringSet("locations", new HashSet<String>());
-        a = h.toArray(new CharSequence[h.size()]);
         started = false;
         nameWasSet = false;
         locationWasSet = false;
         contactNumber = "";
         emerContactName = "";
+        mSelectedItems = new ArrayList();
+
+        //For remembering saved user locations
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        h = settings.getStringSet("locations", new HashSet<String>());
+        a = h.toArray(new CharSequence[h.size()]);
+
+        StartStopButton = (Button)findViewById(R.id.start);
         contactName = (Button)findViewById(R.id.contactName);
         title = (Button)findViewById(R.id.title);
         startstop = (TextView)findViewById(R.id.startstop);
@@ -102,18 +99,18 @@ public class GetStarted extends AppCompatActivity  {
         Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/Arciform.otf");
         startstop.setTypeface(tf);
 
+        //Search for places logic
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place
-                Log.i("hi", "Place: " + place.getAddress());
                 finalLocation.setText("Final Location: " + place.getAddress());
                 locationAddress = "" + place.getAddress();
                 a  = Arrays.copyOf(a, a.length + 1);
                 a[a.length - 1] = place.getAddress();
                 locationWasSet = true;
+
                 final SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
                 SharedPreferences.Editor editor = settings.edit();
                 h.add(locationAddress);
@@ -123,7 +120,6 @@ public class GetStarted extends AppCompatActivity  {
 
             @Override
             public void onError(Status status) {
-                // TODO: Handle the error.
                 Log.i("hi", "An error occurred: " + status);
             }
         });
@@ -133,6 +129,7 @@ public class GetStarted extends AppCompatActivity  {
             emerContactName = savedInstanceState.getString("name");
             contactNumber = savedInstanceState.getString("number");
             started = savedInstanceState.getBoolean("test");
+
             if (started) {
                 started = true;
                 startstop.setText("Your Night Is Underway!");
@@ -147,14 +144,11 @@ public class GetStarted extends AppCompatActivity  {
             locationWasSet = savedInstanceState.getBoolean("locationSet");
             if (locationWasSet){
                 finalLocation.setText("Final Location: " + locationAddress);
-            } else {
-                finalLocation.setText("Swag");
             }
-
         }
-
     }
 
+    //Dialog pop-up for picking from saved locations
     public void pickLocation(final View view) {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         h = settings.getStringSet("locations", new HashSet<String>());
@@ -205,8 +199,7 @@ public class GetStarted extends AppCompatActivity  {
         alert.show();
     }
 
-
-
+    //Below 3 methods are for getting contact information
     public void pickContact(View view) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
