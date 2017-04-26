@@ -66,18 +66,24 @@ public class TrackingActivity extends Service implements LocationListener {
         name = settings.getString("firstname", "");
 
         userLocation = intent.getExtras().getString("location");
+        Log.i("location", userLocation);
         phone_number = intent.getExtras().getString("pNum");
         cName = intent.getExtras().getString("cName");
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         List<Address> addresses = new ArrayList<Address>();
         try {
             addresses = geocoder.getFromLocationName(userLocation, 1);
+            Log.i("testingish", addresses.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
         if (addresses.size() > 0) {
+            Log.i("back", "sup");
             latitude = addresses.get(0).getLatitude();
             longitude = addresses.get(0).getLongitude();
+            Log.i("testingthis", "" + latitude+longitude);
+        } else {
+            Log.i("figalo", "figalo");
         }
         timer = new Timer();
         final double[] lonArray = {0, 0, 0, 0};
@@ -93,15 +99,15 @@ public class TrackingActivity extends Service implements LocationListener {
                 }
                 Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 if(location!=null) {
-                    currentLon = BigDecimal.valueOf(location.getLongitude())
-                            .setScale(5, RoundingMode.HALF_UP)
-                            .doubleValue();
+                    currentLon = BigDecimal.valueOf(location.getLongitude()).doubleValue();
                     currentLat = BigDecimal.valueOf(location.getLatitude())
-                            .setScale(5, RoundingMode.HALF_UP)
                             .doubleValue();
+                    Log.i("logthis", ""+currentLon+currentLat);
                 } else {
+                    Log.i("sucky", "summer");
                     currentLon = longitude;
                     currentLat = latitude;
+
                 }
                 latArray[3] = currentLat;
                 lonArray[3] = currentLon;
@@ -114,7 +120,7 @@ public class TrackingActivity extends Service implements LocationListener {
                 int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
                 if (hour > 2 && ((latArray[0] == latArray[1] && latArray[0] == latArray[2] && latArray[0] == latArray[3]) ||
                         (lonArray[0] == lonArray[1] && lonArray[0] == lonArray[2] && lonArray[0] == lonArray[3])) &&
-                        ((Math.abs(latitude - currentLat) > 0.003) || Math.abs(longitude - currentLon) > 0.003)) {
+                        ((Math.abs(latitude - currentLat) > 0.0001) || Math.abs(longitude - currentLon) > 0.0001)) {
                     try {
                         SmsManager smsManager = SmsManager.getDefault();
                         String message = "Hey " + latitude + ", " + longitude + " went out for a " +
