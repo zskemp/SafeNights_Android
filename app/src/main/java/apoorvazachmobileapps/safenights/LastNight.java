@@ -3,6 +3,8 @@ package apoorvazachmobileapps.safenights;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -28,10 +30,12 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import apoorvazachmobileapps.safenights.LocationHistory.Fields;
@@ -126,30 +130,48 @@ public class LastNight extends AppCompatActivity implements OnMapReadyCallback {
 
         LatLng loc = new LatLng(-34, 151);
 
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+
         //Go through locations and add a new marker
         for(int i = 0; i < locations.size(); i++) {
             Fields l = locations.get(i);
             //Just a little math to get a gradient of colors
             int colorNum = (int)Math.ceil(((double)i/(double)locations.size())*8);
 
-            loc = new LatLng(Double.parseDouble(l.getXcord()), Double.parseDouble(l.getYcord()));
-            Marker mLoc = mMap.addMarker(new MarkerOptions().position(loc).title(l.getTime()).snippet("Lat: " + l.getXcord() + '\n' + "Long: " + l.getYcord()).icon(getMarkerIcon(colors[colorNum])));
-            //mLoc.setTag(i);
-
-            //Add to timeline
+            //Get the time in correct format
             Date date;
-
+            String time;
             //ToDo: Make sure this works with other dates. I don't think this works locally (aka only east coast)
             SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
             try {
                 date = parser.parse(l.getTime());
                 String formattedTime = formatter.format(date);
-                times.add(formattedTime);
+                time = formattedTime;
             } catch (ParseException e) {
-                times.add(l.getTime());
+                time = l.getTime();
                 e.printStackTrace();
             }
+
+            //Get location place
+            Double lat = Double.parseDouble(l.getXcord());
+            Double lon = Double.parseDouble(l.getYcord());
+            List<Address> addresses = null;
+            String address;
+            try {
+                addresses = geocoder.getFromLocation(lat, lon, 1);
+                address = addresses.get(0).getAddressLine(0);
+            } catch (IOException e) {
+                address = "Lat: " + l.getXcord() + " Lon: " + l.getYcord();
+                e.printStackTrace();
+            }
+
+            loc = new LatLng(lat, lon);
+            Marker mLoc = mMap.addMarker(new MarkerOptions().position(loc).title(time).snippet(address).icon(getMarkerIcon(colors[colorNum])));
+            //mLoc.setTag(i);
+
+            //Add to timeline
+            times.add(time);
             markers.add(mLoc);
 
             //Add point to drawing line
@@ -158,7 +180,7 @@ public class LastNight extends AppCompatActivity implements OnMapReadyCallback {
 
         //Set up timeline
         //final ArrayAdapter adapter = new ArrayAdapter(this, R.layout.timeline, R.id.textView1, times);
-        //Uncommenting line above still works, this allows smaller amount of uploads to take up entire height :)
+        //Uncommenting line above still works, this allows smaller amount of uploads to tak
         final TimelineAdapter adapter = new TimelineAdapter(this, times);
         listview.setAdapter(adapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
