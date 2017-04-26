@@ -3,6 +3,10 @@ package apoorvazachmobileapps.safenights;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
+import com.crystal.crystalrangeseekbar.interfaces.OnSeekbarChangeListener;
+import com.crystal.crystalrangeseekbar.interfaces.OnSeekbarFinalValueListener;
+import com.crystal.crystalrangeseekbar.widgets.CrystalSeekbar;
 import com.jesusm.holocircleseekbar.lib.HoloCircleSeekBar;
 
 import java.text.SimpleDateFormat;
@@ -15,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
@@ -29,9 +34,10 @@ import retrofit2.Response;
 public class AddDrinks extends AppCompatActivity {
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
     private SeekBar seekBar;
-    private DatePicker datePicker;
+    private DatePicker datePicker2;
     private TextView moneycount;
     private Date date;
+    private Button datePicker;
     private DatePickerDialog datePickerDialog;
     private int mYear;
     private int mMonth;
@@ -68,41 +74,56 @@ public class AddDrinks extends AppCompatActivity {
         winePicker = (HoloCircleSeekBar) findViewById(R.id.winePicker);
         shotPicker = (HoloCircleSeekBar) findViewById(R.id.shotPicker);
 
-        date = new GregorianCalendar(mYear, mMonth, mDay).getTime();
-        datePicker = (DatePicker) findViewById(R.id.datepicker);
-        seekBar = (SeekBar) findViewById(R.id.seekbar);
+        //date = new GregorianCalendar(mYear, mMonth, mDay).getTime();
+//        datePicker = (DatePicker) findViewById(R.id.datepicker);
+//        datePicker.setMaxDate(date.getTime());
+        datePicker = (Button)  findViewById(R.id.datepicker);
+        datePicker.setText(mMonth + "/" + mDay + "/" + mYear);
+
         moneycount = (TextView) findViewById(R.id.moneycount);
 
         /** Money Seek Bar Logic **/
-        moneycount.setText("Money Spent: $" + seekBar.getProgress());
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int progress = 0;
+        // get seekbar from view
+        CrystalSeekbar seekbar = (CrystalSeekbar) findViewById(R.id.seekbar);
 
+        // set listener
+        seekbar.setOnSeekbarChangeListener(new OnSeekbarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
-                progress = progresValue;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                moneycount.setText("Money Spent: $" + progress);
-                money = progress;
+            public void valueChanged(Number minValue) {
+                moneycount.setText("Money Spent: $" + String.valueOf(minValue));
             }
         });
 
-        datePicker.init(mYear, mMonth, mDay, new DatePicker.OnDateChangedListener(){
+        // set final value listener
+        seekbar.setOnSeekbarFinalValueListener(new OnSeekbarFinalValueListener() {
             @Override
-            public void onDateChanged(DatePicker v, int year, int month, int day) {
-                mYear = year;
-                mMonth = month;
-                mDay = day;
-                date = new GregorianCalendar(mYear, mMonth, mDay).getTime();
+            public void finalValue(Number value) {
+                Log.d("CRS=>", String.valueOf(value));
+                moneycount.setText("Money Spent: $" + value);
+                money = value.intValue();
             }
+        });
+
+        datePicker.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                //To show current date in the datepicker
+                Calendar mcurrentDate = Calendar.getInstance();
+
+                final DatePickerDialog mDatePicker=new DatePickerDialog(AddDrinks.this, new DatePickerDialog.OnDateSetListener() {
+                    public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+                    /*      Your code   to get date and time    */
+                        date = new GregorianCalendar(selectedyear, selectedmonth, selectedday).getTime();
+                        datePicker.setText(selectedmonth + "/" + selectedday + "/" + selectedyear);
+                        mDay = selectedday;
+                        mMonth = selectedmonth;
+                        mYear = selectedyear;
+                    }
+                },mYear, mMonth, mDay);
+                mDatePicker.getDatePicker().setMaxDate(new Date().getTime());
+                mDatePicker.setTitle("");
+                mDatePicker.show();  }
         });
 
 

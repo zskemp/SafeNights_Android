@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,7 +28,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import apoorvazachmobileapps.safenights.LocationHistory.Fields;
 import apoorvazachmobileapps.safenights.LocationHistory.Locationtable;
@@ -40,7 +45,10 @@ public class LastNight extends AppCompatActivity implements OnMapReadyCallback {
 
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
     private ArrayList<Fields> locations = new ArrayList<Fields>();
+    private ArrayList<String> times;
+    private ArrayList<Marker> markers;
     private GoogleMap mMap;
+    private ListView listview;
 
     //Pick the colors for the markers (if more than 8 need to add change in logic below)
     private String[] colors = {"#0ABFBC", "#480048", "#5f2c82", "#658B92", "#837A84", "#A16976", "#EC6F66", "#DE465A", "#FC354C"};
@@ -56,6 +64,28 @@ public class LastNight extends AppCompatActivity implements OnMapReadyCallback {
 
         //Map fragment setup occurs in callLastNightAPI call-
         //Needs the data to set up so need to call after data arrives
+        listview = (ListView) findViewById(R.id.listview);
+        String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
+                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
+                "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux",
+                "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2",
+                "Android", "iPhone", "WindowsMobile" };
+
+//        final ArrayList<String> list = new ArrayList<String>();
+//        for (int i = 0; i < values.length; ++i) {
+//            list.add(values[i]);
+//        }
+//        final ArrayAdapter adapter = new ArrayAdapter(this, R.layout.timeline, R.id.textView1, list);
+//        listview.setAdapter(adapter);
+//        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view,
+//                                    int position, long id) {
+//                Toast.makeText(getApplicationContext(),
+//                        "Click ListItem Number " + position, Toast.LENGTH_LONG)
+//                        .show();
+//            }
+//        });
 
         View v = this.findViewById(android.R.id.content);
         //Note: We add to the nights array list in this method call
@@ -74,6 +104,10 @@ public class LastNight extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        //Need both because to display has to be string, and to get the marker we need marker.
+        //Was lazy and didn't want to make a custom object
+        times = new ArrayList<String>();
+        markers = new ArrayList<Marker>();
 
         //Style the map
         try {
@@ -102,9 +136,38 @@ public class LastNight extends AppCompatActivity implements OnMapReadyCallback {
             Marker mLoc = mMap.addMarker(new MarkerOptions().position(loc).title(l.getTime()).snippet("Lat: " + l.getXcord() + '\n' + "Long: " + l.getYcord()).icon(getMarkerIcon(colors[colorNum])));
             //mLoc.setTag(i);
 
+            //Add to timeline
+            Date date;
+
+            //ToDo: Make sure this works with other dates. I don't think this works locally (aka only east coast)
+            SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+            try {
+                date = parser.parse(l.getTime());
+                String formattedTime = formatter.format(date);
+                times.add(formattedTime);
+            } catch (ParseException e) {
+                times.add(l.getTime());
+                e.printStackTrace();
+            }
+            markers.add(mLoc);
+
             //Add point to drawing line
             line.add(loc);
         }
+
+        //Set up timeline
+        //final ArrayAdapter adapter = new ArrayAdapter(this, R.layout.timeline, R.id.textView1, times);
+        //Uncommenting line above still works, this allows smaller amount of uploads to take up entire height :)
+        final TimelineAdapter adapter = new TimelineAdapter(this, times);
+        listview.setAdapter(adapter);
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(markers.get(position).getPosition()));
+            }
+        });
 
         //Color Line
         line.width(5).color(Color.RED);

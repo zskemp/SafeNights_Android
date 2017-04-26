@@ -23,35 +23,42 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorBackground"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">>
 
-        <!-- Email Label -->
 
+        <Button
+            android:id="@+id/datepicker"
+            android:theme="@style/Buttons"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="30dp"
+            android:layout_centerHorizontal="true"
+            android:minWidth="100dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+            <!--<DatePicker-->
+                <!--android:id="@+id/datepicker"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:backgroundTint="#FFFFFF"-->
+                <!--android:hint="Date of Sin"-->
+                <!--android:shadowColor="#737f82"-->
+                <!--android:layout_alignParentTop="true"-->
+                <!--android:layout_centerHorizontal="true" />-->
 
-            <DatePicker
-                android:id="@+id/datepicker"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#FFFFFF"
-                android:ellipsize="start"
-                android:gravity="center_horizontal"
-                android:hint="Date of Sin"
-                android:inputType="textEmailAddress"
-                android:shadowColor="#737f82"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:textAlignment="center"
-                android:textColor="#737f82"
-                android:textColorHint="#FFFFFF"
-                android:textColorLink="#737f82" />
-        <SeekBar
+        <com.crystal.crystalrangeseekbar.widgets.CrystalSeekbar
             android:id="@+id/seekbar"
-            style="@style/Widget.AppCompat.SeekBar.Discrete"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:max="500"
+            app:corner_radius="10"
+            app:min_value="0"
+            app:max_value="200"
+            app:bar_color="#A5D6A7"
+            app:bar_highlight_color="#4CAF50"
+            app:data_type="_integer"
             android:layout_below="@+id/datepicker"
             android:layout_centerHorizontal="true" />
+
         <TextView
             android:id="@+id/moneycount"
             android:layout_width="wrap_content"

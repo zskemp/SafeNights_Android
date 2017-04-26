@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#143f66</color>
+    <color name="colorPrimary">#212121</color>
+    <color name="colorPrimaryDark">#212121</color>
+    <color name="colorAccent">#211E36</color>
 
-    <color name="colorBackground">#211E36</color>
+    <color name="colorBackground">#303030</color>
     <color name="colorTitle">#9E9E9E</color>
+
+    <color name="mapLines">#FDD835</color>
 
     <color name="colorMoneyLine">#E91E63</color>
     <color name="colorMoneyFill">#F06292</color>
