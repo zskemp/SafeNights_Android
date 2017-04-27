@@ -261,13 +261,6 @@ public class GetStarted extends Fragment {
     public void pickLocation(final View view) {
         SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
         h = settings.getStringSet("locations", new HashSet<String>());
-        Iterator it = h.iterator();
-        while (it.hasNext())
-        {
-            if(it.next().equals("") || it.next() == null){
-                it.remove();
-            }
-        }
         a = h.toArray(new CharSequence[h.size()]);
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Select a location")
