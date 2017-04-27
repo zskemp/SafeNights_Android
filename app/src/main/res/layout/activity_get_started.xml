@@ -91,9 +91,13 @@
             android:textAllCaps="false"
             android:textColor="#143f66" />
 
-        <Button
+        <EditText
             android:id="@+id/contactName"
             android:layout_width="wrap_content"
+            android:hint="Enter Email"
+            android:textAlignment="center"
+            android:inputType="textEmailAddress"
+            android:textColorHint="#143f66"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/start"
             android:layout_alignStart="@+id/start"
@@ -101,8 +105,7 @@
             android:layout_marginTop="27dp"
             android:layout_below="@+id/contactnumber"
             android:background="@drawable/datebutton"
-            android:onClick="pickContact"
-            android:text="Select a Contact"
+            android:text=""
             android:textAllCaps="false"
             android:textColor="#143f66" />
 

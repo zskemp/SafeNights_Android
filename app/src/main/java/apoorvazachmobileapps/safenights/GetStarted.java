@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +41,7 @@ public class GetStarted extends AppCompatActivity  {
     private Button StartStopButton;
     private Button title;
     private String contactNumber;
-    private Button contactName;
+    private EditText contactName;
     private TextView startstop;
     private TextView locationTitle;
     private TextView contactnumber;
@@ -59,11 +60,12 @@ public class GetStarted extends AppCompatActivity  {
         String saveLocation = locationAddress;
         String saveNumber = contactNumber;
         String saveName = emerContactName;
+        String saveEmail = contactName.getText().toString();
 
         savedState.putBoolean("test", test);
         savedState.putBoolean("nameSet", nameWasSet);
         savedState.putBoolean("locationSet", locationWasSet);
-
+        savedState.putString("email", saveEmail);
         savedState.putString("location", saveLocation);
         savedState.putString("number", saveNumber);
         savedState.putString("name", saveName);
@@ -90,7 +92,7 @@ public class GetStarted extends AppCompatActivity  {
         a = h.toArray(new CharSequence[h.size()]);
 
         StartStopButton = (Button)findViewById(R.id.start);
-        contactName = (Button)findViewById(R.id.contactName);
+        contactName = (EditText)findViewById(R.id.contactName);
         title = (Button)findViewById(R.id.title);
         startstop = (TextView)findViewById(R.id.startstop);
         locationTitle = (TextView)findViewById(R.id.locationTitle);
@@ -129,6 +131,7 @@ public class GetStarted extends AppCompatActivity  {
             emerContactName = savedInstanceState.getString("name");
             contactNumber = savedInstanceState.getString("number");
             started = savedInstanceState.getBoolean("test");
+            contactName.setText(savedInstanceState.getString("email"));
 
             if (started) {
                 started = true;
@@ -282,7 +285,8 @@ public class GetStarted extends AppCompatActivity  {
                         Intent intent = new Intent(GetStarted.this, TrackingActivity.class);
                         intent.putExtra("location", locationAddress);
                         intent.putExtra("pNum", contactNumber);
-                        intent.putExtra("cName", emerContactName);
+                        intent.putExtra("email", contactName.getText());
+//                        intent.putExtra("cName", emerContactName);
                         started = true;
                         StartStopButton.setText("Stop Night");
                         startstop.setText("Your Night Is Underway!");

@@ -48,6 +48,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
     private String phone_number;
     private String name;
     private String cName;
+    private String email;
     private Handler handler = new Handler();
     private Timer timer;
     private TimerTask hourlyTask;
@@ -99,6 +100,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
         userLocation = intent.getExtras().getString("location");
         phone_number = intent.getExtras().getString("pNum");
         cName = intent.getExtras().getString("cName");
+        email = intent.getExtras().getString("email");
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
