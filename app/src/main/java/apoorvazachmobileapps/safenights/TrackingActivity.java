@@ -320,21 +320,23 @@ public class TrackingActivity extends Service implements LocationListener, Senso
     public void callSendEmailAPI(int reason) {
         SafeNightsAPIInterface apiService =
                 SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
-        String email = "zrskemp@gmail.com";
-        Log.i("Email", "sending an email");
+
         Call<User> call = apiService.email(cName, reason, email, userLocation, currentLat, currentLon);
 
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 User u = response.body();
-                if (u.getPassed().equals("y")) {
-                    Toast.makeText(getApplicationContext(), "You emailed successfully :)", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), "You failed to send email", Toast.LENGTH_LONG).show();
+                if (u == null) {
+                    Toast.makeText(getApplicationContext(), "You entered an invalid email!", Toast.LENGTH_LONG).show();
                 }
-//                Toast.makeText(getApplicationContext(), "You emailed successfully :)", Toast.LENGTH_LONG).show();
-
+                else {
+                    if (u.getPassed().equals("y")) {
+                        Toast.makeText(getApplicationContext(), "You emailed successfully :)", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "There was a problem with our sever. Please contact a developer!", Toast.LENGTH_LONG).show();
+                    }
+                }
             }
 
             @Override

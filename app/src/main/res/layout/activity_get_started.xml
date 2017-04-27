@@ -53,24 +53,73 @@
             android:layout_alignParentStart="true" />
 
         <TextView
-            android:id="@+id/contactnumber"
+            android:id="@+id/contactname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"
             android:layout_centerVertical="true"
             android:layout_below="@+id/title"
+            android:text="Name of Contact"
+            android:textColor="#FFFFFF"
+            tools:layout_editor_absoluteX="162dp"
+            tools:layout_editor_absoluteY="85dp" />
+
+        <EditText
+            android:id="@+id/contactName"
+            android:layout_width="wrap_content"
+            android:hint="Enter Name"
+            android:textAlignment="center"
+            android:inputType="textEmailAddress"
+            android:textColorHint="#143f66"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/start"
+            android:layout_alignStart="@+id/start"
+            android:layout_alignTop="@+id/contactname"
+            android:layout_marginTop="27dp"
+            android:layout_below="@+id/contactname"
+            android:background="@drawable/datebutton"
+            android:text=""
+            android:textAllCaps="false"
+            android:textColor="#143f66" />
+
+        <TextView
+            android:id="@+id/contactemail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:layout_centerVertical="true"
+            android:layout_below="@+id/contactName"
             android:text="Email: TBD"
             android:textColor="#FFFFFF"
             tools:layout_editor_absoluteX="162dp"
             tools:layout_editor_absoluteY="85dp" />
+
+        <EditText
+            android:id="@+id/contactEmail"
+            android:layout_width="wrap_content"
+            android:hint="Enter Email"
+            android:textAlignment="center"
+            android:inputType="textEmailAddress"
+            android:textColorHint="#143f66"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/start"
+            android:layout_alignStart="@+id/start"
+            android:layout_alignTop="@+id/contactemail"
+            android:layout_marginTop="27dp"
+            android:layout_below="@+id/contactemail"
+            android:background="@drawable/datebutton"
+            android:text=""
+            android:textAllCaps="false"
+            android:textColor="#143f66" />
 
 
         <Button
             android:id="@+id/start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/contactName"
+            android:layout_below="@+id/contactEmail"
             android:layout_centerHorizontal="true"
             android:textColor="#143f66"
             android:layout_marginTop="50dp"
@@ -88,24 +137,6 @@
             android:background="@drawable/datebutton"
             android:onClick="pickLocation"
             android:text="My Locations"
-            android:textAllCaps="false"
-            android:textColor="#143f66" />
-
-        <EditText
-            android:id="@+id/contactName"
-            android:layout_width="wrap_content"
-            android:hint="Enter Email"
-            android:textAlignment="center"
-            android:inputType="textEmailAddress"
-            android:textColorHint="#143f66"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/start"
-            android:layout_alignStart="@+id/start"
-            android:layout_alignTop="@+id/contactnumber"
-            android:layout_marginTop="27dp"
-            android:layout_below="@+id/contactnumber"
-            android:background="@drawable/datebutton"
-            android:text=""
             android:textAllCaps="false"
             android:textColor="#143f66" />
 

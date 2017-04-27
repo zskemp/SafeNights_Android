@@ -45,7 +45,8 @@
             android:layout_below="@+id/title"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/rsz_calendar" />
+            android:src="@drawable/rsz_calendar"
+            android:background="@drawable/calendar_border"/>
 
 
         <Button

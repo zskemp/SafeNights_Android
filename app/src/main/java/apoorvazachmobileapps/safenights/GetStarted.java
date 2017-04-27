@@ -42,6 +42,7 @@ public class GetStarted extends AppCompatActivity  {
     private Button title;
     private String contactNumber;
     private EditText contactName;
+    private EditText contactEmail;
     private TextView startstop;
     private TextView locationTitle;
     private TextView contactnumber;
@@ -93,10 +94,11 @@ public class GetStarted extends AppCompatActivity  {
 
         StartStopButton = (Button)findViewById(R.id.start);
         contactName = (EditText)findViewById(R.id.contactName);
+        contactEmail = (EditText)findViewById(R.id.contactEmail);
         title = (Button)findViewById(R.id.title);
         startstop = (TextView)findViewById(R.id.startstop);
         locationTitle = (TextView)findViewById(R.id.locationTitle);
-        contactnumber = (TextView)findViewById(R.id.contactnumber);
+        //contactnumber = (TextView)findViewById(R.id.contactnumber);
         finalLocation = (TextView)findViewById(R.id.finalLocation);
         Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/Arciform.otf");
         startstop.setTypeface(tf);
@@ -285,7 +287,8 @@ public class GetStarted extends AppCompatActivity  {
                         Intent intent = new Intent(GetStarted.this, TrackingActivity.class);
                         intent.putExtra("location", locationAddress);
                         intent.putExtra("pNum", contactNumber);
-                        intent.putExtra("email", contactName.getText());
+                        intent.putExtra("email", contactEmail.getText().toString());
+                        intent.putExtra("cName", contactName.getText().toString());
 //                        intent.putExtra("cName", emerContactName);
                         started = true;
                         StartStopButton.setText("Stop Night");
