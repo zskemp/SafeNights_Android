@@ -87,6 +87,7 @@ public class AddDrinks extends AppCompatActivity {
 //        datePicker.setText(mMonth+1 + "/" + mDay + "/" + mYear);
 
         moneycount = (TextView) findViewById(R.id.moneycount);
+        moneycount.setText("Money Spent: $0");
         calendarDay = (TextView) findViewById(R.id.calendarDay);
         calendarMonth = (TextView) findViewById(R.id.calendarMonth);
         SimpleDateFormat month_date = new SimpleDateFormat("MMMM");
@@ -211,6 +212,7 @@ public class AddDrinks extends AppCompatActivity {
                     //bring them to home page, let them know a problem
                     Intent intent = new Intent(AddDrinks.this, MainActivity.class);
                     startActivity(intent);
+                    Toast.makeText(getApplicationContext(), "Successfully entered data!", Toast.LENGTH_SHORT).show();
                 } else {
                     //return them to the page with an error
                     Toast.makeText(getApplicationContext(), "There has been a problem adding your night of drinking\n Please use correct formatting and check login credentials", Toast.LENGTH_LONG).show();

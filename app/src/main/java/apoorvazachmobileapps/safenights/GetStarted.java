@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -103,9 +104,27 @@ public class GetStarted extends AppCompatActivity  {
         Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/Arciform.otf");
         startstop.setTypeface(tf);
 
+        contactName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus)
+                    contactName.setHint("");
+                else
+                    contactName.setHint("Enter Name");
+            }
+        });
+        contactEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus)
+                    contactEmail.setHint("");
+                else
+                    contactEmail.setHint("Enter Email");
+            }
+        });
+
         //Search for places logic
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        autocompleteFragment.getView().setFocusable(true);
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
@@ -262,8 +281,8 @@ public class GetStarted extends AppCompatActivity  {
 
     public void callStartNightAPI(View view){
         Log.i("inthe", "bang");
-        if(locationAddress == null || (contactEmail.getText().toString() == null )||
-                (contactName.getText().toString() == null)){
+        if(locationAddress == null || (contactEmail.getText().toString().equals(""))||
+                (contactName.getText().toString().equals(""))){
             Log.i("supbuddy", "suck");
             Toast.makeText(getApplicationContext(), "Please fill out all fields!", Toast.LENGTH_SHORT).show();
         } else {
