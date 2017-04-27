@@ -16,11 +16,13 @@ import java.util.GregorianCalendar;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +48,7 @@ public class AddDrinks extends AppCompatActivity {
     private HoloCircleSeekBar winePicker;
     private HoloCircleSeekBar shotPicker;
     private HoloCircleSeekBar liquorPicker;
-    CrystalSeekbar seekbar;
+    AppCompatSeekBar seekbar;
 
     public void onSaveInstanceState(Bundle savedState) {
         super.onSaveInstanceState(savedState);
@@ -96,25 +98,41 @@ public class AddDrinks extends AppCompatActivity {
 
         /** Money Seek Bar Logic **/
         // get seekbar from view
-        seekbar = (CrystalSeekbar) findViewById(R.id.seekbar);
+        seekbar = (AppCompatSeekBar) findViewById(R.id.seekbar);
 
         // set listener
-        seekbar.setOnSeekbarChangeListener(new OnSeekbarChangeListener() {
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void valueChanged(Number minValue) {
-                moneycount.setText("Money Spent: $" + String.valueOf(minValue));
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                moneycount.setText("Money Spent: $" + String.valueOf(progress));
+                money = progress;
             }
-        });
 
-        // set final value listener
-        seekbar.setOnSeekbarFinalValueListener(new OnSeekbarFinalValueListener() {
             @Override
-            public void finalValue(Number value) {
-                Log.d("CRS=>", String.valueOf(value));
-                moneycount.setText("Money Spent: $" + value);
-                money = value.intValue();
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
+//        {new OnSeekbarChangeListener() {
+//            @Override
+//            public void valueChanged(Number minValue) {
+//                moneycount.setText("Money Spent: $" + String.valueOf(minValue));
+//            }
+//        });
+//
+//        // set final value listener
+//        seekbar.setOnSeekbarFinalValueListener(new OnSeekbarFinalValueListener() {
+//            @Override
+//            public void finalValue(Number value) {
+//                Log.d("CRS=>", String.valueOf(value));
+//                moneycount.setText("Money Spent: $" + value);
+//                money = value.intValue();
+//            }
+//        });
 
         datePicker.setOnClickListener(new View.OnClickListener() {
 
@@ -151,7 +169,7 @@ public class AddDrinks extends AppCompatActivity {
 //            datePicker.setText(mMonth+1 + "/" + mDay + "/" + mYear);
             calendarDay.setText(""+mDay);
             calendarMonth.setText(getMonthForInt(mMonth));
-            seekbar.setPosition(money);
+            seekbar.setProgress(money);
 
         }
     }

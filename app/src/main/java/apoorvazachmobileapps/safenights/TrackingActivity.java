@@ -52,11 +52,12 @@ public class TrackingActivity extends Service implements LocationListener, Senso
     private Handler handler = new Handler();
     private Timer timer;
     private TimerTask hourlyTask;
+    int counter;
 
     SensorManager sensorManager;
     private Sensor mAccelerometer;
-    private static final float SHAKE_THRESHOLD = 6.25f; // m/S**2
-    private static final int MIN_TIME_BETWEEN_SHAKES_MILLISECS = 1000;
+    private static final float SHAKE_THRESHOLD = 6.00f; // m/S**2
+    private static final int MIN_TIME_BETWEEN_SHAKES_MILLISECS = 200;
 
     //Current params
     Double currentLat;
@@ -75,6 +76,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        counter = 0;
         Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
@@ -104,6 +106,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         recentlyMoved = false;
 
         //Gets coordinates from Address String
@@ -162,23 +165,25 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                 float batteryPct = level / (float) scale;
                 int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 
-
+                Log.i("thiscounter", ""+counter);
+                Log.i("hi", ""+recentlyMoved);
                 //If it's between 2-6am, and the latitude and longitude is the same for all spots, send a message
                 //Otherwise, it means they moved locations, so update the positions in the array
-                if (!recentlyMoved && hour > 2 && hour < 6 && ((latArray[0] == latArray[1] && latArray[0] == latArray[2] && latArray[0] == latArray[3]) ||
+                if (!recentlyMoved && ((latArray[0] == latArray[1] && latArray[0] == latArray[2] && latArray[0] == latArray[3]) ||
                         (lonArray[0] == lonArray[1] && lonArray[0] == lonArray[2] && lonArray[0] == lonArray[3])) &&
 
                         ((Math.abs(latitude - currentLat) > 0.0001) || Math.abs(longitude - currentLon) > 0.0001)) {
                     try {
-                        SmsManager smsManager = SmsManager.getDefault();
-                        String message = "Hey " + cName + ", " + name + " went out for a " +
-                                "fun night but didn't reach his final location and hasn't moved for a while! He said he was going to " +
-                                userLocation + ", and his last known location was at " + currentLat + ", " + currentLon + ".";
-                        ArrayList<String> parts = smsManager.divideMessage(message);
-                        smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
+//                        SmsManager smsManager = SmsManager.getDefault();
+//                        String message = "Hey " + cName + ", " + name + " went out for a " +
+//                                "fun night but didn't reach his final location and hasn't moved for a while! He said he was going to " +
+//                                userLocation + ", and his last known location was at " + currentLat + ", " + currentLon + ".";
+//                        ArrayList<String> parts = smsManager.divideMessage(message);
+//                        smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    Log.i("hereiam","hereiam");
                     callSendEmailAPI(1);
                 } else {
                     latArray[0] = latArray[1];
@@ -365,6 +370,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
 
             if (acceleration > SHAKE_THRESHOLD) {
                 recentlyMoved = true;
+                counter++;
             }
         }
     }
