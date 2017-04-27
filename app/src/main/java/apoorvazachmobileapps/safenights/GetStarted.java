@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.data.Entry;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
@@ -40,6 +41,7 @@ import com.hitomi.cmlibrary.OnMenuStatusChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -259,6 +261,13 @@ public class GetStarted extends Fragment {
     public void pickLocation(final View view) {
         SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
         h = settings.getStringSet("locations", new HashSet<String>());
+        Iterator it = h.iterator();
+        while (it.hasNext())
+        {
+            if(it.next().equals("") || it.next() == null){
+                it.remove();
+            }
+        }
         a = h.toArray(new CharSequence[h.size()]);
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Select a location")
