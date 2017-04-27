@@ -12,11 +12,17 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.InflateException;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -26,6 +32,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.hitomi.cmlibrary.CircleMenu;
 import com.hitomi.cmlibrary.OnMenuSelectedListener;
 import com.hitomi.cmlibrary.OnMenuStatusChangeListener;
@@ -39,7 +46,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class GetStarted extends AppCompatActivity  {
+public class GetStarted extends Fragment {
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
     private boolean started;
     private CharSequence[] a;
@@ -56,9 +63,11 @@ public class GetStarted extends AppCompatActivity  {
     private TextView finalLocation;
     private Boolean locationWasSet;
     private Boolean nameWasSet;
+    private static View rootview;
     private String locationAddress;
     Set<String> h;
     private ArrayList mSelectedItems; // Where we track the selected items
+    private SupportMapFragment placepickerFragment;
 
     public void onSaveInstanceState(Bundle savedState) {
         super.onSaveInstanceState(savedState);
@@ -78,13 +87,34 @@ public class GetStarted extends AppCompatActivity  {
         savedState.putString("name", saveName);
     }
 
+    public static GetStarted newInstance() {
+        GetStarted fragment = new GetStarted();
+        return fragment;
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_get_started);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//        final View rootview = inflater.inflate(R.layout.activity_get_started, container, false);
+        //setContentView(R.layout.activity_get_started);
+        if (rootview != null) {
+            ViewGroup parent = (ViewGroup) rootview.getParent();
+            if (parent != null)
+                parent.removeView(rootview);
+        }
+        try {
+            rootview = inflater.inflate(R.layout.activity_get_started, container, false);
+        } catch (InflateException e) {
+            Toast.makeText(getActivity(), "An error occured loading this screen. Please try again.", Toast.LENGTH_SHORT);
+        }
 
         nameWasSet = false;
         locationWasSet = false;
@@ -94,19 +124,35 @@ public class GetStarted extends AppCompatActivity  {
 
 
         //For remembering saved user locations
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
         h = settings.getStringSet("locations", new HashSet<String>());
         a = h.toArray(new CharSequence[h.size()]);
 
-        StartStopButton = (Button)findViewById(R.id.start);
-        contactName = (EditText)findViewById(R.id.contactName);
-        contactEmail = (EditText)findViewById(R.id.contactEmail);
-        title = (Button)findViewById(R.id.title);
-        startstop = (TextView)findViewById(R.id.startstop);
-        locationTitle = (TextView)findViewById(R.id.locationTitle);
+        StartStopButton = (Button)rootview.findViewById(R.id.start);
+        StartStopButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                callStartNightAPI(rootview);
+            }
+        });
+        contactName = (EditText)rootview.findViewById(R.id.contactName);
+        contactEmail = (EditText)rootview.findViewById(R.id.contactEmail);
+        title = (Button)rootview.findViewById(R.id.title);
+        title.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                pickLocation(rootview);
+            }
+        });
+        startstop = (TextView)rootview.findViewById(R.id.startstop);
+        locationTitle = (TextView)rootview.findViewById(R.id.locationTitle);
         //contactnumber = (TextView)findViewById(R.id.contactnumber);
-        finalLocation = (TextView)findViewById(R.id.finalLocation);
-        Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/Arciform.otf");
+        finalLocation = (TextView)rootview.findViewById(R.id.finalLocation);
+        Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Arciform.otf");
         startstop.setTypeface(tf);
 
         contactName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -128,7 +174,7 @@ public class GetStarted extends AppCompatActivity  {
 
         //Search for places logic
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+                getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
         autocompleteFragment.getView().setFocusable(true);
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -139,7 +185,7 @@ public class GetStarted extends AppCompatActivity  {
                 a[a.length - 1] = place.getAddress();
                 locationWasSet = true;
 
-                final SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+                final SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
                 SharedPreferences.Editor editor = settings.edit();
                 h.add(locationAddress);
                 editor.putStringSet("locations", h);
@@ -184,11 +230,22 @@ public class GetStarted extends AppCompatActivity  {
             contactEmail.setText(settings.getString("nightEmail",""));
             contactName.setText(settings.getString("nightName",""));
         }
-
+        return rootview;
     }
 
+//    @Override
+//    public void onActivityCreated(Bundle savedInstanceState) {
+//        super.onActivityCreated(savedInstanceState);
+//        FragmentManager fm = getChildFragmentManager();
+//        placepickerFragment = (SupportMapFragment) fm.findFragmentById(R.id.place_autocomplete_fragment);
+//        if (placepickerFragment == null) {
+//            placepickerFragment = SupportMapFragment.newInstance();
+//            fm.beginTransaction().replace(R.id.place_autocomplete_fragment, placepickerFragment).commit();
+//        }
+//    }
+
     private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {
                 return true;
@@ -200,10 +257,10 @@ public class GetStarted extends AppCompatActivity  {
 
     //Dialog pop-up for picking from saved locations
     public void pickLocation(final View view) {
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
         h = settings.getStringSet("locations", new HashSet<String>());
         a = h.toArray(new CharSequence[h.size()]);
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Select a location")
                 .setMultiChoiceItems(a, null,
                         new DialogInterface.OnMultiChoiceClickListener() {
@@ -232,7 +289,7 @@ public class GetStarted extends AppCompatActivity  {
                         finalLocation.setText("Final Location: " + p);
                         locationWasSet = true;
                         locationAddress = "" + p;
-                        final SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+                        final SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
                         SharedPreferences.Editor editor = settings.edit();
                         h.add(locationAddress);
                         editor.putStringSet("locations", h);
@@ -257,14 +314,14 @@ public class GetStarted extends AppCompatActivity  {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null) {
             Uri uri = data.getData();
 
             if (uri != null) {
                 Cursor c = null;
                 try {
-                    c = getContentResolver().query(uri, new String[]{
+                    c = getActivity().getContentResolver().query(uri, new String[]{
                                     ContactsContract.CommonDataKinds.Phone.NUMBER,
                                     ContactsContract.CommonDataKinds.Phone.TYPE,
                             },
@@ -273,7 +330,7 @@ public class GetStarted extends AppCompatActivity  {
                     if (c != null && c.moveToFirst()) {
                         String number = c.getString(0);
                         contactNumber = number;
-                        emerContactName = getContactName(getApplicationContext(), number);
+                        emerContactName = getContactName(getContext(), number);
                         contactnumber.setText("Contact: " + emerContactName);
                         nameWasSet = true;
                     }
@@ -312,11 +369,11 @@ public class GetStarted extends AppCompatActivity  {
             Log.i("inthe", "bang");
             if(locationAddress == null || (contactEmail.getText().toString().equals(""))||
                     (contactName.getText().toString().equals(""))){
-                Toast.makeText(getApplicationContext(), "Please fill out all fields!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Please fill out all fields!", Toast.LENGTH_SHORT).show();
             } else {
                 SafeNightsAPIInterface apiService =
                         SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
-                final SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+                final SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
                 String username = settings.getString("username", "");
                 String password = settings.getString("password", "");
                 Call<User> call = apiService.startnight(username, password);
@@ -329,7 +386,7 @@ public class GetStarted extends AppCompatActivity  {
                         User u = response.body();
                         if (u.getPassed().equals("n")) {
                             //bring them to home page, let them know a problem
-                            Toast.makeText(getApplicationContext(), "There has been a problem starting your night! Please try again", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "There has been a problem starting your night! Please try again", Toast.LENGTH_LONG).show();
 
                         } else {
                             SharedPreferences.Editor editor = settings.edit();
@@ -339,7 +396,7 @@ public class GetStarted extends AppCompatActivity  {
                             editor.putString("nightName", contactName.getText().toString());
                             editor.putString("nightEmail", contactEmail.getText().toString());
                             editor.commit();
-                            Intent intent = new Intent(GetStarted.this, TrackingActivity.class);
+                            Intent intent = new Intent(getActivity(), TrackingActivity.class);
                             intent.putExtra("location", locationAddress);
                             intent.putExtra("pNum", contactNumber);
                             intent.putExtra("email", contactEmail.getText().toString());
@@ -348,7 +405,7 @@ public class GetStarted extends AppCompatActivity  {
                             started = true;
                             StartStopButton.setText("Stop Night");
                             startstop.setText("Your Night Is Underway!");
-                            startService(intent);
+                            getActivity().startService(intent);
                         }
                     }
 
@@ -360,18 +417,18 @@ public class GetStarted extends AppCompatActivity  {
                 });
             }
             } else {
-                Toast.makeText(getApplicationContext(), "Your night has finished!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Your night has finished!", Toast.LENGTH_LONG).show();
 //                stopService(new Intent(GetStarted.this, TrackingActivity.class));
                 started = false;
-                Intent intent = new Intent(GetStarted.this, TrackingActivity.class);
+                Intent intent = new Intent(getActivity(), TrackingActivity.class);
                 intent.putExtra("location", locationAddress);
                 intent.putExtra("pNum", contactNumber);
                 intent.putExtra("email", contactEmail.getText().toString());
                 intent.putExtra("cName", contactName.getText().toString());
                 intent.putExtra("click", true);
                 StartStopButton.setText("Start Night");
-                startService(intent);
-                Intent i = new Intent(GetStarted.this, MainActivity.class);
+                getActivity().startService(intent);
+                Intent i = new Intent(getActivity(), MainActivity.class);
                 startActivity(i);
 
             }
