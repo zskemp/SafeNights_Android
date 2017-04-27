@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import apoorvazachmobileapps.safenights.LocationHistory.Fields;
 import apoorvazachmobileapps.safenights.LocationHistory.Locationtable;
@@ -140,6 +141,7 @@ public class LastNight extends AppCompatActivity implements OnMapReadyCallback {
             //ToDo: Make sure this works with other dates. I don't think this works locally (aka only east coast)
             SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+            parser.setTimeZone(TimeZone.getTimeZone("CEST"));
             try {
                 date = parser.parse(l.getTime());
                 String formattedTime = formatter.format(date);

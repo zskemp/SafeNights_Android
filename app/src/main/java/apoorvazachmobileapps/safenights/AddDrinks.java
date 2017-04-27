@@ -26,11 +26,14 @@ import android.widget.Toast;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
+import retrofit2.Response;import java.text.DateFormatSymbols;
 
 public class AddDrinks extends AppCompatActivity {
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
     private TextView moneycount;
+    private TextView calendarDay;
+    private TextView calendarMonth;
+
     private Date date;
     private Button datePicker;
     private int mYear;
@@ -79,9 +82,17 @@ public class AddDrinks extends AppCompatActivity {
         shotPicker = (HoloCircleSeekBar) findViewById(R.id.shotPicker);
 
         datePicker = (Button)  findViewById(R.id.datepicker);
-        datePicker.setText(mMonth+1 + "/" + mDay + "/" + mYear);
+//        datePicker.setText(mMonth+1 + "/" + mDay + "/" + mYear);
 
         moneycount = (TextView) findViewById(R.id.moneycount);
+        calendarDay = (TextView) findViewById(R.id.calendarDay);
+        calendarMonth = (TextView) findViewById(R.id.calendarMonth);
+        SimpleDateFormat month_date = new SimpleDateFormat("MMMM");
+        SimpleDateFormat day_date = new SimpleDateFormat("dddd");
+        calendarDay.setText("" + mDay);
+        calendarMonth.setText("" + getMonthForInt(mMonth));
+        date = new GregorianCalendar(mYear, mMonth, mDay).getTime();
+
 
         /** Money Seek Bar Logic **/
         // get seekbar from view
@@ -116,10 +127,12 @@ public class AddDrinks extends AppCompatActivity {
                     public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
                     /*      Your code   to get date and time    */
                         date = new GregorianCalendar(selectedyear, selectedmonth, selectedday).getTime();
-                        datePicker.setText(selectedmonth+1 + "/" + selectedday + "/" + selectedyear);
+//                        datePicker.setText(selectedmonth+1 + "/" + selectedday + "/" + selectedyear);
                         mDay = selectedday;
                         mMonth = selectedmonth;
                         mYear = selectedyear;
+                        calendarDay.setText(""+mDay);
+                        calendarMonth.setText(getMonthForInt(mMonth));
                     }
                 },mYear, mMonth, mDay);
                 mDatePicker.getDatePicker().setMaxDate(new Date().getTime());
@@ -135,8 +148,23 @@ public class AddDrinks extends AppCompatActivity {
 
             date = new GregorianCalendar(mYear, mMonth, mDay).getTime();
             moneycount.setText("Money Spent: $" + money);
-            datePicker.setText(mMonth+1 + "/" + mDay + "/" + mYear);
+//            datePicker.setText(mMonth+1 + "/" + mDay + "/" + mYear);
+            calendarDay.setText(""+mDay);
+            calendarMonth.setText(getMonthForInt(mMonth));
+            seekbar.setPosition(money);
+
         }
+    }
+
+
+    String getMonthForInt(int num) {
+        String month = "wrong";
+        DateFormatSymbols dfs = new DateFormatSymbols();
+        String[] months = dfs.getMonths();
+        if (num >= 0 && num <= 11 ) {
+            month = months[num];
+        }
+        return month;
     }
 
     public void callAddDrinksAPI(View view) {

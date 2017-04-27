@@ -62,6 +62,15 @@ public class History extends AppCompatActivity {
     Button nextMonth;
     Button lastMonth;
 
+    public void onSaveInstanceState(Bundle savedState) {
+        super.onSaveInstanceState(savedState);
+
+        int saveMonth = displayMonth;
+        int saveYear = displayYear;
+        savedState.putInt("month", saveMonth);
+        savedState.putInt("year", saveYear);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,6 +119,13 @@ public class History extends AppCompatActivity {
                 callCallHistory(v);
             }
         });
+
+        if (savedInstanceState != null) {
+            displayMonth = savedInstanceState.getInt("month");
+            displayYear = savedInstanceState.getInt("year");
+            cal.set(displayYear, displayMonth, 1);
+            month.setText(getMonthForInt(displayMonth));
+        }
 
         //Note: We add to the nights array list in this method call
         callHistoryAPI(v);
