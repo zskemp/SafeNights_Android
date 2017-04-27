@@ -139,7 +139,6 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="50dp"
                 android:background="@drawable/datebutton"
-                android:onClick="callStartNightAPI"
                 android:text="Start"
                 android:textColor="#143f66" />
 
@@ -151,7 +150,6 @@
                 android:layout_below="@+id/finalLocation"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/datebutton"
-                android:onClick="pickLocation"
                 android:text="My Locations"
                 android:textAllCaps="false"
                 android:textColor="#143f66" />

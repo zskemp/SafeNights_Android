@@ -123,7 +123,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
             latitude = addresses.get(0).getLatitude();
             longitude = addresses.get(0).getLongitude();
         } else {
-            Toast.makeText(getApplicationContext(), "The address didn't parse correctly!", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "The address didn't parse correctly!", Toast.LENGTH_SHORT);
         }
 
         //Timer task to run every 10 minutes
@@ -151,7 +151,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                                 .doubleValue();
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Something went wrong getting your location!", Toast.LENGTH_SHORT);
+                    Toast.makeText(getApplication(), "Something went wrong getting your location!", Toast.LENGTH_SHORT);
                 }
 
                 //Set the final spot in the array to current location
@@ -241,9 +241,9 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                 User u = response.body();
                 if (u.getPassed().equals("y")) {
                     //bring them to home page, let them know a problem
-                    Toast.makeText(getApplicationContext(), "You uploaded another location successfully :)", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplication(), "You uploaded another location successfully :)", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getApplicationContext(), "There has been a problem uploading your location!\nDo you have service?", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplication(), "There has been a problem uploading your location!\nDo you have service?", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -335,12 +335,12 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                 public void onResponse(Call<User> call, Response<User> response) {
                     User u = response.body();
                     if (u == null) {
-                        Toast.makeText(getApplicationContext(), "You entered an invalid email!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplication(), "You entered an invalid email!", Toast.LENGTH_LONG).show();
                     } else {
                         if (u.getPassed().equals("y")) {
-                            Toast.makeText(getApplicationContext(), "You emailed successfully :)", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplication(), "You emailed successfully :)", Toast.LENGTH_LONG).show();
                         } else {
-                            Toast.makeText(getApplicationContext(), "There was a problem with our sever. Please contact a developer!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplication(), "There was a problem with our sever. Please contact a developer!", Toast.LENGTH_LONG).show();
                         }
                     }
                 }

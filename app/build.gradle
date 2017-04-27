@@ -47,5 +47,4 @@ dependencies {
     compile 'com.android.support:support-v4:25.3.0'
     compile 'com.google.android.gms:play-services-maps:9.8.0'
     testCompile 'junit:junit:4.12'
-    compile files('libs/wheel-menu-library.jar')
 }

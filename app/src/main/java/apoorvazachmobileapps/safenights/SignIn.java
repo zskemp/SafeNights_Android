@@ -40,8 +40,9 @@ public class SignIn extends Fragment {
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
     private AVLoadingIndicatorView indicator;
 
-    public SignIn() {
-        // Required empty public constructor
+    public static SignIn newInstance() {
+        SignIn fragment = new SignIn();
+        return fragment;
     }
 
 

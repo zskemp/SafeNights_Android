@@ -34,8 +34,9 @@ public class SignUp extends Fragment {
     private TextView appname;
     Button mSignUp;
 
-    public SignUp() {
-        // Required empty public constructor
+    public static SignUp newInstance() {
+        SignUp fragment = new SignUp();
+        return fragment;
     }
 
     @Override
