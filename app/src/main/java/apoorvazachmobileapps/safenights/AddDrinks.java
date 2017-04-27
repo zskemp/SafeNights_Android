@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +47,7 @@ public class AddDrinks extends Fragment {
     private TextView calendarMonth;
 
     private Date date;
-    private Button datePicker;
+    private ImageView datePicker;
     private Button submitDrink;
     private int mYear;
     private int mMonth;
@@ -114,9 +115,6 @@ public class AddDrinks extends Fragment {
         winePicker = (HoloCircleSeekBar) rootview.findViewById(R.id.winePicker);
         shotPicker = (HoloCircleSeekBar) rootview.findViewById(R.id.shotPicker);
 
-        datePicker = (Button)  rootview.findViewById(R.id.datepicker);
-//        datePicker.setText(mMonth+1 + "/" + mDay + "/" + mYear);
-
         submitDrink = (Button)rootview.findViewById(R.id.submitDrink);
         submitDrink.setOnClickListener(new View.OnClickListener()
         {
@@ -160,6 +158,7 @@ public class AddDrinks extends Fragment {
             }
         });
 
+        datePicker = (ImageView)  rootview.findViewById(R.id.calendar);
         datePicker.setOnClickListener(new View.OnClickListener() {
 
             @Override

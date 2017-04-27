@@ -6,19 +6,6 @@
     android:layout_height="match_parent"
     tools:context="apoorvazachmobileapps.safenights.AddDrinks">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </android.support.design.widget.AppBarLayout>
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,54 +17,48 @@
         android:layout_height="match_parent"
         android:background="@color/colorBackground"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">>
-        <TextView
-            android:layout_width="match_parent"
-            android:text="Enter In Your Information!"
-            android:textAlignment="center"
-            android:textSize="35dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:id="@+id/title"
-            android:layout_height="match_parent" />
+
         <ImageView
             android:id="@+id/calendar"
             android:layout_width="wrap_content"
             android:layout_below="@+id/title"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
             android:src="@drawable/rsz_calendar"
             android:background="@drawable/calendar_border"/>
 
-
-        <Button
-            android:id="@+id/datepicker"
+        <TextView
+            android:id="@+id/calendarMonth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Switch Date"
-            android:background="@drawable/datebutton"
-            android:textColor="#4f8ddf"
-            android:textAllCaps="false"
-            android:layout_below="@+id/calendar"
+            android:textSize="35dp"
+            android:layout_marginBottom="70dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="30dp"
-            android:layout_marginTop="20dp"
-            android:minWidth="100dp"
-            android:theme="@style/Buttons" />
-        <!--<DatePicker-->
-        <!--android:id="@+id/datepicker"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:backgroundTint="#FFFFFF"-->
-        <!--android:hint="Date of Sin"-->
-        <!--android:shadowColor="#737f82"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_centerHorizontal="true" />-->
+            android:textAlignment="center"
+            android:text="TextView"
+            android:textStyle="bold"
+            android:layout_marginTop="35dp"
+            android:layout_below="@+id/title" />
+
+        <TextView
+            android:id="@+id/calendarDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textColor="#3092cb"
+            android:textSize="70dp"
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold"
+            android:layout_marginTop="75dp"
+            android:layout_alignTop="@+id/calendarMonth"/>
 
         <android.support.v7.widget.AppCompatSeekBar
             android:id="@+id/seekbar"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/datepicker"
+            android:layout_below="@+id/calendar"
             android:layout_centerHorizontal="true"
             android:progressTint="#4CAF50"
             android:foregroundTint="#A5D6A7"
@@ -237,32 +218,6 @@
             android:textColor="#3981c2"
             android:layout_marginTop="15dp"
             android:text="Submit" />
-
-        <TextView
-            android:id="@+id/calendarMonth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="35dp"
-            android:layout_marginBottom="70dp"
-            android:layout_centerHorizontal="true"
-            android:textAlignment="center"
-            android:text="TextView"
-            android:textStyle="bold"
-            android:layout_marginTop="20dp"
-            android:layout_below="@+id/title" />
-
-        <TextView
-            android:id="@+id/calendarDay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textColor="#3092cb"
-            android:textSize="70dp"
-            android:layout_centerHorizontal="true"
-            android:textStyle="bold"
-            android:layout_marginTop="50dp"
-            android:layout_alignTop="@+id/calendarMonth"/>
-
 
     </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
