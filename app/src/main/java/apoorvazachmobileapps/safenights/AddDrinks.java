@@ -15,11 +15,17 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.SeekBar;
@@ -30,7 +36,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;import java.text.DateFormatSymbols;
 
-public class AddDrinks extends AppCompatActivity {
+public class AddDrinks extends Fragment {
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
     private TextView moneycount;
     private TextView calendarDay;
@@ -38,6 +44,7 @@ public class AddDrinks extends AppCompatActivity {
 
     private Date date;
     private Button datePicker;
+    private Button submitDrink;
     private int mYear;
     private int mMonth;
     private int mDay;
@@ -64,13 +71,23 @@ public class AddDrinks extends AppCompatActivity {
         savedState.putInt("day", day);
     }
 
+    public static AddDrinks newInstance() {
+        AddDrinks fragment = new AddDrinks();
+        return fragment;
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_drinks);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final View rootview = inflater.inflate(R.layout.activity_add_drinks, container, false);
 
         Calendar mcurrentDate = Calendar.getInstance();
         mYear = mcurrentDate.get(Calendar.YEAR);
@@ -78,18 +95,28 @@ public class AddDrinks extends AppCompatActivity {
         mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
         money = 0;
 
-        beerPicker = (HoloCircleSeekBar) findViewById(R.id.beerPicker);
-        liquorPicker = (HoloCircleSeekBar) findViewById(R.id.liquorPicker);
-        winePicker = (HoloCircleSeekBar) findViewById(R.id.winePicker);
-        shotPicker = (HoloCircleSeekBar) findViewById(R.id.shotPicker);
+        beerPicker = (HoloCircleSeekBar) rootview.findViewById(R.id.beerPicker);
+        liquorPicker = (HoloCircleSeekBar) rootview.findViewById(R.id.liquorPicker);
+        winePicker = (HoloCircleSeekBar) rootview.findViewById(R.id.winePicker);
+        shotPicker = (HoloCircleSeekBar) rootview.findViewById(R.id.shotPicker);
 
-        datePicker = (Button)  findViewById(R.id.datepicker);
+        datePicker = (Button)  rootview.findViewById(R.id.datepicker);
 //        datePicker.setText(mMonth+1 + "/" + mDay + "/" + mYear);
 
-        moneycount = (TextView) findViewById(R.id.moneycount);
+        submitDrink = (Button)rootview.findViewById(R.id.submitDrink);
+        submitDrink.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                callAddDrinksAPI(rootview);
+            }
+        });
+
+        moneycount = (TextView) rootview.findViewById(R.id.moneycount);
         moneycount.setText("Money Spent: $0");
-        calendarDay = (TextView) findViewById(R.id.calendarDay);
-        calendarMonth = (TextView) findViewById(R.id.calendarMonth);
+        calendarDay = (TextView) rootview.findViewById(R.id.calendarDay);
+        calendarMonth = (TextView) rootview.findViewById(R.id.calendarMonth);
         SimpleDateFormat month_date = new SimpleDateFormat("MMMM");
         SimpleDateFormat day_date = new SimpleDateFormat("dddd");
         calendarDay.setText("" + mDay);
@@ -99,7 +126,7 @@ public class AddDrinks extends AppCompatActivity {
 
         /** Money Seek Bar Logic **/
         // get seekbar from view
-        seekbar = (AppCompatSeekBar) findViewById(R.id.seekbar);
+        seekbar = (AppCompatSeekBar) rootview.findViewById(R.id.seekbar);
 
         // set listener
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -118,22 +145,6 @@ public class AddDrinks extends AppCompatActivity {
 
             }
         });
-//        {new OnSeekbarChangeListener() {
-//            @Override
-//            public void valueChanged(Number minValue) {
-//                moneycount.setText("Money Spent: $" + String.valueOf(minValue));
-//            }
-//        });
-//
-//        // set final value listener
-//        seekbar.setOnSeekbarFinalValueListener(new OnSeekbarFinalValueListener() {
-//            @Override
-//            public void finalValue(Number value) {
-//                Log.d("CRS=>", String.valueOf(value));
-//                moneycount.setText("Money Spent: $" + value);
-//                money = value.intValue();
-//            }
-//        });
 
         datePicker.setOnClickListener(new View.OnClickListener() {
 
@@ -142,7 +153,7 @@ public class AddDrinks extends AppCompatActivity {
                 //To show current date in the datepicker
                 Calendar mcurrentDate = Calendar.getInstance();
 
-                final DatePickerDialog mDatePicker=new DatePickerDialog(AddDrinks.this, new DatePickerDialog.OnDateSetListener() {
+                final DatePickerDialog mDatePicker=new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
                     /*      Your code   to get date and time    */
                         date = new GregorianCalendar(selectedyear, selectedmonth, selectedday).getTime();
@@ -173,6 +184,7 @@ public class AddDrinks extends AppCompatActivity {
             seekbar.setProgress(money);
 
         }
+        return rootview;
     }
 
 
@@ -188,7 +200,7 @@ public class AddDrinks extends AppCompatActivity {
 
     public void callAddDrinksAPI(View view) {
         SafeNightsAPIInterface apiService = SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
         String username = settings.getString("username", "");
         String password = settings.getString("password", "");
 
@@ -209,13 +221,17 @@ public class AddDrinks extends AppCompatActivity {
             public void onResponse(Call<User> call, Response<User> response) {
                 User u = response.body();
                 if (u.getPassed().equals("y")) {
-                    //bring them to home page, let them know a problem
-                    Intent intent = new Intent(AddDrinks.this, MainActivity.class);
-                    startActivity(intent);
-                    Toast.makeText(getApplicationContext(), "Successfully entered data!", Toast.LENGTH_SHORT).show();
+                    //bring them to history page
+                  Fragment fragment = History.newInstance();
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.frame_layout, fragment);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                    Toast.makeText(getActivity(), "Successfully entered data!", Toast.LENGTH_SHORT).show();
                 } else {
                     //return them to the page with an error
-                    Toast.makeText(getApplicationContext(), "There has been a problem adding your night of drinking\n Please use correct formatting and check login credentials", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "There has been a problem adding your night of drinking\n Please use correct formatting and check login credentials", Toast.LENGTH_LONG).show();
                 }
             }
 
