@@ -31,10 +31,10 @@ public class MainActivity extends FragmentActivity {
                             case R.id.action_favorites:
                                 selectedFragment = GetStarted.newInstance();
                                 break;
-                            case R.id.action_music:
-                                selectedFragment = SignUp.newInstance();
-                                break;
                             case R.id.action_schedules:
+                                selectedFragment = AddDrinks.newInstance();
+                                break;
+                            case R.id.action_music:
                                 selectedFragment = History.newInstance();
                                 break;
                             case R.id.last_night:
