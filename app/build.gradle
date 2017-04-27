@@ -32,7 +32,7 @@ dependencies {
     })
     // retrofit, gson
     compile 'com.android.support:appcompat-v7:25.3.0'
-    compile files('libs/wheel-menu-library.jar')
+    compile 'com.github.Hitomis:CircleMenu:v1.0.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:25.3.0'
     compile 'com.github.JesusM:HoloCircleSeekBar:v2.2.2'

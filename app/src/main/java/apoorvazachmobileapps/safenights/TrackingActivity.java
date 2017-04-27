@@ -70,6 +70,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
     double longitude;
     boolean recentlyMoved;
     boolean tempMoved;
+    boolean clicked;
 
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
 
@@ -103,6 +104,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
         phone_number = intent.getExtras().getString("pNum");
         cName = intent.getExtras().getString("cName");
         email = intent.getExtras().getString("email");
+        clicked = intent.getBooleanExtra("click", false);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -323,33 +325,33 @@ public class TrackingActivity extends Service implements LocationListener, Senso
 
 
     public void callSendEmailAPI(int reason) {
-        SafeNightsAPIInterface apiService =
-                SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
+            SafeNightsAPIInterface apiService =
+                    SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
 
-        Call<User> call = apiService.email(cName, reason, email, userLocation, currentLat, currentLon);
+            Call<User> call = apiService.email(cName, reason, email, userLocation, currentLat, currentLon);
 
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                User u = response.body();
-                if (u == null) {
-                    Toast.makeText(getApplicationContext(), "You entered an invalid email!", Toast.LENGTH_LONG).show();
-                }
-                else {
-                    if (u.getPassed().equals("y")) {
-                        Toast.makeText(getApplicationContext(), "You emailed successfully :)", Toast.LENGTH_LONG).show();
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    User u = response.body();
+                    if (u == null) {
+                        Toast.makeText(getApplicationContext(), "You entered an invalid email!", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(getApplicationContext(), "There was a problem with our sever. Please contact a developer!", Toast.LENGTH_LONG).show();
+                        if (u.getPassed().equals("y")) {
+                            Toast.makeText(getApplicationContext(), "You emailed successfully :)", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "There was a problem with our sever. Please contact a developer!", Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                // Log error here since request failed
-                Log.e("API Call:", t.toString());
-            }
-        });
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    // Log error here since request failed
+                    Log.e("API Call:", t.toString());
+                }
+            });
+
     }
 
     @Override
