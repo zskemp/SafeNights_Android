@@ -361,12 +361,16 @@ public class GetStarted extends AppCompatActivity  {
             }
             } else {
                 Toast.makeText(getApplicationContext(), "Your night has finished!", Toast.LENGTH_LONG).show();
-                stopService(new Intent(GetStarted.this, TrackingActivity.class));
+//                stopService(new Intent(GetStarted.this, TrackingActivity.class));
                 started = false;
-                Intent intent = new Intent(this, TrackingActivity.class);
+                Intent intent = new Intent(GetStarted.this, TrackingActivity.class);
+                intent.putExtra("location", locationAddress);
+                intent.putExtra("pNum", contactNumber);
+                intent.putExtra("email", contactEmail.getText().toString());
+                intent.putExtra("cName", contactName.getText().toString());
                 intent.putExtra("click", true);
                 StartStopButton.setText("Start Night");
-                stopService(intent);
+                startService(intent);
                 Intent i = new Intent(GetStarted.this, MainActivity.class);
                 startActivity(i);
 
