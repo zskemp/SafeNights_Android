@@ -56,4 +56,8 @@ public interface SafeNightsAPIInterface {
     @POST("api/v1/getnight/")
     Call<Location> getnight(@Field("username") String username, @Field("pwd") String password, @Field("id") String id);
 
+    @FormUrlEncoded
+    @POST("api/v1/email/")
+    Call<User> email (@Field("name") String name, @Field("reason") int reasonNum, @Field("email") String email, @Field("location") String location, @Field("xcord") Double xcord, @Field("ycord") Double ycord);
+
 }
