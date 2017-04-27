@@ -73,14 +73,22 @@
         <!--android:layout_alignParentTop="true"-->
         <!--android:layout_centerHorizontal="true" />-->
 
-        <com.crystal.crystalrangeseekbar.widgets.CrystalSeekbar
+        <android.support.v7.widget.AppCompatSeekBar
             android:id="@+id/seekbar"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/datepicker"
             android:layout_centerHorizontal="true"
+            android:progressTint="#4CAF50"
+            android:foregroundTint="#A5D6A7"
+            android:indeterminateTint="#A5D6A7"
+            android:secondaryProgressTint="#A5D6A7"
+            android:progressBackgroundTint="#A5D6A7"
+            android:backgroundTint="#A5D6A7"
+            android:thumbTint="#197914"
+            android:max="200"
             app:bar_color="#A5D6A7"
-            app:bar_highlight_color="#4CAF50"
+            app:bar_highlight_color="#4caf50"
             app:corner_radius="10"
             app:data_type="_integer"
             app:max_value="200"
@@ -98,7 +106,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/seekbar"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="10dp"
             android:layout_below="@+id/moneycount"
             android:layout_marginLeft="13dp"
             android:layout_marginStart="13dp"
@@ -113,7 +121,7 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="10dp"
             android:layout_alignRight="@+id/seekbar"
             android:layout_below="@+id/moneycount"
             android:layout_marginLeft="22dp"
@@ -196,7 +204,7 @@
             app:pointer_halo_color="#FFFFFF"
             app:pointer_size="10dp"
             app:text_color="#3981c2"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="25dp"
             app:text_size="20sp"
             app:wheel_active_color="#000000"
             app:wheel_unactive_color="#3981c2" />
@@ -204,7 +212,7 @@
         <com.jesusm.holocircleseekbar.lib.HoloCircleSeekBar
             android:id="@+id/shotPicker"
             android:layout_width="100dp"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="25dp"
             android:layout_height="105dp"
             android:layout_alignRight="@+id/seekbar"
             android:layout_below="@+id/textView5"

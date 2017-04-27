@@ -1,11 +1,13 @@
 package apoorvazachmobileapps.safenights;
 
+import android.app.ActivityManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,6 +26,9 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.hitomi.cmlibrary.CircleMenu;
+import com.hitomi.cmlibrary.OnMenuSelectedListener;
+import com.hitomi.cmlibrary.OnMenuStatusChangeListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +43,7 @@ public class GetStarted extends AppCompatActivity  {
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
     private boolean started;
     private CharSequence[] a;
+    CircleMenu circleMenu;
     private Button StartStopButton;
     private Button title;
     private String contactNumber;
@@ -60,8 +66,8 @@ public class GetStarted extends AppCompatActivity  {
         boolean test  = started;
         String saveLocation = locationAddress;
         String saveNumber = contactNumber;
-        String saveName = emerContactName;
-        String saveEmail = contactName.getText().toString();
+        String saveName = contactName.getText().toString();
+        String saveEmail = contactEmail.getText().toString();
 
         savedState.putBoolean("test", test);
         savedState.putBoolean("nameSet", nameWasSet);
@@ -80,12 +86,12 @@ public class GetStarted extends AppCompatActivity  {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        started = false;
         nameWasSet = false;
         locationWasSet = false;
         contactNumber = "";
         emerContactName = "";
         mSelectedItems = new ArrayList();
+
 
         //For remembering saved user locations
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
@@ -103,9 +109,27 @@ public class GetStarted extends AppCompatActivity  {
         Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/Arciform.otf");
         startstop.setTypeface(tf);
 
+        contactName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus)
+                    contactName.setHint("");
+                else
+                    contactName.setHint("Enter Name");
+            }
+        });
+        contactEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus)
+                    contactEmail.setHint("");
+                else
+                    contactEmail.setHint("Enter Email");
+            }
+        });
+
         //Search for places logic
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        autocompleteFragment.getView().setFocusable(true);
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
@@ -130,10 +154,10 @@ public class GetStarted extends AppCompatActivity  {
 
         if (savedInstanceState != null) {
             locationAddress = savedInstanceState.getString("location");
-            emerContactName = savedInstanceState.getString("name");
+            contactName.setText(savedInstanceState.getString("name"));
             contactNumber = savedInstanceState.getString("number");
             started = savedInstanceState.getBoolean("test");
-            contactName.setText(savedInstanceState.getString("email"));
+            contactEmail.setText(savedInstanceState.getString("email"));
 
             if (started) {
                 started = true;
@@ -151,7 +175,28 @@ public class GetStarted extends AppCompatActivity  {
                 finalLocation.setText("Final Location: " + locationAddress);
             }
         }
+        started = isMyServiceRunning(TrackingActivity.class);
+        if(started){
+            StartStopButton.setText("Stop Night");
+            startstop.setText("Your Night Is Underway!");
+
+            finalLocation.setText("Final Location: " + settings.getString("nightLocation", ""));
+            contactEmail.setText(settings.getString("nightEmail",""));
+            contactName.setText(settings.getString("nightName",""));
+        }
+
     }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     //Dialog pop-up for picking from saved locations
     public void pickLocation(final View view) {
@@ -261,59 +306,71 @@ public class GetStarted extends AppCompatActivity  {
 
 
     public void callStartNightAPI(View view){
+
+        Log.i("beep","sippy");
         if (!started) {
-            SafeNightsAPIInterface apiService =
-                    SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
-            final SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
-            String username = settings.getString("username", "");
-            String password = settings.getString("password", "");
-            Call<User> call = apiService.startnight(username, password);
-            Log.i("u", username + password);
+            Log.i("inthe", "bang");
+            if(locationAddress == null || (contactEmail.getText().toString().equals(""))||
+                    (contactName.getText().toString().equals(""))){
+                Toast.makeText(getApplicationContext(), "Please fill out all fields!", Toast.LENGTH_SHORT).show();
+            } else {
+                SafeNightsAPIInterface apiService =
+                        SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
+                final SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+                String username = settings.getString("username", "");
+                String password = settings.getString("password", "");
+                Call<User> call = apiService.startnight(username, password);
+                Log.i("u", username + password);
 
 
-            call.enqueue(new Callback<User>() {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    User u = response.body();
-                    if (u.getPassed().equals("n")) {
-                        //bring them to home page, let them know a problem
-                        Toast.makeText(getApplicationContext(), "There has been a problem starting your night! Please try again", Toast.LENGTH_LONG).show();
+                call.enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        User u = response.body();
+                        if (u.getPassed().equals("n")) {
+                            //bring them to home page, let them know a problem
+                            Toast.makeText(getApplicationContext(), "There has been a problem starting your night! Please try again", Toast.LENGTH_LONG).show();
 
-                    } else {
-                        SharedPreferences.Editor editor = settings.edit();
-                        String uniqueID = u.getPassed();
-                        editor.putString("id", uniqueID);
-                        editor.commit();
-                        Intent intent = new Intent(GetStarted.this, TrackingActivity.class);
-                        intent.putExtra("location", locationAddress);
-                        intent.putExtra("pNum", contactNumber);
-                        intent.putExtra("email", contactEmail.getText().toString());
-                        intent.putExtra("cName", contactName.getText().toString());
-//                        intent.putExtra("cName", emerContactName);
-                        started = true;
-                        StartStopButton.setText("Stop Night");
-                        startstop.setText("Your Night Is Underway!");
-                        startService(intent);
+                        } else {
+                            SharedPreferences.Editor editor = settings.edit();
+                            String uniqueID = u.getPassed();
+                            editor.putString("id", uniqueID);
+                            editor.putString("nightLocation", locationAddress);
+                            editor.putString("nightName", contactName.getText().toString());
+                            editor.putString("nightEmail", contactEmail.getText().toString());
+                            editor.commit();
+                            Intent intent = new Intent(GetStarted.this, TrackingActivity.class);
+                            intent.putExtra("location", locationAddress);
+                            intent.putExtra("pNum", contactNumber);
+                            intent.putExtra("email", contactEmail.getText().toString());
+                            intent.putExtra("cName", contactName.getText().toString());
+                            //                        intent.putExtra("cName", emerContactName);
+                            started = true;
+                            StartStopButton.setText("Stop Night");
+                            startstop.setText("Your Night Is Underway!");
+                            startService(intent);
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<User> call, Throwable t) {
-                    // Log error here since request failed
-                    Log.e("API Call:", t.toString());
-                }
-            });
-        }
-        else {
-            Toast.makeText(getApplicationContext(), "Your night has finished!", Toast.LENGTH_LONG).show();
-            stopService(new Intent(GetStarted.this, TrackingActivity.class));
-            started = false;
-            Intent intent = new Intent(this, TrackingActivity.class);
-            StartStopButton.setText("Start Night");
-            stopService(intent);
-            Intent i = new Intent(GetStarted.this, MainActivity.class);
-            startActivity(i);
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+                        // Log error here since request failed
+                        Log.e("API Call:", t.toString());
+                    }
+                });
+            }
+            } else {
+                Toast.makeText(getApplicationContext(), "Your night has finished!", Toast.LENGTH_LONG).show();
+                stopService(new Intent(GetStarted.this, TrackingActivity.class));
+                started = false;
+                Intent intent = new Intent(this, TrackingActivity.class);
+                intent.putExtra("click", true);
+                StartStopButton.setText("Start Night");
+                stopService(intent);
+                Intent i = new Intent(GetStarted.this, MainActivity.class);
+                startActivity(i);
 
+            }
         }
     }
-}
+

@@ -21,142 +21,154 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">>
-        <TextView
-            android:id="@+id/startstop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="13dp"
-            android:text="Start Your Night!"
-            android:textColor="#2282b2" />
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:id="@+id/locationTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/startstop"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="47dp"
-            android:text="Search for a destination, or pick on from My Locations!"
-            android:textColor="#FFFFFF" />
-        <fragment
-            android:id="@+id/place_autocomplete_fragment"
-            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/locationTitle"
-            android:layout_alignParentStart="true" />
+            android:layout_height="match_parent"
+            android:focusable="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">>
 
-        <TextView
-            android:id="@+id/contactname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
-            android:layout_centerVertical="true"
-            android:layout_below="@+id/title"
-            android:text="Name of Contact"
-            android:textColor="#FFFFFF"
-            tools:layout_editor_absoluteX="162dp"
-            tools:layout_editor_absoluteY="85dp" />
+            <TextView
+                android:id="@+id/startstop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:textSize="40dp"
+                android:textStyle="bold"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:text="Start Your Night!"
+                android:textColor="#2282b2" />
 
-        <EditText
-            android:id="@+id/contactName"
-            android:layout_width="wrap_content"
-            android:hint="Enter Name"
-            android:textAlignment="center"
-            android:inputType="textEmailAddress"
-            android:textColorHint="#143f66"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/start"
-            android:layout_alignStart="@+id/start"
-            android:layout_alignTop="@+id/contactname"
-            android:layout_marginTop="27dp"
-            android:layout_below="@+id/contactname"
-            android:background="@drawable/datebutton"
-            android:text=""
-            android:textAllCaps="false"
-            android:textColor="#143f66" />
+            <TextView
+                android:id="@+id/locationTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/startstop"
+                android:textSize="20dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="47dp"
+                android:text="Search for a destination, or pick one from My Locations!"
+                android:textColor="#FFFFFF" />
 
-        <TextView
-            android:id="@+id/contactemail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
-            android:layout_centerVertical="true"
-            android:layout_below="@+id/contactName"
-            android:text="Email: TBD"
-            android:textColor="#FFFFFF"
-            tools:layout_editor_absoluteX="162dp"
-            tools:layout_editor_absoluteY="85dp" />
+            <fragment
+                android:id="@+id/place_autocomplete_fragment"
+                android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/locationTitle" />
 
-        <EditText
-            android:id="@+id/contactEmail"
-            android:layout_width="wrap_content"
-            android:hint="Enter Email"
-            android:textAlignment="center"
-            android:inputType="textEmailAddress"
-            android:textColorHint="#143f66"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/start"
-            android:layout_alignStart="@+id/start"
-            android:layout_alignTop="@+id/contactemail"
-            android:layout_marginTop="27dp"
-            android:layout_below="@+id/contactemail"
-            android:background="@drawable/datebutton"
-            android:text=""
-            android:textAllCaps="false"
-            android:textColor="#143f66" />
+            <TextView
+                android:id="@+id/contactname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/title"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="50dp"
+                android:text="Name of Contact"
+                android:textColor="#FFFFFF"
+                tools:layout_editor_absoluteX="162dp"
+                tools:layout_editor_absoluteY="85dp" />
 
+            <EditText
+                android:id="@+id/contactName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/start"
+                android:layout_alignStart="@+id/start"
+                android:layout_alignTop="@+id/contactname"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:layout_below="@+id/contactname"
+                android:layout_marginTop="27dp"
+                android:background="@drawable/datebutton"
+                android:hint="Enter Name"
+                android:inputType="textEmailAddress"
+                android:text=""
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="#143f66"
+                android:textColorHint="#143f66" />
 
-        <Button
-            android:id="@+id/start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/contactEmail"
-            android:layout_centerHorizontal="true"
-            android:textColor="#143f66"
-            android:layout_marginTop="50dp"
-            android:background="@drawable/datebutton"
-            android:onClick="callStartNightAPI"
-            android:text="Start" />
+            <TextView
+                android:id="@+id/contactemail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/contactName"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="50dp"
+                android:text="Email"
+                android:textColor="#FFFFFF"
+                tools:layout_editor_absoluteX="162dp"
+                tools:layout_editor_absoluteY="85dp" />
 
-        <Button
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/contactName"
-            android:layout_below="@+id/finalLocation"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/datebutton"
-            android:onClick="pickLocation"
-            android:text="My Locations"
-            android:textAllCaps="false"
-            android:textColor="#143f66" />
-
-
-
-
-
-
-
-
-        <TextView
-            android:id="@+id/finalLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/place_autocomplete_fragment"
-            android:layout_centerHorizontal="true"
-            android:text="Final Location: TBD"
-            android:textColor="#FFFFFF" />
+            <EditText
+                android:id="@+id/contactEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/start"
+                android:layout_alignStart="@+id/start"
+                android:layout_alignTop="@+id/contactemail"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:layout_below="@+id/contactemail"
+                android:layout_marginTop="27dp"
+                android:background="@drawable/datebutton"
+                android:hint="Enter Email"
+                android:inputType="textEmailAddress"
+                android:text=""
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="#143f66"
+                android:textColorHint="#143f66" />
 
 
-    </RelativeLayout>
+            <Button
+                android:id="@+id/start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/contactEmail"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/datebutton"
+                android:onClick="callStartNightAPI"
+                android:text="Start"
+                android:textColor="#143f66" />
+
+            <Button
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/contactName"
+                android:layout_below="@+id/finalLocation"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/datebutton"
+                android:onClick="pickLocation"
+                android:text="My Locations"
+                android:textAllCaps="false"
+                android:textColor="#143f66" />
+
+
+            <TextView
+                android:id="@+id/finalLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/place_autocomplete_fragment"
+                android:layout_centerHorizontal="true"
+                android:textAlignment="center"
+                android:text="Final Location: TBD"
+                android:textColor="#FFFFFF" />
+
+
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>
