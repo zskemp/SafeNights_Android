@@ -35,7 +35,10 @@ public class MainActivity extends FragmentActivity {
                                 selectedFragment = SignUp.newInstance();
                                 break;
                             case R.id.action_schedules:
-                                selectedFragment = SignIn.newInstance();
+                                selectedFragment = History.newInstance();
+                                break;
+                            case R.id.last_night:
+                                selectedFragment = LastNight.newInstance();
                                 break;
                         }
                         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
