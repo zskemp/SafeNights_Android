@@ -167,6 +167,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                 //Otherwise, it means they moved locations, so update the positions in the array
                 if (!recentlyMoved && hour > 2 && hour < 6 && ((latArray[0] == latArray[1] && latArray[0] == latArray[2] && latArray[0] == latArray[3]) ||
                         (lonArray[0] == lonArray[1] && lonArray[0] == lonArray[2] && lonArray[0] == lonArray[3])) &&
+
                         ((Math.abs(latitude - currentLat) > 0.0001) || Math.abs(longitude - currentLon) > 0.0001)) {
                     try {
                         SmsManager smsManager = SmsManager.getDefault();
@@ -178,6 +179,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    callSendEmailAPI(1);
                 } else {
                     latArray[0] = latArray[1];
                     latArray[1] = latArray[2];
@@ -201,6 +203,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    callSendEmailAPI(2);
                 }
                 //Push location data point
                 callAddLocationAPI();
@@ -284,6 +287,8 @@ public class TrackingActivity extends Service implements LocationListener, Senso
             e.printStackTrace();
         }
 
+        callSendEmailAPI(3);
+
         this.stopSelf();
     }
 
@@ -305,11 +310,40 @@ public class TrackingActivity extends Service implements LocationListener, Senso
         } catch (Exception e) {
             e.printStackTrace();
         }
+        callSendEmailAPI(3);
 
         this.stopSelf();
         super.onDestroy();
     }
 
+
+    public void callSendEmailAPI(int reason) {
+        SafeNightsAPIInterface apiService =
+                SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
+        String email = "zrskemp@gmail.com";
+        Log.i("Email", "sending an email");
+        Call<User> call = apiService.email(cName, reason, email, userLocation, currentLat, currentLon);
+
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                User u = response.body();
+                if (u.getPassed().equals("y")) {
+                    Toast.makeText(getApplicationContext(), "You emailed successfully :)", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "You failed to send email", Toast.LENGTH_LONG).show();
+                }
+//                Toast.makeText(getApplicationContext(), "You emailed successfully :)", Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                // Log error here since request failed
+                Log.e("API Call:", t.toString());
+            }
+        });
+    }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
