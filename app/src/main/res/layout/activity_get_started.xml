@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#211E36"
+    android:background="@color/colorBackground"
     android:layout_height="match_parent"
     tools:context="apoorvazachmobileapps.safenights.GetStarted">
 
@@ -33,7 +33,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="13dp"
             android:text="Start Your Night!"
-            android:textColor="#FFFFFF" />
+            android:textColor="#2282b2" />
 
         <TextView
             android:id="@+id/locationTitle"
@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/contactName"
             android:layout_centerHorizontal="true"
-            android:textColor="#000000"
+            android:textColor="#143f66"
             android:layout_marginTop="50dp"
             android:background="@drawable/datebutton"
             android:onClick="callStartNightAPI"
@@ -89,7 +89,7 @@
             android:onClick="pickLocation"
             android:text="My Locations"
             android:textAllCaps="false"
-            android:textColor="#000000" />
+            android:textColor="#143f66" />
 
         <Button
             android:id="@+id/contactName"
@@ -104,7 +104,7 @@
             android:onClick="pickContact"
             android:text="Select a Contact"
             android:textAllCaps="false"
-            android:textColor="#000000" />
+            android:textColor="#143f66" />
 
 
 

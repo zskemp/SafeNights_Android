@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -38,7 +42,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TrackingActivity extends Service implements LocationListener {
+public class TrackingActivity extends Service implements LocationListener, SensorEventListener{
 
     private String userLocation;
     private String phone_number;
@@ -47,6 +51,11 @@ public class TrackingActivity extends Service implements LocationListener {
     private Handler handler = new Handler();
     private Timer timer;
     private TimerTask hourlyTask;
+
+    SensorManager sensorManager;
+    private Sensor mAccelerometer;
+    private static final float SHAKE_THRESHOLD = 6.25f; // m/S**2
+    private static final int MIN_TIME_BETWEEN_SHAKES_MILLISECS = 1000;
 
     //Current params
     Double currentLat;
@@ -57,6 +66,8 @@ public class TrackingActivity extends Service implements LocationListener {
     //FinalDest params
     double latitude;
     double longitude;
+    boolean recentlyMoved;
+    boolean tempMoved;
 
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
 
@@ -88,6 +99,10 @@ public class TrackingActivity extends Service implements LocationListener {
         userLocation = intent.getExtras().getString("location");
         phone_number = intent.getExtras().getString("pNum");
         cName = intent.getExtras().getString("cName");
+
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        recentlyMoved = false;
 
         //Gets coordinates from Address String
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -145,9 +160,10 @@ public class TrackingActivity extends Service implements LocationListener {
                 float batteryPct = level / (float) scale;
                 int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 
+
                 //If it's between 2-6am, and the latitude and longitude is the same for all spots, send a message
                 //Otherwise, it means they moved locations, so update the positions in the array
-                if (hour > 2 && hour < 6 && ((latArray[0] == latArray[1] && latArray[0] == latArray[2] && latArray[0] == latArray[3]) ||
+                if (!recentlyMoved && hour > 2 && hour < 6 && ((latArray[0] == latArray[1] && latArray[0] == latArray[2] && latArray[0] == latArray[3]) ||
                         (lonArray[0] == lonArray[1] && lonArray[0] == lonArray[2] && lonArray[0] == lonArray[3])) &&
                         ((Math.abs(latitude - currentLat) > 0.0001) || Math.abs(longitude - currentLon) > 0.0001)) {
                     try {
@@ -186,6 +202,7 @@ public class TrackingActivity extends Service implements LocationListener {
                 }
                 //Push location data point
                 callAddLocationAPI();
+                recentlyMoved = false;
             }
         };
 
@@ -289,6 +306,29 @@ public class TrackingActivity extends Service implements LocationListener {
 
         this.stopSelf();
         super.onDestroy();
+    }
+
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // Nothing needs to be added here.
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            float x = event.values[0];
+            float y = event.values[1];
+            float z = event.values[2];
+
+            double acceleration = Math.sqrt(Math.pow(x, 2) +
+                    Math.pow(y, 2) +
+                    Math.pow(z, 2)) - SensorManager.GRAVITY_EARTH;
+
+            if (acceleration > SHAKE_THRESHOLD) {
+                recentlyMoved = true;
+            }
+        }
     }
 
 }
