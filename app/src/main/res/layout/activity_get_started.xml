@@ -60,7 +60,7 @@
             android:layout_marginTop="50dp"
             android:layout_centerVertical="true"
             android:layout_below="@+id/title"
-            android:text="Contact: TBD"
+            android:text="Email: TBD"
             android:textColor="#FFFFFF"
             tools:layout_editor_absoluteX="162dp"
             tools:layout_editor_absoluteY="85dp" />
