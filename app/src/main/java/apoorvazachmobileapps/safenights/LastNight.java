@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,8 @@ import retrofit2.Response;
 public class LastNight extends Fragment {
 
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
+    private static View rootview;
+
     private ArrayList<Fields> locations = new ArrayList<Fields>();
     private ArrayList<String> times;
     private ArrayList<Marker> markers;
@@ -77,7 +80,18 @@ public class LastNight extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final View rootview = inflater.inflate(R.layout.activity_last_night, container, false);
+//        final View rootview = inflater.inflate(R.layout.activity_last_night, container, false);
+
+        if (rootview != null) {
+            ViewGroup parent = (ViewGroup) rootview.getParent();
+            if (parent != null)
+                parent.removeView(rootview);
+        }
+        try {
+            rootview = inflater.inflate(R.layout.activity_last_night, container, false);
+        } catch (InflateException e) {
+            Toast.makeText(getActivity(), "An error occured loading this screen. Please try again.", Toast.LENGTH_SHORT);
+        }
 
         //Map fragment setup occurs in callLastNightAPI call-
         //Needs the data to set up so need to call after data arrives

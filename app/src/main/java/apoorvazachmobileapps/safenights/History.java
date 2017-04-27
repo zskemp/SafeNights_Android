@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,10 @@ public class History extends Fragment {
 
     private LineChart mChart;
     private LineChart aChart;
+
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
+    private static View rootview;
+
     private ArrayList<Fields> nights;
     private HashMap<String, ArrayList<Fields>> months;
     private int displayMonth;
@@ -91,9 +95,19 @@ public class History extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final View rootview = inflater.inflate(R.layout.activity_history, container, false);
+//        final View rootview = inflater.inflate(R.layout.activity_history, container, false);
+        if (rootview != null) {
+            ViewGroup parent = (ViewGroup) rootview.getParent();
+            if (parent != null)
+                parent.removeView(rootview);
+        }
+        try {
+            rootview = inflater.inflate(R.layout.activity_history, container, false);
+        } catch (InflateException e) {
+            Toast.makeText(getActivity(), "An error occured loading this screen. Please try again.", Toast.LENGTH_SHORT);
+        }
 
-        v = rootview.findViewById(android.R.id.content);
+//        v = rootview.findViewById(android.R.id.content);
 
         Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Arciform.otf");
         titleMoney = (TextView)rootview.findViewById(R.id.titleMoney);
@@ -404,10 +418,12 @@ public class History extends Fragment {
 
                 //Plotting the Data for a particular month
                 DisplayMetrics metrics = new DisplayMetrics();
-                getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                mChart.setMinimumHeight((int)(metrics.heightPixels*0.35));
-                aChart.setMinimumHeight((int)(metrics.heightPixels*0.35));
-                populatechart();
+                if(getActivity() != null) {
+                    getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+                    mChart.setMinimumHeight((int) (metrics.heightPixels * 0.35));
+                    aChart.setMinimumHeight((int) (metrics.heightPixels * 0.35));
+                    populatechart();
+                }
             }
 
             @Override

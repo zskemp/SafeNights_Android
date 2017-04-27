@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,8 @@ import retrofit2.Response;import java.text.DateFormatSymbols;
 
 public class AddDrinks extends Fragment {
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
+    private static View rootview;
+
     private TextView moneycount;
     private TextView calendarDay;
     private TextView calendarMonth;
@@ -87,7 +90,18 @@ public class AddDrinks extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final View rootview = inflater.inflate(R.layout.activity_add_drinks, container, false);
+//        final View rootview = inflater.inflate(R.layout.activity_add_drinks, container, false);
+
+        if (rootview != null) {
+            ViewGroup parent = (ViewGroup) rootview.getParent();
+            if (parent != null)
+                parent.removeView(rootview);
+        }
+        try {
+            rootview = inflater.inflate(R.layout.activity_add_drinks, container, false);
+        } catch (InflateException e) {
+            Toast.makeText(getActivity(), "An error occured loading this screen. Please try again.", Toast.LENGTH_SHORT);
+        }
 
         Calendar mcurrentDate = Calendar.getInstance();
         mYear = mcurrentDate.get(Calendar.YEAR);
