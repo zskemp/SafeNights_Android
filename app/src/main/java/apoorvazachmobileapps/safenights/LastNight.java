@@ -7,6 +7,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -62,7 +63,7 @@ public class LastNight extends Fragment {
     private ListView listview;
 
     //Pick the colors for the markers (if more than 8 need to add change in logic below)
-    private String[] colors = {"#0ABFBC", "#480048", "#5f2c82", "#658B92", "#837A84", "#A16976", "#EC6F66", "#DE465A", "#FC354C"};
+    private String[] colors = {"#7C4799", "#A94991", "#CE1F82", "#658B92", "#837A84", "#DC216C", "#EC6F66", "#DE465A", "#FC354C"};
 
     public static LastNight newInstance() {
         LastNight fragment = new LastNight();
@@ -186,8 +187,8 @@ public class LastNight extends Fragment {
             }
 
             loc = new LatLng(lat, lon);
-            Marker mLoc = mMap.addMarker(new MarkerOptions().position(loc).title(time).snippet(address).icon(getMarkerIcon(colors[colorNum])));
-            //mLoc.setTag(i);
+            Marker mLoc = mMap.addMarker(new MarkerOptions().position(loc).title(address).snippet(time).icon(getMarkerIcon(colors[colorNum])));
+//            mLoc.setTag(i);
 
             //Add to timeline
             times.add(time);
@@ -207,15 +208,16 @@ public class LastNight extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(markers.get(position).getPosition()));
+                markers.get(position).showInfoWindow();
             }
         });
 
         //Color Line
-        line.width(5).color(Color.RED);
+        line.width(6).color(ResourcesCompat.getColor(getResources(), R.color.colorAlcoholLine, null));
         mMap.addPolyline(line);
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 12F));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 13.5F));
 
     }
 

@@ -29,7 +29,12 @@ public class TimelineAdapter extends ArrayAdapter<String> {
         View rowView = inflater.inflate(R.layout.timeline, parent, false);
         TextView textView = (TextView) rowView.findViewById(R.id.textView1);
         textView.setText(values.get(position));
-        rowView.setMinimumHeight(parent.getHeight()/getCount());
+        if((parent.getHeight()/getCount()) > 150) {
+            rowView.setMinimumHeight(parent.getHeight()/getCount());
+        }
+        else {
+            rowView.setMinimumHeight(150);
+        }
 
         return rowView;
     }

@@ -9,9 +9,8 @@
         <item name="android:textColor">#FFFFFF</item>
     </style>
 
-    <style name="Buttons" parent="ThemeOverlay.AppCompat.Dark">
-        <item name="colorControlHighlight">@color/colorPrimary</item>
-        <item name="colorButtonNormal">@color/colorAlcoholLine</item>
+    <style name="MyDatePickerDialogTheme" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

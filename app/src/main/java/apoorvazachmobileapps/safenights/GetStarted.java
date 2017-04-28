@@ -133,7 +133,7 @@ public class GetStarted extends Fragment {
         //For seeing if first time user logs in
         if(settings.getBoolean("first_time", false)){
             //Show user around app
-            
+
             SharedPreferences.Editor editor = settings.edit();
             editor.putBoolean("first_time", false);
             editor.commit();

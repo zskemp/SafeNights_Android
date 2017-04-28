@@ -166,7 +166,7 @@ public class AddDrinks extends Fragment {
                 //To show current date in the datepicker
                 Calendar mcurrentDate = Calendar.getInstance();
 
-                final DatePickerDialog mDatePicker=new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                final DatePickerDialog mDatePicker=new DatePickerDialog(getContext(), R.style.MyDatePickerDialogTheme,new DatePickerDialog.OnDateSetListener() {
                     public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
                     /*      Your code   to get date and time    */
                         date = new GregorianCalendar(selectedyear, selectedmonth, selectedday).getTime();
