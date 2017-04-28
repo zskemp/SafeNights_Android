@@ -228,7 +228,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
             };
 
             //Set to run every so often (10 min)
-            timer.schedule(hourlyTask, 0l, 1000 * 1 * 10);
+            timer.schedule(hourlyTask, 0l, 1000 * 10 * 60);
         }
         return super.onStartCommand(intent, flags, startId);
     }
