@@ -174,10 +174,11 @@ public class History extends Fragment {
         callHistoryAPI(v);
     }
 
+
     //TODO:Make a good algorithm for calculating a persons drunkness (how much to weigh each drink)
     public float calculateDrunkness(Fields field) {
         float total = 0;
-        total = total + Float.parseFloat(field.getBeer()) + Float.parseFloat(field.getWine()) + Float.parseFloat(field.getShots()) + Float.parseFloat(field.getHardliquor());
+        total = total + 100*((Float.parseFloat(field.getBeer()) + Float.parseFloat(field.getWine()) + Float.parseFloat(field.getShots()) + Float.parseFloat(field.getHardliquor()))/40);
         return total;
     }
 

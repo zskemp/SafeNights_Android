@@ -382,12 +382,12 @@ public class GetStarted extends Fragment {
     //Dialog pop-up for picking from saved locations
     public void runTutorial(final View view) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Select a location")
-                .setMessage("Welcome friend! We would like to give you a quick introduction to our app." +
-                '\n' + "The Get Started feature requires you pick a location you would safely like to end your night, and some friends you trust to watch over you;" +
-                '\n' + "The Add Drinks feature lets you confess your sins the morning after so you can track your habits;" +
-                '\n' + "History lets you view those habits over the course of a month at a time;" +
-                '\n' + "Finally, Last Night lets you take a look back at your last adventure, in case its a little hazy ;)")
+        builder.setTitle("Welcome!")
+                .setMessage("Hello friend! We would like to give you a quick introduction to our app." +
+                '\n' + '\n' +"The Get Started feature requires you pick a location you would safely like to end your night, and some friends you trust to watch over you;" +
+                '\n' + '\n' +"The Add Drinks feature lets you confess your sins the morning after so you can track your habits (measured in standard drinks);" +
+                '\n' + '\n' +"History lets you view those habits over the course of a month at a time;" +
+                '\n' + '\n' +"Finally, Last Night lets you take a look back at your last adventure, in case its a little hazy ;)")
                 // Set the action buttons
                 .setPositiveButton("Got It!", new DialogInterface.OnClickListener() {
                     @Override
