@@ -36,6 +36,15 @@
         android:layout_height="match_parent"
         android:layout_toRightOf="@+id/timelineLayout" />
 
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/avi"
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content"
+        style="@style/AVLoadingIndicatorView"
+        app:indicatorName="BallSpinFadeLoaderIndicator"
+        app:indicatorColor="#FFFFFF" />
+
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

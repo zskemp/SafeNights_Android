@@ -33,6 +33,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -62,6 +63,8 @@ public class LastNight extends Fragment {
     MapView mMapView;
     private ListView listview;
 
+    private AVLoadingIndicatorView indicator;
+
     //Pick the colors for the markers (if more than 8 need to add change in logic below)
     private String[] colors = {"#7C4799", "#A94991", "#CE1F82", "#658B92", "#837A84", "#DC216C", "#EC6F66", "#DE465A", "#FC354C"};
 
@@ -83,6 +86,7 @@ public class LastNight extends Fragment {
         super.onCreate(savedInstanceState);
 //        final View rootview = inflater.inflate(R.layout.activity_last_night, container, false);
 
+        //Preventing crashing if switch to different tab while this tries to load
         if (rootview != null) {
             ViewGroup parent = (ViewGroup) rootview.getParent();
             if (parent != null)
@@ -93,6 +97,12 @@ public class LastNight extends Fragment {
         } catch (InflateException e) {
             Toast.makeText(getActivity(), "An error occured loading this screen. Please try again.", Toast.LENGTH_SHORT);
         }
+
+        //Sets up loading bar
+        indicator = (AVLoadingIndicatorView)rootview.findViewById(R.id.avi);
+        indicator.show();
+        indicator.setVisibility(View.VISIBLE);
+
 
         //Map fragment setup occurs in callLastNightAPI call-
         //Needs the data to set up so need to call after data arrives
@@ -218,6 +228,9 @@ public class LastNight extends Fragment {
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 13.5F));
+
+        //Hiding the loading bar
+        indicator.hide();
 
     }
 
