@@ -2,24 +2,23 @@
 <resources>
     <color name="colorPrimary">#212121</color>
     <color name="colorPrimaryDark">#212121</color>
-    <color name="colorAccent">#211E36</color>
+    <color name="colorAccent">#56C5EF</color>
     <color name="black">#000000</color>
 
-    <color name="primary">#a3a3a5</color>
-    <color name="primaryAccent">#ffffff</color>
+    <color name="menu">#a3a3a5</color>
 
     <color name="colorBackground">#303030</color>
-    <color name="colorTitle">#9E9E9E</color>
+    <color name="colorTitle">#FFFFFF</color>
 
-    <color name="mapLines">#FDD835</color>
+    <color name="mapLines">#56C5EF</color>
 
-    <color name="colorMoneyLine">#E91E63</color>
-    <color name="colorMoneyFill">#F06292</color>
-    <color name="colorMoneyPoint">#C2185B</color>
-    <color name="colorMoneyPointHole">#FAFAFA</color>
+    <color name="colorMoneyLine">#E20057</color>
+    <color name="colorMoneyFill">#E42871</color>
+    <color name="colorMoneyPoint">#B40046</color>
+    <color name="colorMoneyPointHole">#E42871</color>
 
-    <color name="colorAlcoholLine">#03A9F4</color>
-    <color name="colorAlcoholFill">#56C5EF</color>
-    <color name="colorAlcoholPoint">#1565C0</color>
-    <color name="colorAlcoholPointHole">#FAFAFA</color>
+    <color name="colorAlcoholLine">#AD01B3</color>
+    <color name="colorAlcoholFill">#B421B9</color>
+    <color name="colorAlcoholPoint">#820187</color>
+    <color name="colorAlcoholPointHole">#B421B9</color>
 </resources>

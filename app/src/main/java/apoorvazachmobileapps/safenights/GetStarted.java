@@ -131,6 +131,15 @@ public class GetStarted extends Fragment {
         h = settings.getStringSet("locations", new HashSet<String>());
         a = h.toArray(new CharSequence[h.size()]);
 
+        //For seeing if first time user logs in
+        if(settings.getBoolean("first_time", false)){
+            //Show user around app
+            
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putBoolean("first_time", false);
+            editor.commit();
+        }
+
         StartStopButton = (Button)rootview.findViewById(R.id.start);
         StartStopButton.setOnClickListener(new View.OnClickListener()
         {

@@ -48,6 +48,9 @@ public class SplashScreen extends Activity {
 
                     SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
                     if (settings.getString("username", "") == null || settings.getString("username","") == ""){
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putBoolean("first_time", true);
+                        editor.commit();
                         Intent intent = new Intent(SplashScreen.this, Login.class);
                         startActivity(intent);
                     } else {
