@@ -31,16 +31,16 @@
                 android:text="Start Your Night!"
                 android:textColor="#2282b2" />
 
-            <TextView
-                android:id="@+id/locationTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/startstop"
-                android:textSize="20dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="47dp"
-                android:text="Search for a destination, or pick one from My Locations!"
-                android:textColor="#FFFFFF" />
+            <!--<TextView-->
+                <!--android:id="@+id/locationTitle"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/startstop"-->
+                <!--android:textSize="20dp"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_marginTop="47dp"-->
+                <!--android:text="Search for a destination, or pick one from My Locations!"-->
+                <!--android:textColor="#FFFFFF" />-->
 
             <fragment
                 android:id="@+id/place_autocomplete_fragment"
@@ -48,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_below="@+id/locationTitle" />
+                android:layout_below="@+id/startstop" />
 
             <TextView
                 android:id="@+id/contactname"

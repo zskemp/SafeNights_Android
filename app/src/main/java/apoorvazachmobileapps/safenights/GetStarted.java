@@ -134,7 +134,7 @@ public class GetStarted extends Fragment {
         //For seeing if first time user logs in
         if(settings.getBoolean("first_time", false)){
             //Show user around app
-
+            runTutorial(rootview);
             SharedPreferences.Editor editor = settings.edit();
             editor.putBoolean("first_time", false);
             editor.commit();
@@ -161,7 +161,7 @@ public class GetStarted extends Fragment {
             }
         });
         startstop = (TextView)rootview.findViewById(R.id.startstop);
-        locationTitle = (TextView)rootview.findViewById(R.id.locationTitle);
+        //locationTitle = (TextView)rootview.findViewById(R.id.locationTitle);
         //contactnumber = (TextView)findViewById(R.id.contactnumber);
         finalLocation = (TextView)rootview.findViewById(R.id.finalLocation);
         Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Arciform.otf");
@@ -377,6 +377,28 @@ public class GetStarted extends Fragment {
         }
 
         return contactName;
+    }
+
+    //Dialog pop-up for picking from saved locations
+    public void runTutorial(final View view) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Select a location")
+                .setMessage("Welcome friend! We would like to give you a quick introduction to our app." +
+                '\n' + "The Get Started feature requires you pick a location you would safely like to end your night, and some friends you trust to watch over you;" +
+                '\n' + "The Add Drinks feature lets you confess your sins the morning after so you can track your habits;" +
+                '\n' + "History lets you view those habits over the course of a month at a time;" +
+                '\n' + "Finally, Last Night lets you take a look back at your last adventure, in case its a little hazy ;)")
+                // Set the action buttons
+                .setPositiveButton("Got It!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK, so save the mSelectedItems results somewhere
+                        // or return them to the component that opened the dialog
+
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
 
