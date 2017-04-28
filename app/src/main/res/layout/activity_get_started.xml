@@ -24,31 +24,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:textSize="40dp"
-                android:textStyle="bold"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 android:text="Start Your Night!"
-                android:textColor="#2282b2" />
+                android:textColor="#2282b2"
+                android:textSize="40dp"
+                android:textStyle="bold" />
 
             <!--<TextView-->
-                <!--android:id="@+id/locationTitle"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_below="@+id/startstop"-->
-                <!--android:textSize="20dp"-->
-                <!--android:layout_centerHorizontal="true"-->
-                <!--android:layout_marginTop="47dp"-->
-                <!--android:text="Search for a destination, or pick one from My Locations!"-->
-                <!--android:textColor="#FFFFFF" />-->
+            <!--android:id="@+id/locationTitle"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/startstop"-->
+            <!--android:textSize="20dp"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_marginTop="47dp"-->
+            <!--android:text="Search for a destination, or pick one from My Locations!"-->
+            <!--android:textColor="#FFFFFF" />-->
 
             <fragment
                 android:id="@+id/place_autocomplete_fragment"
                 android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/startstop" />
+                android:layout_below="@+id/startstop"
+                android:layout_centerHorizontal="true" />
 
             <TextView
                 android:id="@+id/contactname"
@@ -64,34 +64,34 @@
                 tools:layout_editor_absoluteY="85dp" />
 
             <android.support.design.widget.TextInputLayout
+                android:id="@+id/contactName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/contactname"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/datebutton"
+                android:backgroundTint="#FFFFFF"
                 android:shadowColor="#737f82"
                 android:textAlignment="center"
-                android:id="@+id/contactName"
-                android:layout_below="@+id/contactname"
                 android:textColor="#143f66"
                 android:textColorHint="#143f66"
-                android:backgroundTint="#FFFFFF"
                 android:textColorLink="#737f82">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/contactNameText"
-                    android:backgroundTint="#FFFFFF"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Username"
-                    android:paddingLeft="5dp"
-                    android:inputType="text"
-                    android:shadowColor="#737f82"
+                    android:backgroundTint="#FFFFFF"
                     android:ellipsize="start"
                     android:gravity="center_horizontal"
-                    android:textColor="#143f66"
+                    android:hint="Name"
+                    android:inputType="text"
+                    android:paddingLeft="5dp"
+                    android:shadowColor="#737f82"
                     android:textAlignment="center"
+                    android:textColor="#143f66"
                     android:textColorHint="#FFFFFF"
                     android:textColorLink="#737f82" />
             </android.support.design.widget.TextInputLayout>
@@ -110,34 +110,34 @@
                 tools:layout_editor_absoluteY="85dp" />
 
             <android.support.design.widget.TextInputLayout
+                android:id="@+id/contactEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/contactemail"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/datebutton"
+                android:backgroundTint="#FFFFFF"
                 android:shadowColor="#737f82"
                 android:textAlignment="center"
-                android:id="@+id/contactEmail"
-                android:layout_below="@+id/contactemail"
                 android:textColor="#143f66"
                 android:textColorHint="#143f66"
-                android:backgroundTint="#FFFFFF"
                 android:textColorLink="#737f82">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/contactEmailText"
-                    android:backgroundTint="#FFFFFF"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Email Address"
-                    android:paddingLeft="5dp"
-                    android:inputType="text"
-                    android:shadowColor="#737f82"
+                    android:backgroundTint="#FFFFFF"
                     android:ellipsize="start"
                     android:gravity="center_horizontal"
-                    android:textColor="#143f66"
+                    android:hint="Email Address"
+                    android:inputType="text"
+                    android:paddingLeft="5dp"
+                    android:shadowColor="#737f82"
                     android:textAlignment="center"
+                    android:textColor="#143f66"
                     android:textColorHint="#FFFFFF"
                     android:textColorLink="#737f82" />
             </android.support.design.widget.TextInputLayout>
@@ -158,8 +158,8 @@
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:layout_below="@+id/finalLocation"
+                android:layout_centerHorizontal="true"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/datebutton"
                 android:text="My Locations"
@@ -173,8 +173,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/place_autocomplete_fragment"
                 android:layout_centerHorizontal="true"
-                android:textAlignment="center"
                 android:text="Final Location: TBD"
+                android:textAlignment="center"
                 android:textColor="#FFFFFF" />
 
 

@@ -149,6 +149,9 @@ public class AddDrinks extends Fragment {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 moneycount.setText("Money Spent: $" + String.valueOf(progress));
                 money = progress;
+                if (money == 200){
+                    moneycount.setText("Money Spent: $" + String.valueOf(progress) + " (Yikes!)");
+                }
             }
 
             @Override
