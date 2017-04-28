@@ -28,13 +28,13 @@ public class MainActivity extends FragmentActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         Fragment selectedFragment = null;
                         switch (item.getItemId()) {
-                            case R.id.action_favorites:
+                            case R.id.get_started:
                                 selectedFragment = GetStarted.newInstance();
                                 break;
-                            case R.id.action_schedules:
+                            case R.id.add_drinks:
                                 selectedFragment = AddDrinks.newInstance();
                                 break;
-                            case R.id.action_music:
+                            case R.id.history:
                                 selectedFragment = History.newInstance();
                                 break;
                             case R.id.last_night:

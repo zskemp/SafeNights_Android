@@ -60,16 +60,16 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/calendar"
             android:layout_centerHorizontal="true"
-            android:progressTint="#4CAF50"
-            android:foregroundTint="#A5D6A7"
-            android:indeterminateTint="#A5D6A7"
-            android:secondaryProgressTint="#A5D6A7"
-            android:progressBackgroundTint="#A5D6A7"
-            android:backgroundTint="#A5D6A7"
-            android:thumbTint="#197914"
+            android:progressTint="#00E5FF"
+            android:foregroundTint="#56C5EF"
+            android:indeterminateTint="#56C5EF"
+            android:secondaryProgressTint="#56C5EF"
+            android:progressBackgroundTint="#56C5EF"
+            android:backgroundTint="#56C5EF"
+            android:thumbTint="#0288D1"
             android:max="200"
-            app:bar_color="#A5D6A7"
-            app:bar_highlight_color="#4caf50"
+            app:bar_color="#56C5EF"
+            app:bar_highlight_color="#00E5FF"
             app:corner_radius="10"
             app:data_type="_integer"
             app:max_value="200"
@@ -80,6 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/seekbar"
+            android:textSize="20dp"
             android:layout_centerHorizontal="true" />
 
         <TextView
@@ -215,7 +216,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
             android:background="@drawable/datebutton"
-            android:textColor="#3981c2"
+            android:textColor="#FFFFFF"
+            android:textSize="25dp"
             android:layout_marginTop="15dp"
             android:text="Submit" />
 
