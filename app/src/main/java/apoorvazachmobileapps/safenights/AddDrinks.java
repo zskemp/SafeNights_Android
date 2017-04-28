@@ -63,16 +63,18 @@ public class AddDrinks extends Fragment {
 
     public void onSaveInstanceState(Bundle savedState) {
         super.onSaveInstanceState(savedState);
-
+        Log.i("gothere","sup");
         int seekMoney = money;
         int year = mYear;
         int month = mMonth;
         int day = mDay;
+        int key = 1;
 
         savedState.putInt("money", seekMoney);
         savedState.putInt("year", year);
         savedState.putInt("month", month);
         savedState.putInt("day", day);
+        savedState.putInt("key", 1);
     }
 
     public static AddDrinks newInstance() {
@@ -103,6 +105,7 @@ public class AddDrinks extends Fragment {
         } catch (InflateException e) {
             Toast.makeText(getActivity(), "An error occured loading this screen. Please try again.", Toast.LENGTH_SHORT);
         }
+
 
         Calendar mcurrentDate = Calendar.getInstance();
         mYear = mcurrentDate.get(Calendar.YEAR);
@@ -146,6 +149,9 @@ public class AddDrinks extends Fragment {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 moneycount.setText("Money Spent: $" + String.valueOf(progress));
                 money = progress;
+                if (money == 200){
+                    moneycount.setText("Money Spent: $" + String.valueOf(progress) + " (Yikes!)");
+                }
             }
 
             @Override
@@ -184,6 +190,7 @@ public class AddDrinks extends Fragment {
         });
 
         if (savedInstanceState != null) {
+
             money = savedInstanceState.getInt("money");
             mDay = savedInstanceState.getInt("day");
             mYear = savedInstanceState.getInt("year");

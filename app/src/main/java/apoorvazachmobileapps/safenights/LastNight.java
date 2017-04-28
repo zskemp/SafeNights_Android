@@ -72,6 +72,11 @@ public class LastNight extends Fragment {
         LastNight fragment = new LastNight();
         return fragment;
     }
+    public void onSaveInstanceState(Bundle savedState) {
+        super.onSaveInstanceState(savedState);
+        savedState.putInt("key", 3);
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,6 +102,8 @@ public class LastNight extends Fragment {
         } catch (InflateException e) {
             Toast.makeText(getActivity(), "An error occured loading this screen. Please try again.", Toast.LENGTH_SHORT);
         }
+        setRetainInstance(true);
+
 
         //Sets up loading bar
         indicator = (AVLoadingIndicatorView)rootview.findViewById(R.id.avi);

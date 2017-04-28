@@ -82,6 +82,8 @@ public class History extends Fragment {
         int saveYear = displayYear;
         savedState.putInt("month", saveMonth);
         savedState.putInt("year", saveYear);
+        savedState.putInt("key", 2);
+
     }
 
     @Override
@@ -106,6 +108,8 @@ public class History extends Fragment {
         } catch (InflateException e) {
             Toast.makeText(getActivity(), "An error occured loading this screen. Please try again.", Toast.LENGTH_SHORT);
         }
+        setRetainInstance(true);
+
 
 //        v = rootview.findViewById(android.R.id.content);
 

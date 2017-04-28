@@ -149,8 +149,8 @@ public class GetStarted extends Fragment {
                 callStartNightAPI(rootview);
             }
         });
-        contactName = (EditText)rootview.findViewById(R.id.contactName);
-        contactEmail = (EditText)rootview.findViewById(R.id.contactEmail);
+        contactName = (EditText)rootview.findViewById(R.id.contactNameText);
+        contactEmail = (EditText)rootview.findViewById(R.id.contactEmailText);
         title = (Button)rootview.findViewById(R.id.title);
         title.setOnClickListener(new View.OnClickListener()
         {
