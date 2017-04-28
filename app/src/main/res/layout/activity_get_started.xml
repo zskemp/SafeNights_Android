@@ -63,24 +63,38 @@
                 tools:layout_editor_absoluteX="162dp"
                 tools:layout_editor_absoluteY="85dp" />
 
-            <EditText
-                android:id="@+id/contactName"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_alignTop="@+id/contactname"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:layout_below="@+id/contactname"
-                android:layout_marginTop="27dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/datebutton"
-                android:hint="Enter Name"
-                android:inputType="textEmailAddress"
-                android:text=""
+                android:shadowColor="#737f82"
                 android:textAlignment="center"
-                android:textAllCaps="false"
+                android:id="@+id/contactName"
+                android:layout_below="@+id/contactname"
                 android:textColor="#143f66"
-                android:textColorHint="#143f66" />
+                android:textColorHint="#143f66"
+                android:backgroundTint="#FFFFFF"
+                android:textColorLink="#737f82">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/contactNameText"
+                    android:backgroundTint="#FFFFFF"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Username"
+                    android:paddingLeft="5dp"
+                    android:inputType="text"
+                    android:shadowColor="#737f82"
+                    android:ellipsize="start"
+                    android:gravity="center_horizontal"
+                    android:textColor="#143f66"
+                    android:textAlignment="center"
+                    android:textColorHint="#FFFFFF"
+                    android:textColorLink="#737f82" />
+            </android.support.design.widget.TextInputLayout>
 
             <TextView
                 android:id="@+id/contactemail"
@@ -90,29 +104,43 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_marginTop="50dp"
-                android:text="Email"
+                android:text="Name"
                 android:textColor="#FFFFFF"
                 tools:layout_editor_absoluteX="162dp"
                 tools:layout_editor_absoluteY="85dp" />
 
-            <EditText
-                android:id="@+id/contactEmail"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_alignTop="@+id/contactemail"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:layout_below="@+id/contactemail"
-                android:layout_marginTop="27dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/datebutton"
-                android:hint="Enter Email"
-                android:inputType="textEmailAddress"
-                android:text=""
+                android:shadowColor="#737f82"
                 android:textAlignment="center"
-                android:textAllCaps="false"
+                android:id="@+id/contactEmail"
+                android:layout_below="@+id/contactemail"
                 android:textColor="#143f66"
-                android:textColorHint="#143f66" />
+                android:textColorHint="#143f66"
+                android:backgroundTint="#FFFFFF"
+                android:textColorLink="#737f82">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/contactEmailText"
+                    android:backgroundTint="#FFFFFF"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Email Address"
+                    android:paddingLeft="5dp"
+                    android:inputType="text"
+                    android:shadowColor="#737f82"
+                    android:ellipsize="start"
+                    android:gravity="center_horizontal"
+                    android:textColor="#143f66"
+                    android:textAlignment="center"
+                    android:textColorHint="#FFFFFF"
+                    android:textColorLink="#737f82" />
+            </android.support.design.widget.TextInputLayout>
 
 
             <Button
