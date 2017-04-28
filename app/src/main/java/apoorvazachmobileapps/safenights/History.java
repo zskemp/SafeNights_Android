@@ -196,8 +196,8 @@ public class History extends Fragment {
         if(thisMonth == null){
             mChart.clear();
             aChart.clear();
-            mChart.setNoDataText("You have no data for this month" + '\n' + "Please record any activity in Add Drinks");
-            aChart.setNoDataText("You have no data for this month" + '\n' + "Please record any activity in Add Drinks");
+            mChart.setNoDataText("No Data! " + '\n' + "Please record any activity in Add Drinks");
+            aChart.setNoDataText("No Data! " + '\n' + "Please record any activity in Add Drinks");
             Toast.makeText(getActivity(), "You have no history  yet!", Toast.LENGTH_SHORT);
             return;
         }
@@ -313,8 +313,8 @@ public class History extends Fragment {
 
 
         // WHAT IF THERE IS NO DATA?!?!?!
-        mChart.setNoDataText("You have no data for this month" + '\n' + "Please record any activity in Add Drinks");
-        aChart.setNoDataText("You have no data for this month" + '\n' + "Please record any activity in Add Drinks");
+        mChart.setNoDataText("No Data!" + '\n' + "Please record any activity in Add Drinks");
+        aChart.setNoDataText("No Data!" + '\n' + "Please record any activity in Add Drinks");
 
         mChart.invalidate(); // refresh
         aChart.invalidate(); // refresh
