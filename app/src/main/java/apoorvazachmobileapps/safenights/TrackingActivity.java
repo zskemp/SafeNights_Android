@@ -180,7 +180,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                     Log.i("hi", "" + recentlyMoved);
                     //If it's between 2-6am, and the latitude and longitude is the same for all spots, send a message
                     //Otherwise, it means they moved locations, so update the positions in the array
-                    if (!recentlyMoved && ((latArray[0] == latArray[1] && latArray[0] == latArray[2] && latArray[0] == latArray[3]) ||
+                    if (!recentlyMoved && hour>=2 && hour<6 &&((latArray[0] == latArray[1] && latArray[0] == latArray[2] && latArray[0] == latArray[3]) ||
                             (lonArray[0] == lonArray[1] && lonArray[0] == lonArray[2] && lonArray[0] == lonArray[3])) &&
 
                             ((Math.abs(latitude - currentLat) > 0.0001) || Math.abs(longitude - currentLon) > 0.0001)) {
