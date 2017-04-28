@@ -104,6 +104,7 @@ public class GetStarted extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 //        final View rootview = inflater.inflate(R.layout.activity_get_started, container, false);
         //setContentView(R.layout.activity_get_started);
@@ -159,18 +160,24 @@ public class GetStarted extends Fragment {
 
         contactName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus)
+                if (hasFocus) {
                     contactName.setHint("");
-                else
+                    contactName.setFocusable(true);
+                }
+                else {
                     contactName.setHint("Enter Name");
+                }
             }
         });
         contactEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus)
+                if (hasFocus) {
+                    contactName.setFocusable(true);
                     contactEmail.setHint("");
-                else
+                }
+                else {
                     contactEmail.setHint("Enter Email");
+                }
             }
         });
 
