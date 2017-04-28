@@ -105,12 +105,6 @@ public class LastNight extends Fragment {
         setRetainInstance(true);
 
 
-        //Sets up loading bar
-        indicator = (AVLoadingIndicatorView)rootview.findViewById(R.id.avi);
-        indicator.show();
-        indicator.setVisibility(View.VISIBLE);
-
-
         //Map fragment setup occurs in callLastNightAPI call-
         //Needs the data to set up so need to call after data arrives
 
@@ -235,9 +229,6 @@ public class LastNight extends Fragment {
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 13.5F));
-
-        //Hiding the loading bar
-        indicator.hide();
 
     }
 
