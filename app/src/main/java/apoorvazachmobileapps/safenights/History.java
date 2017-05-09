@@ -4,12 +4,17 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.InflateException;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,11 +50,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class History extends AppCompatActivity {
+public class History extends Fragment {
 
     private LineChart mChart;
     private LineChart aChart;
+
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
+    private static View rootview;
+
     private ArrayList<Fields> nights;
     private HashMap<String, ArrayList<Fields>> months;
     private int displayMonth;
@@ -62,6 +70,11 @@ public class History extends AppCompatActivity {
     Button nextMonth;
     Button lastMonth;
 
+    public static History newInstance() {
+        History fragment = new History();
+        return fragment;
+    }
+
     public void onSaveInstanceState(Bundle savedState) {
         super.onSaveInstanceState(savedState);
 
@@ -69,34 +82,53 @@ public class History extends AppCompatActivity {
         int saveYear = displayYear;
         savedState.putInt("month", saveMonth);
         savedState.putInt("year", saveYear);
+        savedState.putInt("key", 2);
+
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_history);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        v = this.findViewById(android.R.id.content);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
 
-        Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/Arciform.otf");
-        titleMoney = (TextView)findViewById(R.id.titleMoney);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//        final View rootview = inflater.inflate(R.layout.activity_history, container, false);
+        if (rootview != null) {
+            ViewGroup parent = (ViewGroup) rootview.getParent();
+            if (parent != null)
+                parent.removeView(rootview);
+        }
+        try {
+            rootview = inflater.inflate(R.layout.activity_history, container, false);
+        } catch (InflateException e) {
+            Toast.makeText(getActivity(), "An error occured loading this screen. Please try again.", Toast.LENGTH_SHORT);
+        }
+        setRetainInstance(true);
+
+
+//        v = rootview.findViewById(android.R.id.content);
+
+        Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Arciform.otf");
+        titleMoney = (TextView)rootview.findViewById(R.id.titleMoney);
         titleMoney.setTypeface(tf);
         titleMoney.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorTitle, null));
-        titleAlcohol = (TextView)findViewById(R.id.titleAlcohol);
+        titleAlcohol = (TextView)rootview.findViewById(R.id.titleAlcohol);
         titleAlcohol.setTypeface(tf);
         titleAlcohol.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorTitle, null));
 
-        month = (TextView)findViewById(R.id.month);
+        month = (TextView)rootview.findViewById(R.id.month);
         Date today = new Date();
         final Calendar cal = Calendar.getInstance();
         cal.setTime(today);
         displayMonth = cal.get(Calendar.MONTH);
         displayYear = cal.get(Calendar.YEAR);
         month.setText(getMonthForInt(displayMonth));
-        nextMonth = (Button) findViewById(R.id.nextMonth);
+        nextMonth = (Button) rootview.findViewById(R.id.nextMonth);
         nextMonth.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 cal.add(Calendar.MONTH, 1);
@@ -108,7 +140,7 @@ public class History extends AppCompatActivity {
                 callHistoryAPI(v);
             }
         });
-        lastMonth = (Button) findViewById(R.id.lastMonth);
+        lastMonth = (Button) rootview.findViewById(R.id.lastMonth);
         lastMonth.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 cal.add(Calendar.MONTH, -1);
@@ -127,21 +159,26 @@ public class History extends AppCompatActivity {
             month.setText(getMonthForInt(displayMonth));
         }
 
+
+        mChart = (LineChart) rootview.findViewById(R.id.chartMoney);
+        aChart = (LineChart) rootview.findViewById(R.id.chartAlcohol);
         //Note: We add to the nights array list in this method call
         callHistoryAPI(v);
         //NOTE: All the remaining calls needed to be handeled in the callHistoryAPI() because
         // they were dependent on the response call form the HTTP request
         // (these are handeled asychronously and so could not just call afterwards on main thread)
+        return rootview;
     }
 
     public void callCallHistory(View v){
         callHistoryAPI(v);
     }
 
+
     //TODO:Make a good algorithm for calculating a persons drunkness (how much to weigh each drink)
     public float calculateDrunkness(Fields field) {
         float total = 0;
-        total = total + Float.parseFloat(field.getBeer()) + Float.parseFloat(field.getWine()) + Float.parseFloat(field.getShots()) + Float.parseFloat(field.getHardliquor());
+        total = total + 100*((Float.parseFloat(field.getBeer()) + Float.parseFloat(field.getWine()) + Float.parseFloat(field.getShots()) + Float.parseFloat(field.getHardliquor()))/40);
         return total;
     }
 
@@ -160,9 +197,9 @@ public class History extends AppCompatActivity {
         if(thisMonth == null){
             mChart.clear();
             aChart.clear();
-            mChart.setNoDataText("You have no data for this month" + '\n' + "Please record any activity in Add Drinks");
-            aChart.setNoDataText("You have no data for this month" + '\n' + "Please record any activity in Add Drinks");
-            Toast.makeText(getApplicationContext(), "You have no history  yet!", Toast.LENGTH_SHORT);
+            mChart.setNoDataText("No Data! " + '\n' + "Please record any activity in Add Drinks");
+            aChart.setNoDataText("No Data! " + '\n' + "Please record any activity in Add Drinks");
+            Toast.makeText(getActivity(), "You have no history  yet!", Toast.LENGTH_SHORT);
             return;
         }
 
@@ -277,8 +314,8 @@ public class History extends AppCompatActivity {
 
 
         // WHAT IF THERE IS NO DATA?!?!?!
-        mChart.setNoDataText("You have no data for this month" + '\n' + "Please record any activity in Add Drinks");
-        aChart.setNoDataText("You have no data for this month" + '\n' + "Please record any activity in Add Drinks");
+        mChart.setNoDataText("No Data!" + '\n' + "Please record any activity in Add Drinks");
+        aChart.setNoDataText("No Data!" + '\n' + "Please record any activity in Add Drinks");
 
         mChart.invalidate(); // refresh
         aChart.invalidate(); // refresh
@@ -359,7 +396,7 @@ public class History extends AppCompatActivity {
         SafeNightsAPIInterface apiService =
                 SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
 
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
         String username = settings.getString("username", "");
         String password = settings.getString("password", "");
 
@@ -385,13 +422,13 @@ public class History extends AppCompatActivity {
                 parseDataByMonths();
 
                 //Plotting the Data for a particular month
-                mChart = (LineChart) findViewById(R.id.chartMoney);
-                aChart = (LineChart) findViewById(R.id.chartAlcohol);
                 DisplayMetrics metrics = new DisplayMetrics();
-                getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                mChart.setMinimumHeight((int)(metrics.heightPixels*0.35));
-                aChart.setMinimumHeight((int)(metrics.heightPixels*0.35));
-                populatechart();
+                if(getActivity() != null) {
+                    getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+                    mChart.setMinimumHeight((int) (metrics.heightPixels * 0.35));
+                    aChart.setMinimumHeight((int) (metrics.heightPixels * 0.35));
+                    populatechart();
+                }
             }
 
             @Override

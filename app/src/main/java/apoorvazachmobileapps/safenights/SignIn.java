@@ -40,8 +40,9 @@ public class SignIn extends Fragment {
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
     private AVLoadingIndicatorView indicator;
 
-    public SignIn() {
-        // Required empty public constructor
+    public static SignIn newInstance() {
+        SignIn fragment = new SignIn();
+        return fragment;
     }
 
 
@@ -56,7 +57,7 @@ public class SignIn extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragmen
+        // Inflate the layout for this fragment
         View rootview = inflater.inflate(R.layout.fragment_sign_in, container, false);
         indicator = (AVLoadingIndicatorView)rootview.findViewById(R.id.avi);
 

@@ -6,19 +6,6 @@
     android:layout_height="match_parent"
     tools:context="apoorvazachmobileapps.safenights.AddDrinks">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </android.support.design.widget.AppBarLayout>
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,56 +17,59 @@
         android:layout_height="match_parent"
         android:background="@color/colorBackground"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">>
-        <TextView
-            android:layout_width="match_parent"
-            android:text="Enter In Your Information!"
-            android:textAlignment="center"
-            android:textSize="35dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:id="@+id/title"
-            android:layout_height="match_parent" />
+
         <ImageView
             android:id="@+id/calendar"
             android:layout_width="wrap_content"
             android:layout_below="@+id/title"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/rsz_calendar" />
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:src="@drawable/rsz_calendar"
+            android:background="@drawable/calendar_border"/>
 
-
-        <Button
-            android:id="@+id/datepicker"
+        <TextView
+            android:id="@+id/calendarMonth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Switch Date"
-            android:background="@drawable/datebutton"
-            android:textColor="#4f8ddf"
-            android:textAllCaps="false"
-            android:layout_below="@+id/calendar"
+            android:textSize="35dp"
+            android:layout_marginBottom="70dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="30dp"
-            android:layout_marginTop="20dp"
-            android:minWidth="100dp"
-            android:theme="@style/Buttons" />
-        <!--<DatePicker-->
-        <!--android:id="@+id/datepicker"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:backgroundTint="#FFFFFF"-->
-        <!--android:hint="Date of Sin"-->
-        <!--android:shadowColor="#737f82"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_centerHorizontal="true" />-->
+            android:textAlignment="center"
+            android:text="TextView"
+            android:textStyle="bold"
+            android:layout_marginTop="35dp"
+            android:layout_below="@+id/title" />
 
-        <com.crystal.crystalrangeseekbar.widgets.CrystalSeekbar
+        <TextView
+            android:id="@+id/calendarDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textColor="#3092cb"
+            android:textSize="70dp"
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold"
+            android:layout_marginTop="75dp"
+            android:layout_alignTop="@+id/calendarMonth"/>
+
+        <android.support.v7.widget.AppCompatSeekBar
             android:id="@+id/seekbar"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/datepicker"
+            android:layout_below="@+id/calendar"
             android:layout_centerHorizontal="true"
-            app:bar_color="#A5D6A7"
-            app:bar_highlight_color="#4CAF50"
+            android:progressTint="#00E5FF"
+            android:foregroundTint="#a3a3a5"
+            android:indeterminateTint="#a3a3a5"
+            android:secondaryProgressTint="#a3a3a5"
+            android:progressBackgroundTint="#a3a3a5"
+            android:backgroundTint="#a3a3a5"
+            android:thumbTint="#0288D1"
+            android:max="200"
+            app:bar_color="#56C5EF"
+            app:bar_highlight_color="#00E5FF"
             app:corner_radius="10"
             app:data_type="_integer"
             app:max_value="200"
@@ -90,6 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/seekbar"
+            android:textSize="20dp"
             android:layout_centerHorizontal="true" />
 
         <TextView
@@ -97,7 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/seekbar"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="10dp"
             android:layout_below="@+id/moneycount"
             android:layout_marginLeft="13dp"
             android:layout_marginStart="13dp"
@@ -112,7 +103,7 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="10dp"
             android:layout_alignRight="@+id/seekbar"
             android:layout_below="@+id/moneycount"
             android:layout_marginLeft="22dp"
@@ -132,13 +123,13 @@
             android:paddingBottom="20dp"
             android:paddingLeft="50dp"
             app:max="10"
-            app:pointer_color="#143f66"
+            app:pointer_color="#FFFFFF"
             app:pointer_halo_color="#FFFFFF"
             app:pointer_size="10dp"
-            app:text_color="#3981c2"
+            app:text_color="#FFFFFF"
             app:text_size="20sp"
-            app:wheel_active_color="#000000"
-            app:wheel_unactive_color="#3981c2" />
+            app:wheel_active_color="#56C5EF"
+            app:wheel_unactive_color="#a3a3a5" />
 
         <com.jesusm.holocircleseekbar.lib.HoloCircleSeekBar
             android:id="@+id/beerPicker"
@@ -147,13 +138,13 @@
             android:layout_alignRight="@+id/seekbar"
             android:layout_below="@+id/textView3"
             app:max="10"
-            app:pointer_color="#143f66"
+            app:pointer_color="#FFFFFF"
             app:pointer_halo_color="#FFFFFF"
             app:pointer_size="10dp"
-            app:text_color="#3981c2"
+            app:text_color="#FFFFFF"
             app:text_size="20sp"
-            app:wheel_active_color="#000000"
-            app:wheel_unactive_color="#3981c2" />
+            app:wheel_active_color="#56C5EF"
+            app:wheel_unactive_color="#a3a3a5" />
 
         <TextView
             android:id="@+id/textView4"
@@ -191,69 +182,45 @@
             android:layout_below="@+id/textView4"
             android:paddingLeft="50dp"
             app:max="10"
-            app:pointer_color="#143f66"
+            app:pointer_color="#FFFFFF"
             app:pointer_halo_color="#FFFFFF"
             app:pointer_size="10dp"
-            app:text_color="#3981c2"
-            android:layout_marginBottom="50dp"
+            app:text_color="#FFFFFF"
+            android:layout_marginBottom="25dp"
             app:text_size="20sp"
-            app:wheel_active_color="#000000"
-            app:wheel_unactive_color="#3981c2" />
+            app:wheel_active_color="#56C5EF"
+            app:wheel_unactive_color="#a3a3a5" />
 
         <com.jesusm.holocircleseekbar.lib.HoloCircleSeekBar
             android:id="@+id/shotPicker"
             android:layout_width="100dp"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="25dp"
             android:layout_height="105dp"
             android:layout_alignRight="@+id/seekbar"
             android:layout_below="@+id/textView5"
             android:paddingLeft="50dp"
             app:max="10"
-            app:pointer_color="#143f66"
+            app:pointer_color="#FFFFFF"
             app:pointer_halo_color="#FFFFFF"
             app:pointer_size="10dp"
-            app:text_color="#3981c2"
+            app:text_color="#FFFFFF"
             app:text_size="20sp"
-            app:wheel_active_color="#000000"
-            app:wheel_unactive_color="#3981c2" />
+            app:wheel_active_color="#56C5EF"
+            app:wheel_unactive_color="#a3a3a5" />
 
         <Button
+            android:id="@+id/submitDrink"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/shotPicker"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/datebutton"
-            android:textColor="#3981c2"
+            android:background="@drawable/button_transparent"
+            android:textColor="#56C5EF"
+            android:padding="20dp"
+            android:textSize="20dp"
             android:layout_marginTop="15dp"
-            android:onClick="callAddDrinksAPI"
             android:text="Submit" />
-
-        <TextView
-            android:id="@+id/calendarMonth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="35dp"
-            android:layout_marginBottom="70dp"
-            android:layout_centerHorizontal="true"
-            android:textAlignment="center"
-            android:text="TextView"
-            android:textStyle="bold"
-            android:layout_marginTop="20dp"
-            android:layout_below="@+id/title" />
-
-        <TextView
-            android:id="@+id/calendarDay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textColor="#3092cb"
-            android:textSize="70dp"
-            android:layout_centerHorizontal="true"
-            android:textStyle="bold"
-            android:layout_marginTop="50dp"
-            android:layout_alignTop="@+id/calendarMonth"/>
-
 
     </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>

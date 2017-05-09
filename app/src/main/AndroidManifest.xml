@@ -30,13 +30,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
 
         <service
             android:name=".TrackingActivity"
@@ -53,7 +46,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
+        <fragment
             android:name=".LastNight"
             android:label="@string/title_activity_last_night"
             android:parentActivityName=".MainActivity"
@@ -61,8 +54,8 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="apoorvazachmobileapps.safenights.MainActivity" />
-        </activity>
-        <activity
+        </fragment>
+        <fragment
             android:name=".History"
             android:label="@string/title_activity_history"
             android:parentActivityName=".MainActivity"
@@ -70,8 +63,8 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="apoorvazachmobileapps.safenights.MainActivity" />
-        </activity>
-        <activity
+        </fragment>
+        <fragment
             android:name=".AddDrinks"
             android:label="@string/title_activity_add_drinks"
             android:parentActivityName=".MainActivity"
@@ -80,8 +73,8 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="apoorvazachmobileapps.safenights.MainActivity" />
-        </activity>
-        <activity
+        </fragment>
+        <fragment
             android:name=".GetStarted"
             android:label="@string/title_activity_get_started"
             android:parentActivityName=".MainActivity"
@@ -89,11 +82,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="apoorvazachmobileapps.safenights.MainActivity" />
-        </activity>
-        <activity android:name=".testwebservice" />
+        </fragment>
         <activity
             android:name=".Login"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -6,16 +6,24 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.InflateException;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -25,6 +33,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -42,55 +51,80 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LastNight extends AppCompatActivity implements OnMapReadyCallback {
+public class LastNight extends Fragment {
 
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
+    private static View rootview;
+
     private ArrayList<Fields> locations = new ArrayList<Fields>();
     private ArrayList<String> times;
     private ArrayList<Marker> markers;
     private GoogleMap mMap;
+    MapView mMapView;
     private ListView listview;
 
+    private AVLoadingIndicatorView indicator;
+
     //Pick the colors for the markers (if more than 8 need to add change in logic below)
-    private String[] colors = {"#0ABFBC", "#480048", "#5f2c82", "#658B92", "#837A84", "#A16976", "#EC6F66", "#DE465A", "#FC354C"};
+    private String[] colors = {"#7C4799", "#A94991", "#CE1F82", "#658B92", "#837A84", "#DC216C", "#EC6F66", "#DE465A", "#FC354C"};
+
+    public static LastNight newInstance() {
+        LastNight fragment = new LastNight();
+        return fragment;
+    }
+    public void onSaveInstanceState(Bundle savedState) {
+        super.onSaveInstanceState(savedState);
+        savedState.putInt("key", 3);
+
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_last_night);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//        final View rootview = inflater.inflate(R.layout.activity_last_night, container, false);
+
+        //Preventing crashing if switch to different tab while this tries to load
+        if (rootview != null) {
+            ViewGroup parent = (ViewGroup) rootview.getParent();
+            if (parent != null)
+                parent.removeView(rootview);
+        }
+        try {
+            rootview = inflater.inflate(R.layout.activity_last_night, container, false);
+        } catch (InflateException e) {
+            Toast.makeText(getActivity(), "An error occured loading this screen. Please try again.", Toast.LENGTH_SHORT);
+        }
+        setRetainInstance(true);
+
 
         //Map fragment setup occurs in callLastNightAPI call-
         //Needs the data to set up so need to call after data arrives
-        listview = (ListView) findViewById(R.id.listview);
-        String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
-                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-                "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux",
-                "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2",
-                "Android", "iPhone", "WindowsMobile" };
 
-//        final ArrayList<String> list = new ArrayList<String>();
-//        for (int i = 0; i < values.length; ++i) {
-//            list.add(values[i]);
-//        }
-//        final ArrayAdapter adapter = new ArrayAdapter(this, R.layout.timeline, R.id.textView1, list);
-//        listview.setAdapter(adapter);
-//        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view,
-//                                    int position, long id) {
-//                Toast.makeText(getApplicationContext(),
-//                        "Click ListItem Number " + position, Toast.LENGTH_LONG)
-//                        .show();
-//            }
-//        });
+        //final View v = rootview.findViewById(android.R.id.content);
 
-        View v = this.findViewById(android.R.id.content);
+        listview = (ListView) rootview.findViewById(R.id.listview);
+
+        mMapView = (MapView) rootview.findViewById(R.id.mapView);
+        mMapView.onCreate(savedInstanceState);
+        mMapView.onResume();
+
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         //Note: We add to the nights array list in this method call
-        callLastNightAPI(v);
+        callLastNightAPI(rootview, savedInstanceState);
+
+        return rootview;
     }
 
     /**
@@ -102,8 +136,7 @@ public class LastNight extends AppCompatActivity implements OnMapReadyCallback {
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void setUpMap(GoogleMap googleMap) {
         mMap = googleMap;
         //Need both because to display has to be string, and to get the marker we need marker.
         //Was lazy and didn't want to make a custom object
@@ -114,7 +147,7 @@ public class LastNight extends AppCompatActivity implements OnMapReadyCallback {
         try {
             boolean success = googleMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
-                            this, R.raw.style_json));
+                            getActivity(), R.raw.style_json));
             if (!success) {
                 Log.e("LastNightMap", "Style parsing failed.");
             }
@@ -127,7 +160,7 @@ public class LastNight extends AppCompatActivity implements OnMapReadyCallback {
 
         LatLng loc = new LatLng(-34, 151);
 
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
 
         //Go through locations and add a new marker
         for(int i = 0; i < locations.size(); i++) {
@@ -165,8 +198,8 @@ public class LastNight extends AppCompatActivity implements OnMapReadyCallback {
             }
 
             loc = new LatLng(lat, lon);
-            Marker mLoc = mMap.addMarker(new MarkerOptions().position(loc).title(time).snippet(address).icon(getMarkerIcon(colors[colorNum])));
-            //mLoc.setTag(i);
+            Marker mLoc = mMap.addMarker(new MarkerOptions().position(loc).title(address).snippet(time).icon(getMarkerIcon(colors[colorNum])));
+//            mLoc.setTag(i);
 
             //Add to timeline
             times.add(time);
@@ -179,22 +212,23 @@ public class LastNight extends AppCompatActivity implements OnMapReadyCallback {
         //Set up timeline
         //final ArrayAdapter adapter = new ArrayAdapter(this, R.layout.timeline, R.id.textView1, times);
         //Uncommenting line above still works, this allows smaller amount of uploads to tak
-        final TimelineAdapter adapter = new TimelineAdapter(this, times);
+        final TimelineAdapter adapter = new TimelineAdapter(getActivity(), times);
         listview.setAdapter(adapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(markers.get(position).getPosition()));
+                markers.get(position).showInfoWindow();
             }
         });
 
         //Color Line
-        line.width(5).color(Color.RED);
+        line.width(6).color(ResourcesCompat.getColor(getResources(), R.color.colorAlcoholLine, null));
         mMap.addPolyline(line);
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 12F));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 13.5F));
 
     }
 
@@ -204,11 +238,11 @@ public class LastNight extends AppCompatActivity implements OnMapReadyCallback {
         return BitmapDescriptorFactory.defaultMarker(hsv[0]);
     }
 
-    public void callLastNightAPI (View view) {
+    public void callLastNightAPI (final View view, final Bundle savedInstanceState) {
         SafeNightsAPIInterface apiService =
                 SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
 
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
         String username = settings.getString("username", "");
         String password = settings.getString("password", "");
         String id = settings.getString("id", "");
@@ -229,14 +263,21 @@ public class LastNight extends AppCompatActivity implements OnMapReadyCallback {
                         locations.add(fields);
                     }
 
-                    // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-                    SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                            .findFragmentById(R.id.map);
-                    mapFragment.getMapAsync(LastNight.this);
-                    //For testing purposes
+//                    // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+//                    SupportMapFragment mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager()
+//                            .findFragmentById(R.id.map);
+//                    mapFragment.getMapAsync();
+//                    //For testing purposes
+
+                    mMapView.getMapAsync(new OnMapReadyCallback() {
+                        @Override
+                        public void onMapReady(GoogleMap mMap) {
+                            setUpMap(mMap);
+                        }
+                    });
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "You have no data for last night! Please check the website or begin a new night", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "You have no data for last night! Please check the website or begin a new night", Toast.LENGTH_LONG).show();
                 }
             }
 
