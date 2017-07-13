@@ -56,8 +56,8 @@ public class GetStarted extends Fragment {
     private Button StartStopButton;
     private Button title;
     private String contactNumber;
-    private EditText contactName;
-    private EditText contactEmail;
+    private Button contactName;
+    //private EditText contactEmail;
     private TextView startstop;
     private TextView locationTitle;
     private TextView contactnumber;
@@ -78,12 +78,13 @@ public class GetStarted extends Fragment {
         String saveLocation = locationAddress;
         String saveNumber = contactNumber;
         String saveName = contactName.getText().toString();
-        String saveEmail = contactEmail.getText().toString();
+        //String saveEmail = contactEmail.getText().toString();
 
         savedState.putBoolean("test", test);
         savedState.putBoolean("nameSet", nameWasSet);
         savedState.putBoolean("locationSet", locationWasSet);
-        savedState.putString("email", saveEmail);
+        //TODO: Figure out what to do with this
+//        savedState.putString("email", saveEmail);
         savedState.putString("location", saveLocation);
         savedState.putString("number", saveNumber);
         savedState.putString("name", saveName);
@@ -149,8 +150,14 @@ public class GetStarted extends Fragment {
                 callStartNightAPI(rootview);
             }
         });
-        contactName = (EditText)rootview.findViewById(R.id.contactNameText);
-        contactEmail = (EditText)rootview.findViewById(R.id.contactEmailText);
+        contactName = (Button) rootview.findViewById(R.id.contactName);
+        contactName.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                pickContact(v);
+            }
+        });
+        //contactEmail = (EditText)rootview.findViewById(R.id.contactEmailText);
         title = (Button)rootview.findViewById(R.id.title);
         title.setOnClickListener(new View.OnClickListener()
         {
@@ -178,17 +185,17 @@ public class GetStarted extends Fragment {
                 }
             }
         });
-        contactEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    contactName.setFocusable(true);
-                    contactEmail.setHint("");
-                }
-                else {
-                    contactEmail.setHint("Enter Email");
-                }
-            }
-        });
+//        contactEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (hasFocus) {
+//                    contactName.setFocusable(true);
+//                    contactEmail.setHint("");
+//                }
+//                else {
+//                    contactEmail.setHint("Enter Email");
+//                }
+//            }
+//        });
 
         //Search for places logic
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
@@ -221,7 +228,7 @@ public class GetStarted extends Fragment {
             contactName.setText(savedInstanceState.getString("name"));
             contactNumber = savedInstanceState.getString("number");
             started = savedInstanceState.getBoolean("test");
-            contactEmail.setText(savedInstanceState.getString("email"));
+            //contactEmail.setText(savedInstanceState.getString("email"));
 
             if (started) {
                 started = true;
@@ -245,7 +252,7 @@ public class GetStarted extends Fragment {
             startstop.setText("Your Night Is Underway!");
 
             finalLocation.setText("Final Location: " + settings.getString("nightLocation", ""));
-            contactEmail.setText(settings.getString("nightEmail",""));
+            //contactEmail.setText(settings.getString("nightEmail",""));
             contactName.setText(settings.getString("nightName",""));
         }
         return rootview;
@@ -349,7 +356,7 @@ public class GetStarted extends Fragment {
                         String number = c.getString(0);
                         contactNumber = number;
                         emerContactName = getContactName(getContext(), number);
-                        contactnumber.setText("Contact: " + emerContactName);
+                        contactName.setText("Contact: " + emerContactName);
                         nameWasSet = true;
                     }
                 } finally {
@@ -407,8 +414,7 @@ public class GetStarted extends Fragment {
         Log.i("beep","sippy");
         if (!started) {
             Log.i("inthe", "bang");
-            if(locationAddress == null || (contactEmail.getText().toString().equals(""))||
-                    (contactName.getText().toString().equals(""))){
+            if(locationAddress == null || (contactName.getText().toString().equals(""))){
                 Toast.makeText(getActivity(), "Please fill out all fields!", Toast.LENGTH_SHORT).show();
             } else {
                 SafeNightsAPIInterface apiService =
@@ -434,12 +440,14 @@ public class GetStarted extends Fragment {
                             editor.putString("id", uniqueID);
                             editor.putString("nightLocation", locationAddress);
                             editor.putString("nightName", contactName.getText().toString());
-                            editor.putString("nightEmail", contactEmail.getText().toString());
+                            //editor.putString("nightEmail", contactEmail.getText().toString());
                             editor.commit();
                             Intent intent = new Intent(getActivity(), TrackingActivity.class);
                             intent.putExtra("location", locationAddress);
                             intent.putExtra("pNum", contactNumber);
-                            intent.putExtra("email", contactEmail.getText().toString());
+                            //ToDo: What is this....
+                            intent.putExtra("cName", emerContactName);
+                            //intent.putExtra("email", contactEmail.getText().toString());
                             intent.putExtra("cName", contactName.getText().toString());
                             //                        intent.putExtra("cName", emerContactName);
                             started = true;
@@ -463,7 +471,7 @@ public class GetStarted extends Fragment {
                 Intent intent = new Intent(getActivity(), TrackingActivity.class);
                 intent.putExtra("location", locationAddress);
                 intent.putExtra("pNum", contactNumber);
-                intent.putExtra("email", contactEmail.getText().toString());
+                //intent.putExtra("email", contactEmail.getText().toString());
                 intent.putExtra("cName", contactName.getText().toString());
                 intent.putExtra("click", true);
                 StartStopButton.setText("Start Night");
