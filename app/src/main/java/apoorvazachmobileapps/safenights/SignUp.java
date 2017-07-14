@@ -90,6 +90,7 @@ public class SignUp extends Fragment {
                 Log.i("Body", u.toString());
                 Log.i("y/n", u.getPassed());
                 if(u.getPassed().equals("y")){
+                    //ToDo: Convert this logic over to Login
                     SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putString("firstname", fname);

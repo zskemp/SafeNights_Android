@@ -6,17 +6,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.Typeface;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
@@ -24,24 +25,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.mikephil.charting.data.Entry;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.hitomi.cmlibrary.CircleMenu;
-import com.hitomi.cmlibrary.OnMenuSelectedListener;
-import com.hitomi.cmlibrary.OnMenuStatusChangeListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,16 +49,19 @@ public class GetStarted extends Fragment {
     private boolean started;
     private CharSequence[] a;
     CircleMenu circleMenu;
-    private Button StartStopButton;
-    private Button title;
+    private Button mStartStopButton;
+    private Button mLocationsButton;
+    private Button mContactButton;
+    //String for emergency contact's number
     private String contactNumber;
-    private Button contactName;
-    //private EditText contactEmail;
+    //String for emergency contact's name
+    private String contactName;
+    //Title Text - "Start Your Night!". Unused in Java
     private TextView startstop;
-    private TextView locationTitle;
-    private TextView contactnumber;
-    private String emerContactName;
+    //Text below search bar that displays text for the location
     private TextView finalLocation;
+
+    //Logical private fields
     private Boolean locationWasSet;
     private Boolean nameWasSet;
     private static View rootview;
@@ -77,14 +76,12 @@ public class GetStarted extends Fragment {
         boolean test  = started;
         String saveLocation = locationAddress;
         String saveNumber = contactNumber;
-        String saveName = contactName.getText().toString();
-        //String saveEmail = contactEmail.getText().toString();
+        String saveName = contactName;
 
         savedState.putBoolean("test", test);
         savedState.putBoolean("nameSet", nameWasSet);
         savedState.putBoolean("locationSet", locationWasSet);
         //TODO: Figure out what to do with this
-//        savedState.putString("email", saveEmail);
         savedState.putString("location", saveLocation);
         savedState.putString("number", saveNumber);
         savedState.putString("name", saveName);
@@ -107,8 +104,6 @@ public class GetStarted extends Fragment {
                              Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-//        final View rootview = inflater.inflate(R.layout.activity_get_started, container, false);
-        //setContentView(R.layout.activity_get_started);
         if (rootview != null) {
             ViewGroup parent = (ViewGroup) rootview.getParent();
             if (parent != null)
@@ -123,7 +118,7 @@ public class GetStarted extends Fragment {
         nameWasSet = false;
         locationWasSet = false;
         contactNumber = "";
-        emerContactName = "";
+        contactName = "";
         mSelectedItems = new ArrayList();
 
 
@@ -141,25 +136,42 @@ public class GetStarted extends Fragment {
             editor.commit();
         }
 
-        StartStopButton = (Button)rootview.findViewById(R.id.start);
-        StartStopButton.setOnClickListener(new View.OnClickListener()
+        mStartStopButton = (Button)rootview.findViewById(R.id.start);
+        mStartStopButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                callStartNightAPI(rootview);
+                //ToDo: Add Logic to see if GPS is on
+                //Start manager for check if location currently on
+                final LocationManager manager = (LocationManager) getActivity().getSystemService( Context.LOCATION_SERVICE );
+
+                // Check to make sure they have given proper permissions!
+                if ((ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) ||
+                        (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED)) {
+                    ActivityCompat.requestPermissions(getActivity(),
+                            new String[]{ android.Manifest.permission.ACCESS_FINE_LOCATION,
+                                    android.Manifest.permission.ACCESS_COARSE_LOCATION }, 1);
+
+                } else if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+                    buildAlertMessageNoGps();
+                }
+                else {
+                    callStartNightAPI(rootview);
+                }
             }
         });
-        contactName = (Button) rootview.findViewById(R.id.contactName);
-        contactName.setOnClickListener(new View.OnClickListener() {
+        mContactButton = (Button) rootview.findViewById(R.id.contactName);
+        mContactButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
                 pickContact(v);
             }
         });
-        //contactEmail = (EditText)rootview.findViewById(R.id.contactEmailText);
-        title = (Button)rootview.findViewById(R.id.title);
-        title.setOnClickListener(new View.OnClickListener()
+        mLocationsButton = (Button)rootview.findViewById(R.id.title);
+        mLocationsButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -167,35 +179,11 @@ public class GetStarted extends Fragment {
                 pickLocation(rootview);
             }
         });
-        startstop = (TextView)rootview.findViewById(R.id.startstop);
-        //locationTitle = (TextView)rootview.findViewById(R.id.locationTitle);
-        //contactnumber = (TextView)findViewById(R.id.contactnumber);
+
         finalLocation = (TextView)rootview.findViewById(R.id.finalLocation);
+        startstop = (TextView)rootview.findViewById(R.id.startstop);
         Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Arciform.otf");
         startstop.setTypeface(tf);
-
-        contactName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    contactName.setHint("");
-                    contactName.setFocusable(true);
-                }
-                else {
-                    contactName.setHint("Enter Name");
-                }
-            }
-        });
-//        contactEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (hasFocus) {
-//                    contactName.setFocusable(true);
-//                    contactEmail.setHint("");
-//                }
-//                else {
-//                    contactEmail.setHint("Enter Email");
-//                }
-//            }
-//        });
 
         //Search for places logic
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
@@ -225,22 +213,18 @@ public class GetStarted extends Fragment {
 
         if (savedInstanceState != null) {
             locationAddress = savedInstanceState.getString("location");
-            contactName.setText(savedInstanceState.getString("name"));
+            mContactButton.setText(savedInstanceState.getString("name"));
             contactNumber = savedInstanceState.getString("number");
             started = savedInstanceState.getBoolean("test");
-            //contactEmail.setText(savedInstanceState.getString("email"));
-
             if (started) {
                 started = true;
                 startstop.setText("Your Night Is Underway!");
-                StartStopButton.setText("Stop Night");
+                mStartStopButton.setText("Stop Night");
             }
-
             nameWasSet = savedInstanceState.getBoolean("nameSet");
             if (nameWasSet){
-                contactnumber.setText("Contact: " + emerContactName);
+                mContactButton.setText("Contact: " + contactName);
             }
-
             locationWasSet = savedInstanceState.getBoolean("locationSet");
             if (locationWasSet){
                 finalLocation.setText("Final Location: " + locationAddress);
@@ -248,26 +232,33 @@ public class GetStarted extends Fragment {
         }
         started = isMyServiceRunning(TrackingActivity.class);
         if(started){
-            StartStopButton.setText("Stop Night");
+            mStartStopButton.setText("Stop Night");
             startstop.setText("Your Night Is Underway!");
 
             finalLocation.setText("Final Location: " + settings.getString("nightLocation", ""));
             //contactEmail.setText(settings.getString("nightEmail",""));
-            contactName.setText(settings.getString("nightName",""));
+            mContactButton.setText(settings.getString("nightName",""));
         }
         return rootview;
     }
 
-//    @Override
-//    public void onActivityCreated(Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//        FragmentManager fm = getChildFragmentManager();
-//        placepickerFragment = (SupportMapFragment) fm.findFragmentById(R.id.place_autocomplete_fragment);
-//        if (placepickerFragment == null) {
-//            placepickerFragment = SupportMapFragment.newInstance();
-//            fm.beginTransaction().replace(R.id.place_autocomplete_fragment, placepickerFragment).commit();
-//        }
-//    }
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
@@ -278,7 +269,6 @@ public class GetStarted extends Fragment {
         }
         return false;
     }
-
 
     //Dialog pop-up for picking from saved locations
     public void pickLocation(final View view) {
@@ -305,7 +295,7 @@ public class GetStarted extends Fragment {
                 .setPositiveButton("Done", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        // User clicked OK, so save the mSelectedItems results somewhere
+                        // User isRunning OK, so save the mSelectedItems results somewhere
                         // or return them to the component that opened the dialog
                         String p = "";
                         for(Object a : mSelectedItems){
@@ -355,8 +345,8 @@ public class GetStarted extends Fragment {
                     if (c != null && c.moveToFirst()) {
                         String number = c.getString(0);
                         contactNumber = number;
-                        emerContactName = getContactName(getContext(), number);
-                        contactName.setText("Contact: " + emerContactName);
+                        contactName = getContactName(getContext(), number);
+                        mContactButton.setText("Contact: " + contactName);
                         nameWasSet = true;
                     }
                 } finally {
@@ -399,7 +389,7 @@ public class GetStarted extends Fragment {
                 .setPositiveButton("Got It!", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        // User clicked OK, so save the mSelectedItems results somewhere
+                        // User isRunning OK, so save the mSelectedItems results somewhere
                         // or return them to the component that opened the dialog
 
                     }
@@ -408,13 +398,24 @@ public class GetStarted extends Fragment {
         alert.show();
     }
 
+    //Method to restart the fragment UI and some of the logic without actually restarting Fragment
+    public void restartFragment() {
+        startstop.setText("Start Your Night!");
+        finalLocation.setText("Final Location: TBD");
+        mContactButton.setText("SELECT A CONTACT");
+        mStartStopButton.setText("START");
+
+        nameWasSet = false;
+        locationWasSet = false;
+        contactNumber = "";
+        contactName = "";
+        mSelectedItems.clear();
+    }
+
 
     public void callStartNightAPI(View view){
-
-        Log.i("beep","sippy");
         if (!started) {
-            Log.i("inthe", "bang");
-            if(locationAddress == null || (contactName.getText().toString().equals(""))){
+            if(locationAddress == null || (contactNumber.equals(""))){
                 Toast.makeText(getActivity(), "Please fill out all fields!", Toast.LENGTH_SHORT).show();
             } else {
                 SafeNightsAPIInterface apiService =
@@ -433,30 +434,24 @@ public class GetStarted extends Fragment {
                         if (u.getPassed().equals("n")) {
                             //bring them to home page, let them know a problem
                             Toast.makeText(getActivity(), "There has been a problem starting your night! Please try again", Toast.LENGTH_LONG).show();
-
                         } else {
                             SharedPreferences.Editor editor = settings.edit();
                             String uniqueID = u.getPassed();
                             editor.putString("id", uniqueID);
                             editor.putString("nightLocation", locationAddress);
-                            editor.putString("nightName", contactName.getText().toString());
-                            //editor.putString("nightEmail", contactEmail.getText().toString());
+                            editor.putString("nightName", contactName);
                             editor.commit();
                             Intent intent = new Intent(getActivity(), TrackingActivity.class);
                             intent.putExtra("location", locationAddress);
                             intent.putExtra("pNum", contactNumber);
                             //ToDo: What is this....
-                            intent.putExtra("cName", emerContactName);
-                            //intent.putExtra("email", contactEmail.getText().toString());
-                            intent.putExtra("cName", contactName.getText().toString());
-                            //                        intent.putExtra("cName", emerContactName);
+                            intent.putExtra("cName", contactName);
                             started = true;
-                            StartStopButton.setText("Stop Night");
+                            mStartStopButton.setText("Stop Night");
                             startstop.setText("Your Night Is Underway!");
                             getActivity().startService(intent);
                         }
                     }
-
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
                         // Log error here since request failed
@@ -464,22 +459,18 @@ public class GetStarted extends Fragment {
                     }
                 });
             }
-            } else {
-                Toast.makeText(getActivity(), "Your night has finished!", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getActivity(), "Your night has finished!", Toast.LENGTH_LONG).show();
 //                stopService(new Intent(GetStarted.this, TrackingActivity.class));
-                started = false;
-                Intent intent = new Intent(getActivity(), TrackingActivity.class);
-                intent.putExtra("location", locationAddress);
-                intent.putExtra("pNum", contactNumber);
-                //intent.putExtra("email", contactEmail.getText().toString());
-                intent.putExtra("cName", contactName.getText().toString());
-                intent.putExtra("click", true);
-                StartStopButton.setText("Start Night");
-                getActivity().startService(intent);
-                Intent i = new Intent(getActivity(), MainActivity.class);
-                startActivity(i);
-
-            }
+            started = false;
+            Intent intent = new Intent(getActivity(), TrackingActivity.class);
+            //ToDo: Is this really necessary. Should look at how this works
+            intent.putExtra("isRunning", true);
+            mStartStopButton.setText("Start Night");
+            getActivity().stopService(intent);
+            //Resets the logic and UI for the fragment
+            restartFragment();
         }
     }
+}
 

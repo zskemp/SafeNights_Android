@@ -21,6 +21,7 @@ import android.os.Bundle;
 
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
@@ -48,7 +49,6 @@ public class TrackingActivity extends Service implements LocationListener, Senso
     private String phone_number;
     private String name;
     private String cName;
-    private String email;
     private Handler handler = new Handler();
     private Timer timer;
     private TimerTask hourlyTask;
@@ -70,167 +70,174 @@ public class TrackingActivity extends Service implements LocationListener, Senso
     double longitude;
     boolean recentlyMoved;
     boolean tempMoved;
-    boolean clicked;
+    boolean isRunning;
 
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        clicked = intent.hasExtra("click");
-        if(clicked){
-            stopSelf();
+        if (intent == null ) {
+            Toast.makeText(this, "There has been an error starting the service! Please Restart and Try Again.", Toast.LENGTH_SHORT).show();
         } else {
-
-            counter = 0;
-            Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
-            LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
-            LocationListener locationListener = new LocationListener() {
-                public void onLocationChanged(Location location) {
-                    // Called when a new location is found by the network location provider.
-                    tempLat = location.getLatitude();
-                    tempLon = location.getLongitude();
-                }
-
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-                }
-
-                public void onProviderEnabled(String provider) {
-                }
-
-                public void onProviderDisabled(String provider) {
-                }
-            };
-
-            // Register the listener with the Location Manager to receive location updates
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-
-            final SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
-            name = settings.getString("firstname", "");
-            userLocation = intent.getExtras().getString("location");
-            phone_number = intent.getExtras().getString("pNum");
-            cName = intent.getExtras().getString("cName");
-            email = intent.getExtras().getString("email");
-            clicked = intent.getBooleanExtra("click", false);
-
-            sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-            mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            sensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-            recentlyMoved = false;
-
-            //Gets coordinates from Address String
-            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-            List<Address> addresses = new ArrayList<Address>();
-            try {
-                addresses = geocoder.getFromLocationName(userLocation, 1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (addresses.size() > 0) {
-                latitude = addresses.get(0).getLatitude();
-                longitude = addresses.get(0).getLongitude();
+            intent.hasExtra("isRunning");
+            if (isRunning) {
+                stopSelf();
             } else {
-                Toast.makeText(this, "The address didn't parse correctly!", Toast.LENGTH_SHORT);
-            }
+                counter = 0;
+                //ToDo: Delete this
+                Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
+                LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
-            //Timer task to run every 10 minutes
-            timer = new Timer();
-            final double[] lonArray = {0, 0, 0, 0};
-            final double[] latArray = {0, 0, 0, 0};
-            hourlyTask = new TimerTask() {
-                @Override
-                public void run() {
-                    LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    if (Build.VERSION.SDK_INT >= 23 &&
-                            ContextCompat.checkSelfPermission(TrackingActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                            ContextCompat.checkSelfPermission(TrackingActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    }
-                    Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    //If location isn't null, we can update the current coordinates to where we actually are.
-                    //Otherwise, we have to use lastKnownLocation
-                    if (location != null) {
-                        if (tempLat != null) {
-                            currentLat = tempLat;
-                            currentLon = tempLon;
-                        } else {
-                            currentLon = BigDecimal.valueOf(location.getLongitude()).doubleValue();
-                            currentLat = BigDecimal.valueOf(location.getLatitude())
-                                    .doubleValue();
-                        }
-                    } else {
-                        Toast.makeText(getApplication(), "Something went wrong getting your location!", Toast.LENGTH_SHORT);
+                LocationListener locationListener = new LocationListener() {
+                    public void onLocationChanged(Location location) {
+                        // Called when a new location is found by the network location provider.
+                        tempLat = location.getLatitude();
+                        tempLon = location.getLongitude();
                     }
 
-                    //Set the final spot in the array to current location
-                    latArray[3] = currentLat;
-                    lonArray[3] = currentLon;
-
-                    //Get battery level
-                    IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-                    Intent batteryStatus = getApplicationContext().registerReceiver(null, ifilter);
-                    int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-                    int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-
-                    float batteryPct = level / (float) scale;
-                    int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-
-                    Log.i("thiscounter", "" + counter);
-                    Log.i("hi", "" + recentlyMoved);
-                    //If it's between 2-6am, and the latitude and longitude is the same for all spots, send a message
-                    //Otherwise, it means they moved locations, so update the positions in the array
-                    if (!recentlyMoved && hour>=2 && hour<6 &&((latArray[0] == latArray[1] && latArray[0] == latArray[2] && latArray[0] == latArray[3]) ||
-                            (lonArray[0] == lonArray[1] && lonArray[0] == lonArray[2] && lonArray[0] == lonArray[3])) &&
-
-                            ((Math.abs(latitude - currentLat) > 0.0001) || Math.abs(longitude - currentLon) > 0.0001)) {
-                        try {
-                            //                        SmsManager smsManager = SmsManager.getDefault();
-                            //                        String message = "Hey " + cName + ", " + name + " went out for a " +
-                            //                                "fun night but didn't reach his final location and hasn't moved for a while! He said he was going to " +
-                            //                                userLocation + ", and his last known location was at " + currentLat + ", " + currentLon + ".";
-                            //                        ArrayList<String> parts = smsManager.divideMessage(message);
-                            //                        smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        Log.i("hereiam", "hereiam");
-                        callSendEmailAPI(1);
-                    } else {
-                        latArray[0] = latArray[1];
-                        latArray[1] = latArray[2];
-                        latArray[2] = latArray[3];
-                        latArray[3] = currentLat;
-                        lonArray[0] = lonArray[1];
-                        lonArray[1] = lonArray[2];
-                        lonArray[2] = lonArray[3];
-                        lonArray[3] = currentLon;
+                    public void onStatusChanged(String provider, int status, Bundle extras) {
                     }
 
-                    //If their battery is below 10%, send a warning message
-                    if (batteryPct * 100 < 10) {
-                        try {
-                            SmsManager smsManager = SmsManager.getDefault();
-                            String message = "Hey " + cName + ", " + name + " went out for a " +
-                                    "fun night tonight but his phone battery is almost dead! He said he was going to " +
-                                    userLocation + ", and his last known location was at " + currentLat + ", " + currentLon + ".";
-                            ArrayList<String> parts = smsManager.divideMessage(message);
-                            smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        callSendEmailAPI(2);
+                    public void onProviderEnabled(String provider) {
                     }
-                    //Push location data point
-                    callAddLocationAPI();
-                    recentlyMoved = false;
+
+                    public void onProviderDisabled(String provider) {
+                    }
+                };
+
+                // Register the listener with the Location Manager to receive location updates
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
+                final SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+                name = settings.getString("firstname", "");
+                userLocation = intent.getExtras().getString("location");
+                phone_number = intent.getExtras().getString("pNum");
+                cName = intent.getExtras().getString("cName");
+                isRunning = intent.getBooleanExtra("isRunning", false);
+
+                sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+                mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+                sensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+                recentlyMoved = false;
+
+                //Gets coordinates from Address String
+                Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+                List<Address> addresses = new ArrayList<Address>();
+                try {
+                    addresses = geocoder.getFromLocationName(userLocation, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            };
+                if (addresses.size() > 0) {
+                    latitude = addresses.get(0).getLatitude();
+                    longitude = addresses.get(0).getLongitude();
+                } else {
+                    Toast.makeText(this, "The address didn't parse correctly!", Toast.LENGTH_SHORT);
+                }
 
-            //Set to run every so often (10 min)
-            timer.schedule(hourlyTask, 0l, 1000 * 10 * 60);
+                //Timer task to run every 10 minutes
+                timer = new Timer();
+                final double[] lonArray = {0, 0, 0, 0};
+                final double[] latArray = {0, 0, 0, 0};
+                hourlyTask = new TimerTask() {
+                    @Override
+                    public void run() {
+                        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                        ContextCompat.checkSelfPermission(TrackingActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION);
+                        ContextCompat.checkSelfPermission(TrackingActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION);
+
+                        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        //If location isn't null, we can update the current coordinates to where we actually are.
+                        //Otherwise, we have to use lastKnownLocation
+                        if (location != null) {
+                            if (tempLat != null) {
+                                currentLat = tempLat;
+                                currentLon = tempLon;
+                            } else {
+                                currentLon = BigDecimal.valueOf(location.getLongitude()).doubleValue();
+                                currentLat = BigDecimal.valueOf(location.getLatitude())
+                                        .doubleValue();
+                            }
+                        } else {
+                            Handler handler = new Handler(Looper.getMainLooper());
+                            handler.post(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "Something went wrong getting your location! Trying again in 60 seconds... \n Please make sure your GPS is turned on.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
+                        //Set the final spot in the array to current location
+                        latArray[3] = currentLat;
+                        lonArray[3] = currentLon;
+
+                        //Get battery level
+                        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+                        Intent batteryStatus = getApplicationContext().registerReceiver(null, ifilter);
+                        int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+                        int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+
+                        float batteryPct = level / (float) scale;
+                        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+
+                        Log.i("thiscounter", "" + counter);
+                        Log.i("hi", "" + recentlyMoved);
+                        //If it's between 2-6am, and the latitude and longitude is the same for all spots, send a message
+                        //Otherwise, it means they moved locations, so update the positions in the array
+                        if (!recentlyMoved && hour >= 2 && hour < 6 && ((latArray[0] == latArray[1] && latArray[0] == latArray[2] && latArray[0] == latArray[3]) ||
+                                (lonArray[0] == lonArray[1] && lonArray[0] == lonArray[2] && lonArray[0] == lonArray[3])) &&
+
+                                ((Math.abs(latitude - currentLat) > 0.0001) || Math.abs(longitude - currentLon) > 0.0001)) {
+                            try {
+                                SmsManager smsManager = SmsManager.getDefault();
+                                String message = "Hey " + cName + ", " + name + " went out for a " +
+                                        "fun night but didn't reach his final location and hasn't moved for a while! He said he was going to " +
+                                        userLocation + ", and his last known location was at " + currentLat + ", " + currentLon + ".";
+                                ArrayList<String> parts = smsManager.divideMessage(message);
+                                smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            latArray[0] = latArray[1];
+                            latArray[1] = latArray[2];
+                            latArray[2] = latArray[3];
+                            latArray[3] = currentLat;
+                            lonArray[0] = lonArray[1];
+                            lonArray[1] = lonArray[2];
+                            lonArray[2] = lonArray[3];
+                            lonArray[3] = currentLon;
+                        }
+
+                        //If their battery is below 10%, send a warning message
+                        if (batteryPct * 100 < 10) {
+                            try {
+                                SmsManager smsManager = SmsManager.getDefault();
+                                String message = "Hey " + cName + ", " + name + " went out for a " +
+                                        "fun night tonight but his phone battery is almost dead! He said he was going to " +
+                                        userLocation + ", and his last known location was at " + currentLat + ", " + currentLon + ".";
+                                ArrayList<String> parts = smsManager.divideMessage(message);
+                                smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        //Push location data point
+                        callAddLocationAPI();
+                        recentlyMoved = false;
+                    }
+                };
+
+                //Set to run every so often (10 min) EDIT TO 10 SECONDS::::
+                timer.schedule(hourlyTask, 0l, 1000 * 1 * 10);
+            }
         }
-        return super.onStartCommand(intent, flags, startId);
+        //return super.onStartCommand(intent, flags, startId);
+        return START_STICKY_COMPATIBILITY;
     }
 
 
@@ -303,7 +310,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
             e.printStackTrace();
         }
 
-        callSendEmailAPI(3);
+        //callSendEmailAPI(3);
 
         this.stopSelf();
     }
@@ -315,10 +322,12 @@ public class TrackingActivity extends Service implements LocationListener, Senso
         try {
             SmsManager smsManager = SmsManager.getDefault();
             String message = "Hey " + cName + ", " + name + " went out for a " +
-                    "fun night tonight but his tracking app SafeNights just crashed! He said he was going to " +
-                    userLocation + ", and his last known location was at " + currentLat + ", " + currentLon + ".";
+                    "fun night tonight and appears to have finished! He said he was going to " +
+                    userLocation + ", and his last known location was at " + currentLat + ", " + currentLon + ". " +
+                    "If this does not look right you should give your friend a call :)";
             ArrayList<String> parts = smsManager.divideMessage(message);
             smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
+            //ToDo: You kill this like 3 times... Look into calming down
             stopSelf();
             Intent i = new Intent(this, TrackingActivity.class);
             stopService(i);
@@ -326,43 +335,8 @@ public class TrackingActivity extends Service implements LocationListener, Senso
         } catch (Exception e) {
             e.printStackTrace();
         }
-        callSendEmailAPI(3);
-
         this.stopSelf();
         super.onDestroy();
-    }
-
-
-    public void callSendEmailAPI(int reason) {
-        if(!clicked) {
-            SafeNightsAPIInterface apiService =
-                    SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
-
-            Call<User> call = apiService.email(cName, reason, email, userLocation, currentLat, currentLon);
-
-            call.enqueue(new Callback<User>() {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    User u = response.body();
-                    if (u == null) {
-                        Toast.makeText(getApplication(), "You entered an invalid email!", Toast.LENGTH_LONG).show();
-                    } else {
-                        if (u.getPassed().equals("y")) {
-                            Toast.makeText(getApplication(), "You emailed successfully :)", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplication(), "There was a problem with our sever. Please contact a developer!", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<User> call, Throwable t) {
-                    // Log error here since request failed
-                    Log.e("API Call:", t.toString());
-                }
-            });
-        }
-
     }
 
     @Override

@@ -114,6 +114,8 @@ public class SignIn extends Fragment {
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putString("username", uname);
                     editor.putString("password", pword);
+                    //ToDo: Update API to return first name of person
+                    //ToDo: Put this in the string because if they login there is no record of what their name is
                     editor.putString("id", "");
                     Set<String> locations = new HashSet<String>();
                     editor.putStringSet("locations", locations);
