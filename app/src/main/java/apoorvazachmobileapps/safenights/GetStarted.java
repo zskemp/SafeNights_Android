@@ -58,8 +58,6 @@ public class GetStarted extends Fragment {
     private String contactName;
     //Title Text - "Start Your Night!". Unused in Java
     private TextView startstop;
-    //Text below search bar that displays text for the location
-    private TextView finalLocation;
 
     //Logical private fields
     private Boolean locationWasSet;
@@ -180,10 +178,9 @@ public class GetStarted extends Fragment {
             }
         });
 
-        finalLocation = (TextView)rootview.findViewById(R.id.finalLocation);
         startstop = (TextView)rootview.findViewById(R.id.startstop);
-        Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Arciform.otf");
-        startstop.setTypeface(tf);
+        //Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Arciform.otf");
+        //startstop.setTypeface(tf);
 
         //Search for places logic
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
@@ -192,8 +189,8 @@ public class GetStarted extends Fragment {
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                finalLocation.setText("Final Location: " + place.getAddress());
-                locationAddress = "" + place.getAddress();
+                mLocationsButton.setText("" + place.getAddress());
+                locationAddress = ("" + place.getAddress());
                 a  = Arrays.copyOf(a, a.length + 1);
                 a[a.length - 1] = place.getAddress();
                 locationWasSet = true;
@@ -213,7 +210,7 @@ public class GetStarted extends Fragment {
 
         if (savedInstanceState != null) {
             locationAddress = savedInstanceState.getString("location");
-            mContactButton.setText(savedInstanceState.getString("name"));
+            contactName = savedInstanceState.getString("name");
             contactNumber = savedInstanceState.getString("number");
             started = savedInstanceState.getBoolean("test");
             if (started) {
@@ -223,11 +220,11 @@ public class GetStarted extends Fragment {
             }
             nameWasSet = savedInstanceState.getBoolean("nameSet");
             if (nameWasSet){
-                mContactButton.setText("Contact: " + contactName);
+                mContactButton.setText(contactName);
             }
             locationWasSet = savedInstanceState.getBoolean("locationSet");
             if (locationWasSet){
-                finalLocation.setText("Final Location: " + locationAddress);
+                mLocationsButton.setText(locationAddress);
             }
         }
         started = isMyServiceRunning(TrackingActivity.class);
@@ -235,7 +232,7 @@ public class GetStarted extends Fragment {
             mStartStopButton.setText("Stop Night");
             startstop.setText("Your Night Is Underway!");
 
-            finalLocation.setText("Final Location: " + settings.getString("nightLocation", ""));
+            mLocationsButton.setText(settings.getString("nightLocation", ""));
             //contactEmail.setText(settings.getString("nightEmail",""));
             mContactButton.setText(settings.getString("nightName",""));
         }
@@ -301,7 +298,7 @@ public class GetStarted extends Fragment {
                         for(Object a : mSelectedItems){
                             p+=a;
                         }
-                        finalLocation.setText("Final Location: " + p);
+                        mLocationsButton.setText("" + p);
                         locationWasSet = true;
                         locationAddress = "" + p;
                         final SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
@@ -346,7 +343,7 @@ public class GetStarted extends Fragment {
                         String number = c.getString(0);
                         contactNumber = number;
                         contactName = getContactName(getContext(), number);
-                        mContactButton.setText("Contact: " + contactName);
+                        mContactButton.setText(contactName);
                         nameWasSet = true;
                     }
                 } finally {
@@ -401,8 +398,8 @@ public class GetStarted extends Fragment {
     //Method to restart the fragment UI and some of the logic without actually restarting Fragment
     public void restartFragment() {
         startstop.setText("Start Your Night!");
-        finalLocation.setText("Final Location: TBD");
-        mContactButton.setText("SELECT A CONTACT");
+        mLocationsButton.setText("My Locations");
+        mContactButton.setText("Select a Contact");
         mStartStopButton.setText("START");
 
         nameWasSet = false;

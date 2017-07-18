@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import android.os.Bundle;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -242,12 +243,15 @@ public class AddDrinks extends Fragment {
                 User u = response.body();
                 if (u.getPassed().equals("y")) {
                     //bring them to history page
-                  Fragment fragment = History.newInstance();
+                    Fragment fragment = History.newInstance();
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.frame_layout, fragment);
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
+                    //Change selector on tabs as well
+                    BottomNavigationView bottomNavigationView = (BottomNavigationView) getActivity().findViewById(R.id.bottom_navigation);
+                    bottomNavigationView.setSelectedItemId(R.id.history);
                     Toast.makeText(getActivity(), "Successfully entered data!", Toast.LENGTH_SHORT).show();
                 } else {
                     //return them to the page with an error

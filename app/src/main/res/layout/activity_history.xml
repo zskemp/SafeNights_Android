@@ -30,7 +30,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/titleMoney"
+                android:layout_marginTop="5dp"
                 android:paddingBottom="20dp"/>
+
+            <TextView
+                android:id="@+id/totalMoney"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="4dp"
+                android:layout_below="@id/titleMoney"
+                android:textSize="14dp"
+                android:text="Total = $0" />
 
             <TextView
                 android:id="@+id/titleAlcohol"

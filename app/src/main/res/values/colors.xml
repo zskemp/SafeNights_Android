@@ -5,9 +5,11 @@
     <color name="colorAccent">#56C5EF</color>
     <color name="black">#000000</color>
 
+    <!--light light black 303030-->
+
     <color name="menu">#a3a3a5</color>
 
-    <color name="colorBackground">#303030</color>
+    <color name="colorBackground">#000000</color>
     <color name="colorTitle">#FFFFFF</color>
 
     <color name="mapLines">#56C5EF</color>

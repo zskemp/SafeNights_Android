@@ -65,10 +65,14 @@ public class History extends Fragment {
     private View v;
 
     TextView titleMoney;
+    TextView totalMoney;
     TextView titleAlcohol;
     TextView month;
     Button nextMonth;
     Button lastMonth;
+
+    //Global var to calculate total money spent on alcohol
+    private int totalSpent;
 
     public static History newInstance() {
         History fragment = new History();
@@ -120,6 +124,9 @@ public class History extends Fragment {
         titleAlcohol = (TextView)rootview.findViewById(R.id.titleAlcohol);
         titleAlcohol.setTypeface(tf);
         titleAlcohol.setTextColor(ResourcesCompat.getColor(getResources(), R.color.colorTitle, null));
+        totalMoney = (TextView)rootview.findViewById(R.id.totalMoney);
+        totalMoney.setTypeface(tf);
+        totalSpent = 0;
 
         month = (TextView)rootview.findViewById(R.id.month);
         Date today = new Date();
@@ -136,6 +143,8 @@ public class History extends Fragment {
                 displayYear = cal.get(Calendar.YEAR);
                 cal.set(displayYear, displayMonth, 1);
                 month.setText(getMonthForInt(displayMonth));
+                //Reset Total Spent (or else will keep adding)
+                totalSpent = 0;
 
                 callHistoryAPI(v);
             }
@@ -148,7 +157,10 @@ public class History extends Fragment {
                 displayYear = cal.get(Calendar.YEAR);
                 cal.set(displayYear, displayMonth, 1);
                 month.setText(getMonthForInt(displayMonth));
-                callCallHistory(v);
+                //Reset Total Spent (or else will keep adding)
+                totalSpent = 0;
+
+                callHistoryAPI(v);
             }
         });
 
@@ -217,6 +229,8 @@ public class History extends Fragment {
             // turn your data into Entry objects
             alcohol.add(new Entry(Float.parseFloat(data.getDay()), alcoholY));
             money.add(new Entry(Float.parseFloat(data.getDay()), (float)data.getMoney()));
+            // add to total money count
+            totalSpent += data.getMoney();
         }
 
         //Adding the 1st and 31st of the month to make graph look decent
@@ -319,6 +333,7 @@ public class History extends Fragment {
 
         mChart.invalidate(); // refresh
         aChart.invalidate(); // refresh
+        totalMoney.setText("Total = $" + totalSpent);
     }
 
 

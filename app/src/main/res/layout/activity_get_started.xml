@@ -17,18 +17,26 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:focusable="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/logo1"
+                android:layout_marginTop="20dp"/>
 
             <TextView
                 android:id="@+id/startstop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
+                android:layout_below="@id/logo"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
                 android:text="Start Your Night!"
-                android:textColor="#2282b2"
-                android:textSize="40dp"
+                android:textColor="@color/colorTitle"
+                android:textSize="32dp"
                 android:textStyle="bold" />
 
             <fragment
@@ -37,20 +45,77 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/startstop"
+                android:layout_marginTop="20dp"
                 android:layout_centerHorizontal="true" />
+
+            <!--<TextView-->
+                <!--android:id="@+id/finalLocation"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/place_autocomplete_fragment"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:text="Final Location:"-->
+                <!--android:textAlignment="center"-->
+                <!--android:textColor="#FFFFFF" />-->
+
+            <ImageView
+                android:id="@+id/finalLocation"
+                android:layout_width="60dp"
+                android:layout_height="65dp"
+                android:src="@mipmap/location_icon"
+                android:layout_alignTop="@+id/title"
+                android:layout_toStartOf="@+id/title" />
+
+            <Button
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:maxWidth="300dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/place_autocomplete_fragment"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:background="#00ffffff"
+                android:textSize="20dp"
+                android:text="My Locations"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF" />
+
+            <!--<TextView-->
+                <!--android:id="@+id/contactLabel"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/title"-->
+                <!--android:layout_marginTop="20dp"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:text="Emergency Contact"-->
+                <!--android:textAlignment="center"-->
+                <!--android:textColor="#FFFFFF" />-->
+
+            <ImageView
+                android:id="@+id/contactLabel"
+                android:layout_width="60dp"
+                android:layout_height="65dp"
+                android:src="@mipmap/contact_icon"
+                android:layout_alignTop="@+id/contactName"
+                android:layout_toStartOf="@+id/contactName" />
 
             <Button
                 android:id="@+id/contactName"
                 android:layout_width="wrap_content"
+                android:maxWidth="300dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/title"
+                android:layout_marginTop="16dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="50dp"
+                android:background="#00ffffff"
+                android:textSize="20dp"
                 android:text="Select a Contact"
-                android:textColor="#FFFFFF"
-                tools:layout_editor_absoluteX="162dp"
-                tools:layout_editor_absoluteY="85dp" />
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/start"
@@ -60,31 +125,10 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="50dp"
                 android:background="@drawable/button_transparent"
+                android:padding="20dp"
+                android:textSize="20dp"
                 android:text="Start"
                 android:textColor="#56C5EF" />
-
-            <Button
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/finalLocation"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/datebutton"
-                android:text="My Locations"
-                android:textAllCaps="false"
-                android:textColor="#143f66" />
-
-
-            <TextView
-                android:id="@+id/finalLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/place_autocomplete_fragment"
-                android:layout_centerHorizontal="true"
-                android:text="Final Location: TBD"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF" />
 
 
         </RelativeLayout>
