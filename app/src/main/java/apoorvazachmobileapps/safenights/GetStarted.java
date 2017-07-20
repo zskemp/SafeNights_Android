@@ -418,10 +418,10 @@ public class GetStarted extends Fragment {
                 SafeNightsAPIInterface apiService =
                         SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
                 final SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
-                String username = settings.getString("username", "");
+                final String username = settings.getString("username", "");
                 String password = settings.getString("password", "");
                 Call<User> call = apiService.startnight(username, password);
-                Log.i("u", username + password);
+                //Log.i("u", username + password);
 
 
                 call.enqueue(new Callback<User>() {
@@ -432,17 +432,22 @@ public class GetStarted extends Fragment {
                             //bring them to home page, let them know a problem
                             Toast.makeText(getActivity(), "There has been a problem starting your night! Please try again", Toast.LENGTH_LONG).show();
                         } else {
+                            //Get the adventureID
+                            String adventureID = u.getPassed();
+                            //Update preferences
                             SharedPreferences.Editor editor = settings.edit();
                             String uniqueID = u.getPassed();
                             editor.putString("id", uniqueID);
                             editor.putString("nightLocation", locationAddress);
                             editor.putString("nightName", contactName);
                             editor.commit();
+                            //Create intent and start service
                             Intent intent = new Intent(getActivity(), TrackingActivity.class);
                             intent.putExtra("location", locationAddress);
                             intent.putExtra("pNum", contactNumber);
-                            //ToDo: What is this....
                             intent.putExtra("cName", contactName);
+                            intent.putExtra("username", username);
+                            intent.putExtra("adventureID", adventureID);
                             started = true;
                             mStartStopButton.setText("Stop Night");
                             startstop.setText("Your Night Is Underway!");

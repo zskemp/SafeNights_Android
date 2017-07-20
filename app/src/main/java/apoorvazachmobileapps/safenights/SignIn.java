@@ -109,11 +109,21 @@ public class SignIn extends Fragment {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 User u  = response.body();
-                if(u.getPassed().equals("y")){
+                if(u.getPassed().equals("n")){
+                    Toast.makeText(getActivity().getApplicationContext(), "Incorrect Credentials!", Toast.LENGTH_LONG).show();
+                } else {
+                    Log.i("names:", u.getPassed());
+                    String[] names = u.getPassed().split(",");
+                    Log.i("fname:", names[0]);
+                    Log.i("lname:", names[1]);
+                    String fname = names[0];
+                    String lname = names[1];
                     SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putString("username", uname);
                     editor.putString("password", pword);
+                    editor.putString("firstname", fname);
+                    editor.putString("lastname", lname);
                     //ToDo: Update API to return first name of person
                     //ToDo: Put this in the string because if they login there is no record of what their name is
                     editor.putString("id", "");
@@ -124,8 +134,6 @@ public class SignIn extends Fragment {
                     Intent intent = new Intent(SignIn.this.getActivity(), MainActivity.class);
                     startActivity(intent);
                     getActivity().finish();
-                } else {
-                    Toast.makeText(getActivity().getApplicationContext(), "Incorrect Credentials!", Toast.LENGTH_LONG).show();
                 }
 
             }

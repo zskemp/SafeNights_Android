@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -16,7 +15,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.BatteryManager;
-import android.os.Build;
 import android.os.Bundle;
 
 import android.os.Handler;
@@ -47,8 +45,11 @@ public class TrackingActivity extends Service implements LocationListener, Senso
 
     private String userLocation;
     private String phone_number;
-    private String name;
+    private String fname;
+    private String lname;
     private String cName;
+    private String adventureID;
+    private String username;
     private Handler handler = new Handler();
     private Timer timer;
     private TimerTask hourlyTask;
@@ -111,10 +112,13 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
                 final SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
-                name = settings.getString("firstname", "");
+                fname = settings.getString("firstname", "");
+                lname = settings.getString("lastname", "");
                 userLocation = intent.getExtras().getString("location");
                 phone_number = intent.getExtras().getString("pNum");
                 cName = intent.getExtras().getString("cName");
+                adventureID = intent.getExtras().getString("adventureID");
+                username = intent.getExtras().getString("username");
                 isRunning = intent.getBooleanExtra("isRunning", false);
 
                 sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -152,6 +156,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                         //If location isn't null, we can update the current coordinates to where we actually are.
                         //Otherwise, we have to use lastKnownLocation
                         if (location != null) {
+                            //ToDO: Look into tempLat and logic to see why crashes on first try everytime
                             if (tempLat != null) {
                                 currentLat = tempLat;
                                 currentLon = tempLon;
@@ -194,7 +199,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                                 ((Math.abs(latitude - currentLat) > 0.0001) || Math.abs(longitude - currentLon) > 0.0001)) {
                             try {
                                 SmsManager smsManager = SmsManager.getDefault();
-                                String message = "Hey " + cName + ", " + name + " went out for a " +
+                                String message = "Hey " + cName + ", " + fname + " went out for a " +
                                         "fun night but didn't reach his final location and hasn't moved for a while! He said he was going to " +
                                         userLocation + ", and his last known location was at " + currentLat + ", " + currentLon + ".";
                                 ArrayList<String> parts = smsManager.divideMessage(message);
@@ -217,7 +222,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                         if (batteryPct * 100 < 10) {
                             try {
                                 SmsManager smsManager = SmsManager.getDefault();
-                                String message = "Hey " + cName + ", " + name + " went out for a " +
+                                String message = "Hey " + cName + ", " + fname + " went out for a " +
                                         "fun night tonight but his phone battery is almost dead! He said he was going to " +
                                         userLocation + ", and his last known location was at " + currentLat + ", " + currentLon + ".";
                                 ArrayList<String> parts = smsManager.divideMessage(message);
@@ -234,6 +239,19 @@ public class TrackingActivity extends Service implements LocationListener, Senso
 
                 //Set to run every so often (10 min) EDIT TO 10 SECONDS::::
                 timer.schedule(hourlyTask, 0l, 1000 * 1 * 10);
+
+                //Send Text to Friend
+                try {
+                    SmsManager smsManager = SmsManager.getDefault();
+                    String message = "Hello " + cName + ", " + fname + " " + lname + " went out for a " +
+                            "fun night tonight and has entrusted you as their Guardian Angel. We will send you an update if they fail to reach their destination; " +
+                            "However, as their Angel you can always head to gentle-badlands-54918.herokuapp.com and login with these credentials to keep a protective watch over your adventurer..." +
+                            "\nUsername: " + username + "\nSpecial Password: " + adventureID;
+                    ArrayList<String> parts = smsManager.divideMessage(message);
+                    smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         //return super.onStartCommand(intent, flags, startId);
@@ -301,7 +319,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
         super.onTaskRemoved(rootIntent);
         try {
             SmsManager smsManager = SmsManager.getDefault();
-            String message = "Hey " + cName + ", " + name + " went out for a " +
+            String message = "Hey " + cName + ", " + fname + " went out for a " +
                     "fun night tonight but his tracking app SafeNights just crashed! He said he was going to " +
                     userLocation + ", and his last known location was at " + currentLat + ", " + currentLon + ".";
             ArrayList<String> parts = smsManager.divideMessage(message);
@@ -321,7 +339,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
         timer.cancel();
         try {
             SmsManager smsManager = SmsManager.getDefault();
-            String message = "Hey " + cName + ", " + name + " went out for a " +
+            String message = "Hey " + cName + ", " + fname + " went out for a " +
                     "fun night tonight and appears to have finished! He said he was going to " +
                     userLocation + ", and his last known location was at " + currentLat + ", " + currentLon + ". " +
                     "If this does not look right you should give your friend a call :)";
