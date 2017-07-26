@@ -84,6 +84,10 @@
                 android:value="apoorvazachmobileapps.safenights.MainActivity" />
         </fragment>
         <activity
+            android:name=".Tutorial"
+            android:label="Onboarding"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".Login"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MainActivity">

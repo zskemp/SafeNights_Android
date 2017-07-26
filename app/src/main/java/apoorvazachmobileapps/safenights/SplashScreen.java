@@ -45,19 +45,17 @@ public class SplashScreen extends Activity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } finally {
-
                     SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-                    if (settings.getString("username", "") == null || settings.getString("username","") == ""){
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putBoolean("first_time", true);
-                        editor.commit();
+                    if (settings.getBoolean("tutorial", false)){
+                        Intent intent = new Intent(SplashScreen.this, Tutorial.class);
+                        startActivity(intent);
+                    } else if (settings.getString("username", "") == null || settings.getString("username","") == ""){
                         Intent intent = new Intent(SplashScreen.this, Login.class);
                         startActivity(intent);
                     } else {
                         Intent intent = new Intent(SplashScreen.this, MainActivity.class);
                         startActivity(intent);
                     }
-
                 }
             }
         };

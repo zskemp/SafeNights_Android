@@ -69,6 +69,8 @@ public class TrackingActivity extends Service implements LocationListener, Senso
     //FinalDest params
     double latitude;
     double longitude;
+    boolean feelingLucky;
+    boolean notifiedLucky;
     boolean recentlyMoved;
     boolean tempMoved;
     boolean isRunning;
@@ -125,20 +127,26 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                 mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
                 sensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
                 recentlyMoved = false;
+                feelingLucky = false;
+                notifiedLucky = false;
 
                 //Gets coordinates from Address String
                 Geocoder geocoder = new Geocoder(this, Locale.getDefault());
                 List<Address> addresses = new ArrayList<Address>();
-                try {
-                    addresses = geocoder.getFromLocationName(userLocation, 1);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (addresses.size() > 0) {
-                    latitude = addresses.get(0).getLatitude();
-                    longitude = addresses.get(0).getLongitude();
+                if(userLocation.equals("I'm Feeling Lucky ;)")) {
+                    feelingLucky = true;
                 } else {
-                    Toast.makeText(this, "The address didn't parse correctly!", Toast.LENGTH_SHORT);
+                    try {
+                        addresses = geocoder.getFromLocationName(userLocation, 1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (addresses.size() > 0) {
+                        latitude = addresses.get(0).getLatitude();
+                        longitude = addresses.get(0).getLongitude();
+                    } else {
+                        Toast.makeText(this, "The address didn't parse correctly!", Toast.LENGTH_SHORT);
+                    }
                 }
 
                 //Timer task to run every 10 minutes
@@ -157,13 +165,18 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                         //Otherwise, we have to use lastKnownLocation
                         if (location != null) {
                             //ToDO: Look into tempLat and logic to see why crashes on first try everytime
+                            //Note: This is the one updating everytime... Getting the last GPS sucks at working :(
                             if (tempLat != null) {
                                 currentLat = tempLat;
                                 currentLon = tempLon;
+                                currentLon = (double)Math.round(currentLon * 10000d) / 10000d;
+                                currentLat = (double)Math.round(currentLat * 10000d) / 10000d;
                             } else {
                                 currentLon = BigDecimal.valueOf(location.getLongitude()).doubleValue();
                                 currentLat = BigDecimal.valueOf(location.getLatitude())
                                         .doubleValue();
+                                currentLon = (double)Math.round(currentLon * 10000d) / 10000d;
+                                currentLat = (double)Math.round(currentLat * 10000d) / 10000d;
                             }
                         } else {
                             Handler handler = new Handler(Looper.getMainLooper());
@@ -189,12 +202,25 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                         float batteryPct = level / (float) scale;
                         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 
-                        Log.i("thiscounter", "" + counter);
-                        Log.i("hi", "" + recentlyMoved);
+//                        Log.i("thiscounter", "" + counter);
+//                        Log.i("hi", "" + recentlyMoved);
                         //If it's between 2-6am, and the latitude and longitude is the same for all spots, send a message
                         //Otherwise, it means they moved locations, so update the positions in the array
-                        if (!recentlyMoved && hour >= 2 && hour < 6 && ((latArray[0] == latArray[1] && latArray[0] == latArray[2] && latArray[0] == latArray[3]) ||
-                                (lonArray[0] == lonArray[1] && lonArray[0] == lonArray[2] && lonArray[0] == lonArray[3])) &&
+                        if (!recentlyMoved && hour >= 2 && hour < 25 && ((latArray[0] == latArray[1] && latArray[0] == latArray[2] && latArray[0] == latArray[3]) ||
+                                (lonArray[0] == lonArray[1] && lonArray[0] == lonArray[2] && lonArray[0] == lonArray[3])) && feelingLucky && !notifiedLucky) {
+                            try {
+                                SmsManager smsManager = SmsManager.getDefault();
+                                String message = "Hey " + cName + ", " + fname + " went out for a " +
+                                        "fun night hasn't moved for a while! It seems they were okay with ending up anywhere, " +
+                                        "but as their Guardian Angel we wanted you to know where they ended up. Their coordinates were " + currentLat + ", " + currentLon + ".";
+                                ArrayList<String> parts = smsManager.divideMessage(message);
+                                smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
+                                notifiedLucky = true;
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else if (!recentlyMoved && hour >= 2 && hour < 25 && ((latArray[0] == latArray[1] && latArray[0] == latArray[2] && latArray[0] == latArray[3]) ||
+                                (lonArray[0] == lonArray[1] && lonArray[0] == lonArray[2] && lonArray[0] == lonArray[3])) && !feelingLucky &&
 
                                 ((Math.abs(latitude - currentLat) > 0.0001) || Math.abs(longitude - currentLon) > 0.0001)) {
                             try {
@@ -216,6 +242,10 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                             lonArray[1] = lonArray[2];
                             lonArray[2] = lonArray[3];
                             lonArray[3] = currentLon;
+                            Log.i("Iter1", "" + latArray[0] + lonArray[0]);
+                            Log.i("Iter2", "" + latArray[1] + lonArray[1]);
+                            Log.i("Iter3", "" + latArray[2] + lonArray[2]);
+                            Log.i("Iter4", "" + latArray[3] + lonArray[3]);
                         }
 
                         //If their battery is below 10%, send a warning message

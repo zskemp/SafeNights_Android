@@ -123,16 +123,13 @@ public class GetStarted extends Fragment {
         //For remembering saved user locations
         SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
         h = settings.getStringSet("locations", new HashSet<String>());
-        a = h.toArray(new CharSequence[h.size()]);
-
-        //For seeing if first time user logs in
-        if(settings.getBoolean("first_time", false)){
-            //Show user around app
-            runTutorial(rootview);
+        if(h.size() == 0) {
             SharedPreferences.Editor editor = settings.edit();
-            editor.putBoolean("first_time", false);
+            h.add("I'm Feeling Lucky ;)");
+            editor.putStringSet("locations", h);
             editor.commit();
         }
+        a = h.toArray(new CharSequence[h.size()]);
 
         mStartStopButton = (Button)rootview.findViewById(R.id.start);
         mStartStopButton.setOnClickListener(new View.OnClickListener()
@@ -371,28 +368,6 @@ public class GetStarted extends Fragment {
         }
 
         return contactName;
-    }
-
-    //Dialog pop-up for picking from saved locations
-    public void runTutorial(final View view) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Welcome!")
-                .setMessage("Hello friend! We would like to give you a quick introduction to our app." +
-                '\n' + '\n' +"The Get Started feature requires you pick a location you would safely like to end your night, and some friends you trust to watch over you;" +
-                '\n' + '\n' +"The Add Drinks feature lets you confess your sins the morning after so you can track your habits (measured in standard drinks);" +
-                '\n' + '\n' +"History lets you view those habits over the course of a month at a time;" +
-                '\n' + '\n' +"Finally, Last Night lets you take a look back at your last adventure, in case its a little hazy ;)")
-                // Set the action buttons
-                .setPositiveButton("Got It!", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User isRunning OK, so save the mSelectedItems results somewhere
-                        // or return them to the component that opened the dialog
-
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
     }
 
     //Method to restart the fragment UI and some of the logic without actually restarting Fragment

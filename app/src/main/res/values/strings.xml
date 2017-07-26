@@ -20,6 +20,29 @@
         completions."
     </string>
 
+    <string name="tutorial_title_1">Welcome to Project Ina</string>
+    <string name="tutorial_desc_1">Learn about the adventure of pregnancy and connect to your community!</string>
+
+    <string-array name="tutorial_titles">
+        <item>@string/tutorial_title_1</item>
+        <item>Baby Progress</item>
+        <item>Glossary</item>
+        <item>Stories</item>
+        <item>Resources</item>
+        <item>Map</item>
+        <item>Calendar</item>
+    </string-array>
+
+    <string-array name="tutorial_desc">
+        <item>@string/tutorial_desc_1</item>
+        <item>Learn about your baby at every step of the pregnancy and your newborn\'s life!</item>
+        <item>Read through various articles to help with your baby!</item>
+        <item>Find cultural stories and customs from your community!</item>
+        <item>View resources around Sisseton and other nearby towns!</item>
+        <item>Get directions to resources near you!</item>
+        <item>Find out about classes and community events!</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_test">Map</string>
