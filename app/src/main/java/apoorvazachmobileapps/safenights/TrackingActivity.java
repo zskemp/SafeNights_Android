@@ -36,6 +36,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -74,6 +78,11 @@ public class TrackingActivity extends Service implements LocationListener, Senso
     boolean recentlyMoved;
     boolean tempMoved;
     boolean isRunning;
+    boolean nestedTimerRunning;
+
+    //Global parameters for setting timer rates****************
+    int retryLocationRate = 10; //in seconds
+    int timerRate = 10; //in minutes
 
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
 
@@ -89,7 +98,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
             } else {
                 counter = 0;
                 //ToDo: Delete this
-                Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Starting Your Night...", Toast.LENGTH_SHORT).show();
                 LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
                 LocationListener locationListener = new LocationListener() {
@@ -164,8 +173,6 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                         //If location isn't null, we can update the current coordinates to where we actually are.
                         //Otherwise, we have to use lastKnownLocation
                         if (location != null) {
-                            //ToDO: Look into tempLat and logic to see why crashes on first try everytime
-                            //Note: This is the one updating everytime... Getting the last GPS sucks at working :(
                             if (tempLat != null) {
                                 currentLat = tempLat;
                                 currentLon = tempLon;
@@ -184,9 +191,24 @@ public class TrackingActivity extends Service implements LocationListener, Senso
 
                                 @Override
                                 public void run() {
-                                    Toast.makeText(getApplicationContext(), "Something went wrong getting your location! Trying again in 60 seconds... \n Please make sure your GPS is turned on.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "Something went wrong getting your location! Location will be pulled again in 60 seconds. Please be patient :) \nMake sure your GPS is turned on and you have service", Toast.LENGTH_LONG).show();
                                 }
                             });
+                            //Rerun the hourlyTask run() method in a minute and try to get location again
+                            //Note: Logic is such that if it doesn't work again will keep trying every minute instead of every 15 minutes
+                            final ExecutorService executor = Executors.newFixedThreadPool(1);
+                            executor.submit(new Runnable() {
+                                public void run() {
+                                    try {
+                                        Thread.sleep(retryLocationRate * 1000);
+                                        hourlyTask.run();
+                                    } catch (InterruptedException e) {
+                                        Log.i("Catch ExecutorService", "Broken second run. Uh-oh...");
+                                    }
+                                }
+                            });
+                            //Return out of run() method. Timer still going, we ran a second timer in retryLocationRate seconds
+                            return;
                         }
 
                         //Set the final spot in the array to current location
@@ -242,10 +264,6 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                             lonArray[1] = lonArray[2];
                             lonArray[2] = lonArray[3];
                             lonArray[3] = currentLon;
-                            Log.i("Iter1", "" + latArray[0] + lonArray[0]);
-                            Log.i("Iter2", "" + latArray[1] + lonArray[1]);
-                            Log.i("Iter3", "" + latArray[2] + lonArray[2]);
-                            Log.i("Iter4", "" + latArray[3] + lonArray[3]);
                         }
 
                         //If their battery is below 10%, send a warning message
@@ -268,7 +286,8 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                 };
 
                 //Set to run every so often (10 min) EDIT TO 10 SECONDS::::
-                timer.schedule(hourlyTask, 0l, 1000 * 1 * 10);
+                //1000ms * MIN/timerRate * 60 should be actual values
+                timer.schedule(hourlyTask, 0l, 1000 * timerRate * 1);
 
                 //Send Text to Friend
                 try {
