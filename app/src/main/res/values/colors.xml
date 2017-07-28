@@ -26,12 +26,8 @@
     <color name="colorAlcoholPoint">#820187</color>
     <color name="colorAlcoholPointHole">#B421B9</color>
 
-    <color name="tutorial1">#c0392b</color>
-    <color name="tutorial2">#8e44ad</color>
-    <color name="tutorial3">#155799</color>
-    <color name="tutorial4">#159957</color>
-    <color name="tutorial5">#FF8235</color>
-    <color name="tutorial6">#30E8BF</color>
-    <color name="tutorial7">#C33764</color>
-    <color name="tutorial8">#1D2671</color>
+    <color name="tutorial1">#055C7D</color>
+    <color name="tutorial2">#C7AD00</color>
+    <color name="tutorial3">#C76800</color>
+    <color name="tutorial4">#370D88</color>
 </resources>

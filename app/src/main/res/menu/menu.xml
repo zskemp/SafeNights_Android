@@ -22,7 +22,7 @@
     <item
         android:id="@+id/last_night"
         android:enabled="true"
-        android:icon="@drawable/map"
+        android:icon="@drawable/lastnight"
         android:title="Last Night"
         app:showAsAction="ifRoom" />
 </menu>

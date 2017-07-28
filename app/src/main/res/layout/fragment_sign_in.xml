@@ -6,7 +6,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
 
-    android:background="#211E36"
+    android:background="#000000"
     android:fitsSystemWindows="true">
 
 
@@ -16,7 +16,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="56dp"
+        android:paddingTop="24dp"
         android:paddingLeft="24dp"
         android:textColor="#FFFFFF"
         android:paddingRight="24dp"
@@ -27,21 +27,12 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="131dp"
-            android:layout_height="72dp"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="24dp"
             android:layout_weight="0.21"
-            android:src="@drawable/logo1" />
-        <TextView android:id="@+id/appname"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#02D4F1"
-            android:layout_marginBottom="24dp"
-            android:text="SafeNights"
-            android:fontFamily=""
-            android:gravity="center"
-            android:textSize="50dip"/>
+            android:src="@drawable/logo_full" />
 
         <!-- Username Label -->
         <android.support.design.widget.TextInputLayout

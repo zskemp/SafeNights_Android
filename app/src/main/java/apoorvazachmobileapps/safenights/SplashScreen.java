@@ -10,6 +10,7 @@ import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -30,9 +31,9 @@ public class SplashScreen extends Activity {
         setContentView(R.layout.activity_splash_screen);
         Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/Arciform.otf");
         indicator = (AVLoadingIndicatorView)findViewById(R.id.avi);
-        appname = (TextView)findViewById(R.id.appname);
-        appname.setTypeface(tf);
-        appname.getPaint().setShader(new LinearGradient(0,0,0,appname.getLineHeight(), Color.parseColor("#6FDA9C"), Color.parseColor("#56C5EF"), Shader.TileMode.REPEAT));
+//        appname = (TextView)findViewById(R.id.appname);
+//        appname.setTypeface(tf);
+//        appname.getPaint().setShader(new LinearGradient(0,0,0,appname.getLineHeight(), Color.parseColor("#6FDA9C"), Color.parseColor("#56C5EF"), Shader.TileMode.REPEAT));
         loading = (TextView)findViewById(R.id.loading);
         loading.setTypeface(tf);
         indicator.show();
@@ -46,10 +47,10 @@ public class SplashScreen extends Activity {
                     e.printStackTrace();
                 } finally {
                     SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-                    if (settings.getBoolean("tutorial", false)){
+                    if (!settings.getBoolean("tutorialComplete", false)){
                         Intent intent = new Intent(SplashScreen.this, Tutorial.class);
                         startActivity(intent);
-                    } else if (settings.getString("username", "") == null || settings.getString("username","") == ""){
+                    } else if (settings.getString("username", "") == null || settings.getString("username","").equals("")){
                         Intent intent = new Intent(SplashScreen.this, Login.class);
                         startActivity(intent);
                     } else {
