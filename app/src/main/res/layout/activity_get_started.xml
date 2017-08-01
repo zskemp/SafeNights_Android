@@ -28,23 +28,47 @@
                 android:src="@drawable/logo_mini"
                 android:layout_marginTop="20dp"/>
 
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/logo"
+                android:id="@+id/startstopLayout">
+
             <TextView
                 android:id="@+id/startstop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/logo"
                 android:layout_centerHorizontal="true"
                 android:text="Start Your Night!"
                 android:textColor="@color/colorTitle"
                 android:textSize="32dp"
                 android:textStyle="bold" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="16dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/startstop"
+                android:background="@color/colorAccent"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:layout_toRightOf="@id/startstop"
+                android:background="@color/colorAccent"
+                />
+
+            </RelativeLayout>
+
             <fragment
                 android:id="@+id/place_autocomplete_fragment"
                 android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/startstop"
+                android:layout_below="@+id/startstopLayout"
                 android:layout_marginTop="20dp"
                 android:layout_centerHorizontal="true" />
 

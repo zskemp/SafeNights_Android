@@ -212,7 +212,7 @@ public class GetStarted extends Fragment {
             started = savedInstanceState.getBoolean("test");
             if (started) {
                 started = true;
-                startstop.setText("Your Night Is Underway!");
+                startstop.setText("Night Underway!");
                 mStartStopButton.setText("Stop Night");
             }
             nameWasSet = savedInstanceState.getBoolean("nameSet");
@@ -227,7 +227,7 @@ public class GetStarted extends Fragment {
         started = isMyServiceRunning(TrackingActivity.class);
         if(started){
             mStartStopButton.setText("Stop Night");
-            startstop.setText("Your Night Is Underway!");
+            startstop.setText("Night Underway!");
 
             mLocationsButton.setText(settings.getString("nightLocation", ""));
             //contactEmail.setText(settings.getString("nightEmail",""));
@@ -271,18 +271,19 @@ public class GetStarted extends Fragment {
         a = h.toArray(new CharSequence[h.size()]);
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Select a location")
-                .setMultiChoiceItems(a, null,
-                        new DialogInterface.OnMultiChoiceClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which,
-                                                boolean isChecked) {
-                                if (isChecked) {
-                                    // If the user checked the item, add it to the selected items
-                                    mSelectedItems.add(a[which]);
-                                } else if (mSelectedItems.contains(which)) {
-                                    // Else, if the item is already in the array, remove it
-                                    mSelectedItems.remove(Integer.valueOf(which));
-                                }
+                .setSingleChoiceItems(a, 0,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                int selectedPosition = ((AlertDialog)dialog).getListView().getCheckedItemPosition();
+                                mSelectedItems.clear();
+                                mSelectedItems.add(a[which]);
+//                                if (selectedPosition ) {
+//                                    // If the user checked the item, add it to the selected items
+//                                    mSelectedItems.add(a[which]);
+//                                } else if (mSelectedItems.contains(which)) {
+//                                    // Else, if the item is already in the array, remove it
+//                                    mSelectedItems.remove(Integer.valueOf(which));
+//                                }
                             }
                         })
                 // Set the action buttons
@@ -425,7 +426,7 @@ public class GetStarted extends Fragment {
                             intent.putExtra("adventureID", adventureID);
                             started = true;
                             mStartStopButton.setText("Stop Night");
-                            startstop.setText("Your Night Is Underway!");
+                            startstop.setText("Night Underway!");
                             getActivity().startService(intent);
                         }
                     }

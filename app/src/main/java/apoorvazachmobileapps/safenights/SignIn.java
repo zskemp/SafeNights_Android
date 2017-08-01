@@ -73,6 +73,9 @@ public class SignIn extends Fragment {
         mSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                indicator.show();
+                indicator.setVisibility(View.VISIBLE);
+                mSignIn.setEnabled(false);
                 callSignInAPI(v);
             }
         });
@@ -94,8 +97,6 @@ public class SignIn extends Fragment {
     }
 
     public void callSignInAPI (View view) {
-        indicator.show();
-        indicator.setVisibility(View.VISIBLE);
         SafeNightsAPIInterface apiService =
                 SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
 
@@ -110,6 +111,9 @@ public class SignIn extends Fragment {
             public void onResponse(Call<User> call, Response<User> response) {
                 User u  = response.body();
                 if(u.getPassed().equals("n")){
+                    mSignIn.setEnabled(true);
+                    indicator.hide();
+                    indicator.setVisibility(View.GONE);
                     Toast.makeText(getActivity().getApplicationContext(), "Incorrect Credentials!", Toast.LENGTH_LONG).show();
                 } else {
                     Log.i("names:", u.getPassed());
@@ -124,8 +128,6 @@ public class SignIn extends Fragment {
                     editor.putString("password", pword);
                     editor.putString("firstname", fname);
                     editor.putString("lastname", lname);
-                    //ToDo: Update API to return first name of person
-                    //ToDo: Put this in the string because if they login there is no record of what their name is
                     editor.putString("id", "");
                     Set<String> locations = new HashSet<String>();
                     editor.putStringSet("locations", locations);
@@ -142,6 +144,9 @@ public class SignIn extends Fragment {
             public void onFailure(Call<User> call, Throwable t) {
                 // Log error here since request failed
                 Log.e("API Call:", t.toString());
+                mSignIn.setEnabled(true);
+                indicator.hide();
+                indicator.setVisibility(View.GONE);
             }
         });
     }
