@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -38,14 +36,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TrackingActivity extends Service implements LocationListener, SensorEventListener{
+public class TrackingActivity extends Service implements LocationListener {
+    //SensorEventListener (also implements this for sensor*******)
 
     private String userLocation;
     private String phone_number;
@@ -61,8 +58,6 @@ public class TrackingActivity extends Service implements LocationListener, Senso
 
     SensorManager sensorManager;
     private Sensor mAccelerometer;
-    private static final float SHAKE_THRESHOLD = 6.00f; // m/S**2
-    private static final int MIN_TIME_BETWEEN_SHAKES_MILLISECS = 200;
 
     //Current params
     Double currentLat;
@@ -74,15 +69,19 @@ public class TrackingActivity extends Service implements LocationListener, Senso
     double latitude;
     double longitude;
     boolean feelingLucky;
-    boolean notifiedLucky;
-    boolean recentlyMoved;
+    boolean notifiedAlready;
+//    boolean recentlyMoved;
     boolean tempMoved;
     boolean isRunning;
     boolean nestedTimerRunning;
 
     //Global parameters for setting timer rates****************
-    int retryLocationRate = 10; //in seconds
-    int timerRate = 10; //in minutes
+    private static final int retryLocationRate = 10; //in seconds
+    private static final int timerRate = 15; //in minutes
+    private static final double gpsDifference = 0.0006; //.0006 = 61m difference
+    private static final double gpsDistance = 0.1; //.001 = 111m difference
+//    private static final float SHAKE_THRESHOLD = 8.00f; // m/S**2
+//    private static final int MIN_TIME_BETWEEN_SHAKES_MILLISECS = 200;
 
     public static final String PREFS_NAME = "CoreSkillsPrefsFile";
 
@@ -132,12 +131,14 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                 username = intent.getExtras().getString("username");
                 isRunning = intent.getBooleanExtra("isRunning", false);
 
-                sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-                mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-                sensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-                recentlyMoved = false;
+                Log.i("track", userLocation);
+
+//                sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+//                mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+//                sensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+//                recentlyMoved = false;
                 feelingLucky = false;
-                notifiedLucky = false;
+                notifiedAlready = false;
 
                 //Gets coordinates from Address String
                 Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -145,14 +146,18 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                 if(userLocation.equals("I'm Feeling Lucky ;)")) {
                     feelingLucky = true;
                 } else {
+                    Log.i("track", "I'm here");
                     try {
                         addresses = geocoder.getFromLocationName(userLocation, 1);
+                        Log.i("track", addresses.toString());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     if (addresses.size() > 0) {
+                        Log.i("loc", userLocation);
                         latitude = addresses.get(0).getLatitude();
                         longitude = addresses.get(0).getLongitude();
+                        Log.i("loclat", "" + latitude);
                     } else {
                         Toast.makeText(this, "The address didn't parse correctly!", Toast.LENGTH_SHORT);
                     }
@@ -176,14 +181,14 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                             if (tempLat != null) {
                                 currentLat = tempLat;
                                 currentLon = tempLon;
-                                currentLon = (double)Math.round(currentLon * 10000d) / 10000d;
-                                currentLat = (double)Math.round(currentLat * 10000d) / 10000d;
+                                currentLon = (double)Math.round(currentLon * 1000d) / 1000d;
+                                currentLat = (double)Math.round(currentLat * 1000d) / 1000d;
                             } else {
                                 currentLon = BigDecimal.valueOf(location.getLongitude()).doubleValue();
                                 currentLat = BigDecimal.valueOf(location.getLatitude())
                                         .doubleValue();
-                                currentLon = (double)Math.round(currentLon * 10000d) / 10000d;
-                                currentLat = (double)Math.round(currentLat * 10000d) / 10000d;
+                                currentLon = (double)Math.round(currentLon * 1000d) / 1000d;
+                                currentLat = (double)Math.round(currentLat * 1000d) / 1000d;
                             }
                         } else {
                             Handler handler = new Handler(Looper.getMainLooper());
@@ -224,34 +229,46 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                         float batteryPct = level / (float) scale;
                         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 
-//                        Log.i("thiscounter", "" + counter);
-//                        Log.i("hi", "" + recentlyMoved);
-                        //If it's between 2-6am, and the latitude and longitude is the same for all spots, send a message
+                        Log.i("tracklat0:", "" +  (latitude));
+                        Log.i("tracklon0:", "" +  (longitude));
+                        Log.i("tracklat:", "" +  Math.abs(latitude - currentLat));
+                        Log.i("tracklon:", "" +  Math.abs(longitude - currentLon));
+
+                        //If it's between 2-7am, and the latitude and longitude is the same for all spots, send a message
                         //Otherwise, it means they moved locations, so update the positions in the array
-                        if (!recentlyMoved && hour >= 2 && hour < 25 && ((latArray[0] == latArray[1] && latArray[0] == latArray[2] && latArray[0] == latArray[3]) ||
-                                (lonArray[0] == lonArray[1] && lonArray[0] == lonArray[2] && lonArray[0] == lonArray[3])) && feelingLucky && !notifiedLucky) {
+                        //NOTE: I AM LEAVING OUT ACCELEROMETER FOR FIRST ITERATION
+                        if (hour >= 0 && hour < 25 && (((Math.abs(latArray[0] - latArray[1]) < gpsDifference) && (Math.abs(latArray[0] - latArray[2]) < gpsDifference) && (Math.abs(latArray[0] - latArray[3]) < gpsDifference)) ||
+                                (((Math.abs(lonArray[0] - lonArray[1]) < gpsDifference) && (Math.abs(lonArray[0] - lonArray[2]) < gpsDifference) && (Math.abs(lonArray[0] - lonArray[3]) < gpsDifference)))) && feelingLucky && !notifiedAlready) {
                             try {
+                                Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+                                List<Address> addresses = geocoder.getFromLocation(currentLat, currentLon, 1);
+                                String address = addresses.get(0).getAddressLine(0);
+                                String city = addresses.get(0).getLocality();
                                 SmsManager smsManager = SmsManager.getDefault();
                                 String message = "Hey " + cName + ", " + fname + " went out for a " +
                                         "fun night hasn't moved for a while! It seems they were okay with ending up anywhere, " +
-                                        "but as their Guardian Angel we wanted you to know where they ended up. Their coordinates were " + currentLat + ", " + currentLon + ".";
+                                        "but as their Guardian Angel we wanted you to know where they ended up. They were last at " + address + " in " + city + ". (For more information, visit Gabriel's Iris on the website)";
                                 ArrayList<String> parts = smsManager.divideMessage(message);
                                 smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
-                                notifiedLucky = true;
+                                notifiedAlready = true;
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                        } else if (!recentlyMoved && hour >= 2 && hour < 25 && ((latArray[0] == latArray[1] && latArray[0] == latArray[2] && latArray[0] == latArray[3]) ||
-                                (lonArray[0] == lonArray[1] && lonArray[0] == lonArray[2] && lonArray[0] == lonArray[3])) && !feelingLucky &&
-
-                                ((Math.abs(latitude - currentLat) > 0.0001) || Math.abs(longitude - currentLon) > 0.0001)) {
+                        } else if (hour >= 0 && hour < 25 && (((Math.abs(latArray[0] - latArray[1]) < gpsDifference) && (Math.abs(latArray[0] - latArray[2]) < gpsDifference) && (Math.abs(latArray[0] - latArray[3]) < gpsDifference)) ||
+                                (((Math.abs(lonArray[0] - lonArray[1]) < gpsDifference) && (Math.abs(lonArray[0] - lonArray[2]) < gpsDifference) && (Math.abs(lonArray[0] - lonArray[3]) < gpsDifference)))) && !feelingLucky &&
+                                ((Math.abs(latitude - currentLat) + Math.abs(longitude - currentLon)) > gpsDistance) && !notifiedAlready) {
                             try {
+                                Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+                                List<Address> addresses = geocoder.getFromLocation(currentLat, currentLon, 1);
+                                String address = addresses.get(0).getAddressLine(0);
+                                String city = addresses.get(0).getLocality();
                                 SmsManager smsManager = SmsManager.getDefault();
                                 String message = "Hey " + cName + ", " + fname + " went out for a " +
                                         "fun night but didn't reach his final location and hasn't moved for a while! He said he was going to " +
-                                        userLocation + ", and his last known location was at " + currentLat + ", " + currentLon + ".";
+                                        userLocation + ", and his last known location was at " + address + " in " + city + ". (For more information, visit Gabriel's Iris on the website)";
                                 ArrayList<String> parts = smsManager.divideMessage(message);
                                 smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
+                                notifiedAlready = true;
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -269,10 +286,14 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                         //If their battery is below 10%, send a warning message
                         if (batteryPct * 100 < 10) {
                             try {
+                                Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+                                List<Address> addresses = geocoder.getFromLocation(currentLat, currentLon, 1);
+                                String address = addresses.get(0).getAddressLine(0);
+                                String city = addresses.get(0).getLocality();
                                 SmsManager smsManager = SmsManager.getDefault();
                                 String message = "Hey " + cName + ", " + fname + " went out for a " +
                                         "fun night tonight but his phone battery is almost dead! He said he was going to " +
-                                        userLocation + ", and his last known location was at " + currentLat + ", " + currentLon + ".";
+                                        userLocation + ", and his last known location was at " + address + " in " + city + ". (For more information, visit Gabriel's Iris on the website)";
                                 ArrayList<String> parts = smsManager.divideMessage(message);
                                 smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
                             } catch (Exception e) {
@@ -281,7 +302,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                         }
                         //Push location data point
                         callAddLocationAPI();
-                        recentlyMoved = false;
+//                        recentlyMoved = false;
                     }
                 };
 
@@ -294,7 +315,7 @@ public class TrackingActivity extends Service implements LocationListener, Senso
                     SmsManager smsManager = SmsManager.getDefault();
                     String message = "Hello " + cName + ", " + fname + " " + lname + " went out for a " +
                             "fun night tonight and has entrusted you as their Guardian Angel. We will send you an update if they fail to reach their destination; " +
-                            "However, as their Angel you can always head to gentle-badlands-54918.herokuapp.com and login with these credentials to keep a protective watch over your adventurer..." +
+                            "However, as their Angel you can always head to safe-nights.com and login with these credentials to keep a protective watch over your adventurer..." +
                             "\nUsername: " + username + "\nSpecial Password: " + adventureID;
                     ArrayList<String> parts = smsManager.divideMessage(message);
                     smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
@@ -367,10 +388,14 @@ public class TrackingActivity extends Service implements LocationListener, Senso
         timer.cancel();
         super.onTaskRemoved(rootIntent);
         try {
+            Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(currentLat, currentLon, 1);
+            String address = addresses.get(0).getAddressLine(0);
+            String city = addresses.get(0).getLocality();
             SmsManager smsManager = SmsManager.getDefault();
             String message = "Hey " + cName + ", " + fname + " went out for a " +
                     "fun night tonight but his tracking app SafeNights just crashed! He said he was going to " +
-                    userLocation + ", and his last known location was at " + currentLat + ", " + currentLon + ".";
+                    userLocation + ", and his last known location was at " + address + " in " + city + ". (For more information, visit Gabriel's Iris on the website)";
             ArrayList<String> parts = smsManager.divideMessage(message);
             smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
         } catch (Exception e) {
@@ -387,10 +412,14 @@ public class TrackingActivity extends Service implements LocationListener, Senso
         handler.removeCallbacksAndMessages(null);
         timer.cancel();
         try {
+            Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(currentLat, currentLon, 1);
+            String address = addresses.get(0).getAddressLine(0);
+            String city = addresses.get(0).getLocality();
             SmsManager smsManager = SmsManager.getDefault();
             String message = "Hey " + cName + ", " + fname + " went out for a " +
                     "fun night tonight and appears to have finished! He said he was going to " +
-                    userLocation + ", and his last known location was at " + currentLat + ", " + currentLon + ". " +
+                    userLocation + ", and his last known location was at " + address + " in " + city + ". " +
                     "If this does not look right you should give your friend a call :)";
             ArrayList<String> parts = smsManager.divideMessage(message);
             smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
@@ -406,27 +435,27 @@ public class TrackingActivity extends Service implements LocationListener, Senso
         super.onDestroy();
     }
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // Nothing needs to be added here.
-    }
+//    @Override
+//    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+//        // Nothing needs to be added here.
+//    }
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            float x = event.values[0];
-            float y = event.values[1];
-            float z = event.values[2];
-
-            double acceleration = Math.sqrt(Math.pow(x, 2) +
-                    Math.pow(y, 2) +
-                    Math.pow(z, 2)) - SensorManager.GRAVITY_EARTH;
-
-            if (acceleration > SHAKE_THRESHOLD) {
-                recentlyMoved = true;
-                counter++;
-            }
-        }
-    }
+//    @Override
+//    public void onSensorChanged(SensorEvent event) {
+//        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+//            float x = event.values[0];
+//            float y = event.values[1];
+//            float z = event.values[2];
+//
+//            double acceleration = Math.sqrt(Math.pow(x, 2) +
+//                    Math.pow(y, 2) +
+//                    Math.pow(z, 2)) - SensorManager.GRAVITY_EARTH;
+//
+//            if (acceleration > SHAKE_THRESHOLD) {
+//                recentlyMoved = true;
+//                counter++;
+//            }
+//        }
+//    }
 
 }

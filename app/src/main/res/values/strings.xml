@@ -20,27 +20,21 @@
         completions."
     </string>
 
-    <string name="tutorial_title_1">Welcome to Project Ina</string>
-    <string name="tutorial_desc_1">Learn about the adventure of pregnancy and connect to your community!</string>
+    <string name="tutorial_title_1">Entrust A Friend To Be Your Guardian Angel</string>
+    <string name="tutorial_desc_1">\"Walking with a friend in the dark is better than walking alone in the light.\"</string>
 
     <string-array name="tutorial_titles">
         <item>@string/tutorial_title_1</item>
-        <item>Baby Progress</item>
-        <item>Glossary</item>
-        <item>Stories</item>
-        <item>Resources</item>
-        <item>Map</item>
-        <item>Calendar</item>
+        <item>Go Out On Your Adventure!</item>
+        <item>Guardian Angel Has Real Time Tracking And Updates On Your Final Status</item>
+        <item>Confess Your Sins The Next Day And Track Your Drinking Habits</item>
     </string-array>
 
     <string-array name="tutorial_desc">
         <item>@string/tutorial_desc_1</item>
-        <item>Learn about your baby at every step of the pregnancy and your newborn\'s life!</item>
-        <item>Read through various articles to help with your baby!</item>
-        <item>Find cultural stories and customs from your community!</item>
-        <item>View resources around Sisseton and other nearby towns!</item>
-        <item>Get directions to resources near you!</item>
-        <item>Find out about classes and community events!</item>
+        <item>\"Every day\'s an adventure when I step out of my door. That\'s why I usually wear a hat and keep my head low.\"</item>
+        <item>\"One is not exposed to danger who, even when in safety is always on their guard.\"</item>
+        <item>\"By three methods we may learn wisdom: First, by reflection, which is noblest; Second, by imitation, which is easiest; and third by experience, which is the bitterest.\"</item>
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->

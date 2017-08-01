@@ -100,8 +100,8 @@ public class SignIn extends Fragment {
         SafeNightsAPIInterface apiService =
                 SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
 
-        final String uname = mUsername.getText().toString();
-        final String pword = mPassword.getText().toString();
+        final String uname = mUsername.getText().toString().trim();
+        final String pword = mPassword.getText().toString().trim();
 
 
         Call<User> call = apiService.signin(uname, pword);

@@ -64,8 +64,6 @@ public class SignUp extends Fragment {
                     mUsername.setError("Username is required!");
                 } else if( mUsername.getText().toString().length() > 20 ) {
                     mUsername.setError("Username cannot be longer than 20 characters!");
-                } else if( mUsername.getText().toString().contains(" ")) {
-                    mUsername.setError("Username cannot include spaces!");
                 } else if( mUsername.getText().toString().matches("^[A-Za-z0-9]+$")) {
                     //Matches what we want correctly
                     goodUsername = true;
@@ -83,8 +81,6 @@ public class SignUp extends Fragment {
                     mFname.setError("First name is required!");
                 } else if( mFname.getText().toString().length() > 20 ) {
                     mFname.setError("First name cannot be longer than 20 characters");
-                } else if( mFname.getText().toString().contains(" ")) {
-                    mFname.setError("First name cannot include spaces");
                 } else {
                     //Matches what we want correctly
                     goodFname = true;
@@ -99,8 +95,6 @@ public class SignUp extends Fragment {
                     mLname.setError("Last name is required!");
                 } else if( mLname.getText().toString().length() > 20 ) {
                     mLname.setError("Last name cannot be longer than 20 characters!");
-                } else if( mLname.getText().toString().contains(" ")) {
-                    mLname.setError("Last name cannot include spaces!");
                 } else {
                     //Matches what we want correctly
                     goodLname = true;
@@ -128,8 +122,6 @@ public class SignUp extends Fragment {
                     mPassword.setError("Password cannot be shorter than 6 characters!");
                 } else if( mPassword.getText().toString().length() > 20 ) {
                     mPassword.setError("Password cannot be longer than 20 characters!");
-                } else if( mPassword.getText().toString().contains(" ")) {
-                    mPassword.setError("Password cannot include spaces!");
                 } else {
                     //Matches what we want correctly
                     goodPassword = true;
@@ -163,11 +155,11 @@ public class SignUp extends Fragment {
                 SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
 
         //Get the strings you need for the api
-        String username = mUsername.getText().toString();
-        final String fname = mFname.getText().toString();
-        final String lname = mLname.getText().toString();
-        String email = mEmail.getText().toString();
-        String password = mPassword.getText().toString();
+        String username = mUsername.getText().toString().trim();
+        final String fname = mFname.getText().toString().trim();
+        final String lname = mLname.getText().toString().trim();
+        String email = mEmail.getText().toString().trim();
+        String password = mPassword.getText().toString().trim();
 
         Call<User> call = apiService.signup(username, fname, lname, email, password);
 

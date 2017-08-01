@@ -26,8 +26,8 @@
     <color name="colorAlcoholPoint">#820187</color>
     <color name="colorAlcoholPointHole">#B421B9</color>
 
-    <color name="tutorial1">#055C7D</color>
-    <color name="tutorial2">#C7AD00</color>
-    <color name="tutorial3">#C76800</color>
-    <color name="tutorial4">#370D88</color>
+    <color name="tutorial1">#41A9CC</color>
+    <color name="tutorial2">#E2615C</color>
+    <color name="tutorial3">#FDBE57</color>
+    <color name="tutorial4">#8A63B2</color>
 </resources>
