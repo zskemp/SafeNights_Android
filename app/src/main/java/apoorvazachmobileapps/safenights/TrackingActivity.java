@@ -1,5 +1,6 @@
 package apoorvazachmobileapps.safenights;
 
+import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Bundle;
 
@@ -26,8 +28,16 @@ import android.util.Log;
 
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -36,6 +46,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -79,7 +91,7 @@ public class TrackingActivity extends Service implements LocationListener {
     private static final int retryLocationRate = 10; //in seconds
     private static final int timerRate = 15; //in minutes
     private static final double gpsDifference = 0.0006; //.0006 = 61m difference
-    private static final double gpsDistance = 0.1; //.001 = 111m difference
+    private static final double gpsDistance = 0.0015; //.001 = 111m difference
 //    private static final float SHAKE_THRESHOLD = 8.00f; // m/S**2
 //    private static final int MIN_TIME_BETWEEN_SHAKES_MILLISECS = 200;
 
@@ -146,21 +158,9 @@ public class TrackingActivity extends Service implements LocationListener {
                 if(userLocation.equals("I'm Feeling Lucky ;)")) {
                     feelingLucky = true;
                 } else {
-                    Log.i("track", "I'm here");
-                    try {
-                        addresses = geocoder.getFromLocationName(userLocation, 1);
-                        Log.i("track", addresses.toString());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    if (addresses.size() > 0) {
-                        Log.i("loc", userLocation);
-                        latitude = addresses.get(0).getLatitude();
-                        longitude = addresses.get(0).getLongitude();
-                        Log.i("loclat", "" + latitude);
-                    } else {
-                        Toast.makeText(this, "The address didn't parse correctly!", Toast.LENGTH_SHORT);
-                    }
+                    //In this method get the userLocation and parse into global latitude and longitude
+                    Log.i("loc", userLocation);
+                    new DataLongOperationAsynchTask().execute(userLocation);
                 }
 
                 //Timer task to run every 10 minutes
@@ -193,7 +193,6 @@ public class TrackingActivity extends Service implements LocationListener {
                         } else {
                             Handler handler = new Handler(Looper.getMainLooper());
                             handler.post(new Runnable() {
-
                                 @Override
                                 public void run() {
                                     Toast.makeText(getApplicationContext(), "Something went wrong getting your location! Location will be pulled again in 60 seconds. Please be patient :) \nMake sure your GPS is turned on and you have service", Toast.LENGTH_LONG).show();
@@ -231,6 +230,8 @@ public class TrackingActivity extends Service implements LocationListener {
 
                         Log.i("tracklat0:", "" +  (latitude));
                         Log.i("tracklon0:", "" +  (longitude));
+                        Log.i("tracklat0:", "" +  (currentLat));
+                        Log.i("tracklon0:", "" +  (currentLon));
                         Log.i("tracklat:", "" +  Math.abs(latitude - currentLat));
                         Log.i("tracklon:", "" +  Math.abs(longitude - currentLon));
 
@@ -264,8 +265,8 @@ public class TrackingActivity extends Service implements LocationListener {
                                 String city = addresses.get(0).getLocality();
                                 SmsManager smsManager = SmsManager.getDefault();
                                 String message = "Hey " + cName + ", " + fname + " went out for a " +
-                                        "fun night but didn't reach his final location and hasn't moved for a while! He said he was going to " +
-                                        userLocation + ", and his last known location was at " + address + " in " + city + ". (For more information, visit Gabriel's Iris on the website)";
+                                        "fun night but didn't reach their final location and hasn't moved for a while! They said they were going to " +
+                                        userLocation + ", and their last known location was at " + address + " in " + city + ". (For more information, visit Gabriel's Iris on the website)";
                                 ArrayList<String> parts = smsManager.divideMessage(message);
                                 smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
                                 notifiedAlready = true;
@@ -292,8 +293,8 @@ public class TrackingActivity extends Service implements LocationListener {
                                 String city = addresses.get(0).getLocality();
                                 SmsManager smsManager = SmsManager.getDefault();
                                 String message = "Hey " + cName + ", " + fname + " went out for a " +
-                                        "fun night tonight but his phone battery is almost dead! He said he was going to " +
-                                        userLocation + ", and his last known location was at " + address + " in " + city + ". (For more information, visit Gabriel's Iris on the website)";
+                                        "fun night tonight but their phone battery is almost dead! They said they were going to " +
+                                        userLocation + ", and their last known location was at " + address + " in " + city + ". (For more information, visit Gabriel's Iris on the website)";
                                 ArrayList<String> parts = smsManager.divideMessage(message);
                                 smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
                             } catch (Exception e) {
@@ -394,8 +395,8 @@ public class TrackingActivity extends Service implements LocationListener {
             String city = addresses.get(0).getLocality();
             SmsManager smsManager = SmsManager.getDefault();
             String message = "Hey " + cName + ", " + fname + " went out for a " +
-                    "fun night tonight but his tracking app SafeNights just crashed! He said he was going to " +
-                    userLocation + ", and his last known location was at " + address + " in " + city + ". (For more information, visit Gabriel's Iris on the website)";
+                    "fun night tonight but their tracking app SafeNights just crashed! They said they was going to " +
+                    userLocation + ", and their last known location was at " + address + " in " + city + ". (For more information, visit Gabriel's Iris on the website)";
             ArrayList<String> parts = smsManager.divideMessage(message);
             smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
         } catch (Exception e) {
@@ -418,8 +419,8 @@ public class TrackingActivity extends Service implements LocationListener {
             String city = addresses.get(0).getLocality();
             SmsManager smsManager = SmsManager.getDefault();
             String message = "Hey " + cName + ", " + fname + " went out for a " +
-                    "fun night tonight and appears to have finished! He said he was going to " +
-                    userLocation + ", and his last known location was at " + address + " in " + city + ". " +
+                    "fun night tonight and appears to have finished! They said they were going to " +
+                    userLocation + ", and their last known location was at " + address + " in " + city + ". " +
                     "If this does not look right you should give your friend a call :)";
             ArrayList<String> parts = smsManager.divideMessage(message);
             smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
@@ -433,6 +434,89 @@ public class TrackingActivity extends Service implements LocationListener {
         }
         this.stopSelf();
         super.onDestroy();
+    }
+
+    private class DataLongOperationAsynchTask extends AsyncTask<String, Void, String[]> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String[] doInBackground(String... params) {
+            String response;
+            Log.i("params", params[0]);
+            try {
+                response = getLatLongByURL("http://maps.google.com/maps/api/geocode/json?address="+params[0]+"&sensor=false");
+                Log.d("response",""+response);
+                return new String[]{response};
+            } catch (Exception e) {
+                return new String[]{"error"};
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String... result) {
+            try {
+                JSONObject jsonObject = new JSONObject(result[0]);
+
+                double lng = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
+                        .getJSONObject("geometry").getJSONObject("location")
+                        .getDouble("lng");
+
+                double lat = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
+                        .getJSONObject("geometry").getJSONObject("location")
+                        .getDouble("lat");
+
+                latitude = lat;
+                longitude = lng;
+
+                Log.d("latitude", "" + lat);
+                Log.d("longitude", "" + lng);
+            } catch (JSONException e) {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), "Something went wrong parsing your address. Please restart!!!", Toast.LENGTH_LONG).show();
+                    }
+                });
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public String getLatLongByURL(String requestURL) {
+        URL url;
+        String response = "";
+        try {
+            url = new URL(requestURL);
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setReadTimeout(15000);
+            conn.setConnectTimeout(15000);
+            conn.setRequestMethod("GET");
+            conn.setDoInput(true);
+            conn.setRequestProperty("Content-Type",
+                    "application/x-www-form-urlencoded");
+            conn.setDoOutput(true);
+            int responseCode = conn.getResponseCode();
+
+            if (responseCode == HttpsURLConnection.HTTP_OK) {
+                String line;
+                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                while ((line = br.readLine()) != null) {
+                    response += line;
+                }
+            } else {
+                response = "";
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return response;
     }
 
 //    @Override

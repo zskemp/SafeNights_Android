@@ -154,6 +154,7 @@ public class GetStarted extends Fragment {
                     buildAlertMessageNoGps();
                 }
                 else {
+                    mStartStopButton.setEnabled(false);
                     callStartNightAPI(rootview);
                 }
             }
@@ -403,6 +404,8 @@ public class GetStarted extends Fragment {
                 call.enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
+                        mStartStopButton.setEnabled(true);
+
                         User u = response.body();
                         if (u.getPassed().equals("n")) {
                             //bring them to home page, let them know a problem
@@ -432,6 +435,8 @@ public class GetStarted extends Fragment {
                     }
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
+                        mStartStopButton.setEnabled(true);
+
                         // Log error here since request failed
                         Log.e("API Call:", t.toString());
                     }
@@ -441,6 +446,7 @@ public class GetStarted extends Fragment {
             Toast.makeText(getActivity(), "Your night has finished!", Toast.LENGTH_LONG).show();
 //                stopService(new Intent(GetStarted.this, TrackingActivity.class));
             started = false;
+            mStartStopButton.setEnabled(true);
             Intent intent = new Intent(getActivity(), TrackingActivity.class);
             //ToDo: Is this really necessary. Should look at how this works
             intent.putExtra("isRunning", true);
