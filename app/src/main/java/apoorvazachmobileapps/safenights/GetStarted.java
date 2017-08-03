@@ -56,7 +56,7 @@ public class GetStarted extends Fragment {
     private String contactNumber;
     //String for emergency contact's name
     private String contactName;
-    //Title Text - "Start Your Night!". Unused in Java
+    //Title Text - "Start Adventure!". Unused in Java
     private TextView startstop;
 
     //Logical private fields
@@ -213,8 +213,8 @@ public class GetStarted extends Fragment {
             started = savedInstanceState.getBoolean("test");
             if (started) {
                 started = true;
-                startstop.setText("Night Underway!");
-                mStartStopButton.setText("Stop Night");
+                startstop.setText("Adventure Underway!");
+                mStartStopButton.setText("Finish");
             }
             nameWasSet = savedInstanceState.getBoolean("nameSet");
             if (nameWasSet){
@@ -227,8 +227,8 @@ public class GetStarted extends Fragment {
         }
         started = isMyServiceRunning(TrackingActivity.class);
         if(started){
-            mStartStopButton.setText("Stop Night");
-            startstop.setText("Night Underway!");
+            mStartStopButton.setText("Finish");
+            startstop.setText("Adventure Underway!");
 
             mLocationsButton.setText(settings.getString("nightLocation", ""));
             //contactEmail.setText(settings.getString("nightEmail",""));
@@ -374,10 +374,10 @@ public class GetStarted extends Fragment {
 
     //Method to restart the fragment UI and some of the logic without actually restarting Fragment
     public void restartFragment() {
-        startstop.setText("Start Your Night!");
-        mLocationsButton.setText("My Locations");
-        mContactButton.setText("Select a Contact");
-        mStartStopButton.setText("START");
+        startstop.setText("Start Adventure!");
+        mLocationsButton.setText("My Strongholds");
+        mContactButton.setText("My Guardian Angels");
+        mStartStopButton.setText("SET OFF");
 
         nameWasSet = false;
         locationWasSet = false;
@@ -428,8 +428,8 @@ public class GetStarted extends Fragment {
                             intent.putExtra("username", username);
                             intent.putExtra("adventureID", adventureID);
                             started = true;
-                            mStartStopButton.setText("Stop Night");
-                            startstop.setText("Night Underway!");
+                            mStartStopButton.setText("Finish");
+                            startstop.setText("Adventure Underway!");
                             getActivity().startService(intent);
                         }
                     }
@@ -450,7 +450,7 @@ public class GetStarted extends Fragment {
             Intent intent = new Intent(getActivity(), TrackingActivity.class);
             //ToDo: Is this really necessary. Should look at how this works
             intent.putExtra("isRunning", true);
-            mStartStopButton.setText("Start Night");
+            mStartStopButton.setText("SET OFF");
             getActivity().stopService(intent);
             //Resets the logic and UI for the fragment
             restartFragment();

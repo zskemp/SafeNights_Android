@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:textSize="25dp"
-                android:text="Money Spent" />
+                android:text="Exhausted Plunder" />
 
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/chartMoney"
@@ -50,7 +50,7 @@
                 android:layout_below="@id/chartMoney"
                 android:layout_centerHorizontal="true"
                 android:textSize="25dp"
-                android:text="Alcohol Consumption" />
+                android:text="Strength of Blood" />
 
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/chartAlcohol"

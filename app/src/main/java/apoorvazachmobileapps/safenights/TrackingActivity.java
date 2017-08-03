@@ -88,7 +88,7 @@ public class TrackingActivity extends Service implements LocationListener {
     boolean nestedTimerRunning;
 
     //Global parameters for setting timer rates****************
-    private static final int retryLocationRate = 10; //in seconds
+    private static final int retryLocationRate = 60; //in seconds
     private static final int timerRate = 15; //in minutes
     private static final double gpsDifference = 0.0006; //.0006 = 61m difference
     private static final double gpsDistance = 0.0015; //.001 = 111m difference
@@ -143,8 +143,6 @@ public class TrackingActivity extends Service implements LocationListener {
                 username = intent.getExtras().getString("username");
                 isRunning = intent.getBooleanExtra("isRunning", false);
 
-                Log.i("track", userLocation);
-
 //                sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 //                mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 //                sensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
@@ -159,7 +157,6 @@ public class TrackingActivity extends Service implements LocationListener {
                     feelingLucky = true;
                 } else {
                     //In this method get the userLocation and parse into global latitude and longitude
-                    Log.i("loc", userLocation);
                     new DataLongOperationAsynchTask().execute(userLocation);
                 }
 
@@ -228,17 +225,10 @@ public class TrackingActivity extends Service implements LocationListener {
                         float batteryPct = level / (float) scale;
                         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 
-                        Log.i("tracklat0:", "" +  (latitude));
-                        Log.i("tracklon0:", "" +  (longitude));
-                        Log.i("tracklat0:", "" +  (currentLat));
-                        Log.i("tracklon0:", "" +  (currentLon));
-                        Log.i("tracklat:", "" +  Math.abs(latitude - currentLat));
-                        Log.i("tracklon:", "" +  Math.abs(longitude - currentLon));
-
                         //If it's between 2-7am, and the latitude and longitude is the same for all spots, send a message
                         //Otherwise, it means they moved locations, so update the positions in the array
                         //NOTE: I AM LEAVING OUT ACCELEROMETER FOR FIRST ITERATION
-                        if (hour >= 0 && hour < 25 && (((Math.abs(latArray[0] - latArray[1]) < gpsDifference) && (Math.abs(latArray[0] - latArray[2]) < gpsDifference) && (Math.abs(latArray[0] - latArray[3]) < gpsDifference)) ||
+                        if (hour >= 2 && hour < 7 && (((Math.abs(latArray[0] - latArray[1]) < gpsDifference) && (Math.abs(latArray[0] - latArray[2]) < gpsDifference) && (Math.abs(latArray[0] - latArray[3]) < gpsDifference)) ||
                                 (((Math.abs(lonArray[0] - lonArray[1]) < gpsDifference) && (Math.abs(lonArray[0] - lonArray[2]) < gpsDifference) && (Math.abs(lonArray[0] - lonArray[3]) < gpsDifference)))) && feelingLucky && !notifiedAlready) {
                             try {
                                 Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
@@ -255,7 +245,7 @@ public class TrackingActivity extends Service implements LocationListener {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                        } else if (hour >= 0 && hour < 25 && (((Math.abs(latArray[0] - latArray[1]) < gpsDifference) && (Math.abs(latArray[0] - latArray[2]) < gpsDifference) && (Math.abs(latArray[0] - latArray[3]) < gpsDifference)) ||
+                        } else if (hour >= 2 && hour < 7 && (((Math.abs(latArray[0] - latArray[1]) < gpsDifference) && (Math.abs(latArray[0] - latArray[2]) < gpsDifference) && (Math.abs(latArray[0] - latArray[3]) < gpsDifference)) ||
                                 (((Math.abs(lonArray[0] - lonArray[1]) < gpsDifference) && (Math.abs(lonArray[0] - lonArray[2]) < gpsDifference) && (Math.abs(lonArray[0] - lonArray[3]) < gpsDifference)))) && !feelingLucky &&
                                 ((Math.abs(latitude - currentLat) + Math.abs(longitude - currentLon)) > gpsDistance) && !notifiedAlready) {
                             try {
@@ -309,7 +299,7 @@ public class TrackingActivity extends Service implements LocationListener {
 
                 //Set to run every so often (10 min) EDIT TO 10 SECONDS::::
                 //1000ms * MIN/timerRate * 60 should be actual values
-                timer.schedule(hourlyTask, 0l, 1000 * timerRate * 1);
+                timer.schedule(hourlyTask, 0l, 1000 * timerRate * 60);
 
                 //Send Text to Friend
                 try {
@@ -338,7 +328,7 @@ public class TrackingActivity extends Service implements LocationListener {
         String password = settings.getString("password", "");
         String id = settings.getString("id", "");
         Call<User> call = apiService.addlocation(username, password, id, currentLat, currentLon);
-        Log.i("u", id + username + password + currentLat + currentLon);
+//        Log.i("u", id + username + password + currentLat + currentLon);
 
         call.enqueue(new Callback<User>() {
             @Override
@@ -445,7 +435,6 @@ public class TrackingActivity extends Service implements LocationListener {
         @Override
         protected String[] doInBackground(String... params) {
             String response;
-            Log.i("params", params[0]);
             try {
                 response = getLatLongByURL("http://maps.google.com/maps/api/geocode/json?address="+params[0]+"&sensor=false");
                 Log.d("response",""+response);

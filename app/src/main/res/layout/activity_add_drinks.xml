@@ -160,13 +160,10 @@
             android:layout_height="wrap_content"
             android:layout_alignRight="@+id/seekbar"
             android:layout_below="@+id/winePicker"
-            android:layout_marginLeft="22dp"
-            android:layout_marginStart="22dp"
             android:paddingBottom="5dp"
-            android:paddingLeft="17dp"
-            android:paddingRight="29dp"
+            android:paddingRight="10dp"
             android:paddingTop="15dp"
-            android:text="Shots" />
+            android:text="Mixed Drinks" />
 
 
         <com.jesusm.holocircleseekbar.lib.HoloCircleSeekBar
@@ -214,7 +211,7 @@
             android:textColor="#56C5EF"
             android:padding="20dp"
             android:textSize="20dp"
-            android:text="Submit" />
+            android:text="Confess" />
 
     </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>

@@ -5,24 +5,24 @@
         android:id="@+id/get_started"
         android:enabled="true"
         android:icon="@drawable/start"
-        android:title="Get Started"
+        android:title="Adventure Time"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/add_drinks"
         android:enabled="true"
         android:icon="@drawable/plus"
-        android:title="Add Drinks"
+        android:title="Confess Sins"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/history"
         android:enabled="true"
         android:icon="@drawable/history"
-        android:title="History"
+        android:title="My Legacy"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/last_night"
         android:enabled="true"
         android:icon="@drawable/lastnight"
-        android:title="Last Night"
+        android:title="Last Adventure"
         app:showAsAction="ifRoom" />
 </menu>
