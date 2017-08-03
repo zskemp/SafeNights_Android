@@ -251,19 +251,19 @@ public class History extends Fragment {
         LineDataSet moneySet = new LineDataSet(money, "money");
 
         //STYLING Part 1!
-        //alcoholSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        alcoholSet.setLineWidth(2f);
-        alcoholSet.setDrawFilled(true);
+//        alcoholSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        alcoholSet.setLineWidth(3f);
+        alcoholSet.setDrawFilled(false);
         alcoholSet.setColor(ResourcesCompat.getColor(getResources(), R.color.colorAlcoholLine, null));
-        alcoholSet.setFillColor(ResourcesCompat.getColor(getResources(), R.color.colorAlcoholFill, null));
+//        alcoholSet.setFillColor(ResourcesCompat.getColor(getResources(), R.color.colorAlcoholLine, null));
         alcoholSet.setCircleColor(ResourcesCompat.getColor(getResources(), R.color.colorAlcoholPoint, null));
         alcoholSet.setCircleColorHole(ResourcesCompat.getColor(getResources(), R.color.colorAlcoholPointHole, null));
         alcoholSet.setDrawValues(false);
         //moneySet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        moneySet.setLineWidth(2f);
-        moneySet.setDrawFilled(true);
+        moneySet.setLineWidth(3f);
+        moneySet.setDrawFilled(false);
         moneySet.setColor(ResourcesCompat.getColor(getResources(), R.color.colorMoneyLine, null));
-        moneySet.setFillColor(ResourcesCompat.getColor(getResources(), R.color.colorMoneyFill, null));
+//        moneySet.setFillColor(ResourcesCompat.getColor(getResources(), R.color.colorMoneyFill, null));
         moneySet.setCircleColor(ResourcesCompat.getColor(getResources(), R.color.colorMoneyPoint, null));
         moneySet.setCircleColorHole(ResourcesCompat.getColor(getResources(), R.color.colorMoneyPointHole, null));
         moneySet.setDrawValues(false);

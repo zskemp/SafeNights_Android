@@ -62,7 +62,7 @@ public class SignIn extends Fragment {
         indicator = (AVLoadingIndicatorView)rootview.findViewById(R.id.avi);
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        Typeface tf = Typeface.createFromAsset(this.getContext().getAssets(),"fonts/Arciform.otf");
+//        Typeface tf = Typeface.createFromAsset(this.getContext().getAssets(),"fonts/Arciform.otf");
 //        appname = (TextView)rootview.findViewById(R.id.appname);
 //        appname.setTypeface(tf);
         //Next line does the gradient thing. Idk...
@@ -80,7 +80,7 @@ public class SignIn extends Fragment {
             }
         });
         mRegister = (TextView)rootview.findViewById(R.id.register_button);
-        mRegister.setTypeface(tf);
+//        mRegister.setTypeface(tf);
         mRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

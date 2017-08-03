@@ -21,12 +21,12 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="24dp"
             android:layout_weight="0.21"
-            android:src="@drawable/logo_full" />
+            android:src="@drawable/logo_mini" />
 
         <!-- Email Label -->
         <android.support.design.widget.TextInputLayout
@@ -34,27 +34,24 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/roundshapebtn"
+            android:background="@android:color/transparent"
+            android:textAlignment="viewStart"
             android:shadowColor="#737f82"
-            android:textAlignment="center"
             android:textColor="#FFFFFF"
-            android:textColorHint="#737f82"
-            android:backgroundTint="#FFFFFF"
+            android:textColorHint="#FFFFFF"
             android:textColorLink="#737f82">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/fname"
-                android:backgroundTint="#FFFFFF"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="First Name"
                 android:paddingLeft="5dp"
-                android:inputType="textEmailAddress"
+                android:inputType="textCapWords"
                 android:shadowColor="#737f82"
                 android:ellipsize="start"
-                android:gravity="center_horizontal"
-                android:textColor="#737f82"
-                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textAlignment="viewStart"
                 android:textColorHint="#FFFFFF"
                 android:textColorLink="#737f82" />
         </android.support.design.widget.TextInputLayout>
@@ -63,114 +60,104 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#737f82"
+            android:textColor="#FFFFFF"
             android:textColorLink="#737f82"
-            android:backgroundTint="#FFFFFF"
             android:shadowColor="#737f82"
-            android:textColorHint="#737f82"
-            android:textAlignment="center"
-            android:background="@drawable/roundshapebtn"
+            android:textColorHint="#FFFFFF"
+            android:background="@android:color/transparent"
+            android:textAlignment="viewStart"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/lname"
                 android:layout_width="match_parent"
-                android:textColor="#737f82"
-                android:backgroundTint="#FFFFFF"
+                android:textColor="#FFFFFF"
                 android:paddingLeft="5dp"
                 android:ellipsize="start"
-                android:gravity="center_horizontal"
+                android:textAlignment="viewStart"
                 android:textColorLink="#737f82"
                 android:shadowColor="#737f82"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textColorHint="#737f82"
+                android:textColorHint="#FFFFFF"
+                android:inputType="textCapWords"
+
                 android:hint="Last Name"/>
         </android.support.design.widget.TextInputLayout>
         <!-- Email Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#737f82"
+            android:textColor="#FFFFFF"
             android:textColorLink="#737f82"
-            android:backgroundTint="#FFFFFF"
             android:shadowColor="#737f82"
-            android:textColorHint="#737f82"
-            android:textAlignment="center"
-            android:background="@drawable/roundshapebtn"
+            android:textColorHint="#FFFFFF"
+            android:background="@android:color/transparent"
+            android:textAlignment="viewStart"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/email"
                 android:layout_width="match_parent"
-                android:textColor="#737f82"
-                android:backgroundTint="#FFFFFF"
+                android:textColor="#FFFFFF"
                 android:paddingLeft="5dp"
                 android:ellipsize="start"
-                android:gravity="center_horizontal"
+                android:textAlignment="viewStart"
                 android:textColorLink="#737f82"
                 android:shadowColor="#737f82"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
-                android:textAlignment="center"
-                android:textColorHint="#737f82"
+                android:textColorHint="#FFFFFF"
                 android:hint="Email Address"/>
         </android.support.design.widget.TextInputLayout>
         <!-- Password Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#737f82"
+            android:textColor="#FFFFFF"
             android:textColorLink="#737f82"
-            android:backgroundTint="#FFFFFF"
             android:shadowColor="#737f82"
-            android:textColorHint="#737f82"
-            android:textAlignment="center"
-            android:background="@drawable/roundshapebtn"
+            android:textColorHint="#FFFFFF"
+            android:background="@android:color/transparent"
+            android:textAlignment="viewStart"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/username"
                 android:layout_width="match_parent"
-                android:textColor="#737f82"
-                android:backgroundTint="#FFFFFF"
+                android:textColor="#FFFFFF"
                 android:paddingLeft="5dp"
                 android:ellipsize="start"
-                android:gravity="center_horizontal"
                 android:textColorLink="#737f82"
                 android:shadowColor="#737f82"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textColorHint="#737f82"
+                android:textAlignment="viewStart"
+                android:textColorHint="#FFFFFF"
                 android:hint="Username"/>
         </android.support.design.widget.TextInputLayout>
         <!-- Password Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#737f82"
+            android:textColor="#FFFFFF"
             android:textColorLink="#737f82"
-            android:backgroundTint="#FFFFFF"
             android:shadowColor="#737f82"
-            android:textColorHint="#737f82"
-            android:textAlignment="center"
-            android:background="@drawable/roundshapebtn"
+            android:textColorHint="#FFFFFF"
+            android:background="@android:color/transparent"
+            android:textAlignment="viewStart"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/password"
                 android:layout_width="match_parent"
-                android:textColor="#737f82"
-                android:backgroundTint="#FFFFFF"
+                android:textColor="#FFFFFF"
                 android:paddingLeft="5dp"
                 android:ellipsize="start"
-                android:gravity="center_horizontal"
                 android:textColorLink="#737f82"
                 android:shadowColor="#737f82"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:textAlignment="center"
-                android:textColorHint="#737f82"
+                android:textAlignment="viewStart"
+                android:textColorHint="#FFFFFF"
                 android:hint="Password"/>
         </android.support.design.widget.TextInputLayout>
 
@@ -179,10 +166,13 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textColor="#FFFFFF"
-            android:background="@drawable/roundbtn"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
+            android:background="@drawable/button_transparent"
+            android:textAlignment="center"
+            android:gravity="center|bottom"
             android:padding="12dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginTop="16dp"
+            android:textSize="20sp"
             android:text="CREATE ACCOUNT"/>
 
 
