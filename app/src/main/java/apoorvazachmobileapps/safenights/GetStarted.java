@@ -137,7 +137,6 @@ public class GetStarted extends Fragment {
             @Override
             public void onClick(View v)
             {
-                //ToDo: Add Logic to see if GPS is on
                 //Start manager for check if location currently on
                 final LocationManager manager = (LocationManager) getActivity().getSystemService( Context.LOCATION_SERVICE );
 
@@ -154,8 +153,12 @@ public class GetStarted extends Fragment {
                     buildAlertMessageNoGps();
                 }
                 else {
-                    mStartStopButton.setEnabled(false);
-                    callStartNightAPI(rootview);
+                    ActivityCompat.requestPermissions(getActivity(), new String[] { android.Manifest.permission.SEND_SMS }, 1);
+                    if((ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.SEND_SMS)
+                            == PackageManager.PERMISSION_GRANTED)) {
+                        mStartStopButton.setEnabled(false);
+                        callStartNightAPI(rootview);
+                    }
                 }
             }
         });
@@ -163,7 +166,11 @@ public class GetStarted extends Fragment {
         mContactButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
-                pickContact(v);
+                ActivityCompat.requestPermissions(getActivity(), new String[] { android.Manifest.permission.READ_CONTACTS }, 1);
+                if((ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.READ_CONTACTS)
+                        == PackageManager.PERMISSION_GRANTED)) {
+                    pickContact(v);
+                }
             }
         });
         mLocationsButton = (Button)rootview.findViewById(R.id.title);
@@ -297,6 +304,9 @@ public class GetStarted extends Fragment {
                         for(Object a : mSelectedItems){
                             p+=a;
                         }
+                        if(p.equals("")) {
+                            p = "I'm Feeling Lucky ;)";
+                        }
                         mLocationsButton.setText("" + p);
                         locationWasSet = true;
                         locationAddress = "" + p;
@@ -391,6 +401,7 @@ public class GetStarted extends Fragment {
         if (!started) {
             if(locationAddress == null || (contactNumber.equals(""))){
                 Toast.makeText(getActivity(), "Please fill out all fields!", Toast.LENGTH_SHORT).show();
+                mStartStopButton.setEnabled(true);
             } else {
                 SafeNightsAPIInterface apiService =
                         SafeNightsAPIClient.getClient().create(SafeNightsAPIInterface.class);
