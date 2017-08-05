@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="apoorvazachmobileapps.safenights">
+    package="zrsApps.safenights">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -23,7 +23,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashScreen">
+        <activity android:name="zrsApps.safenights.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,14 +32,14 @@
         </activity>
 
         <service
-            android:name=".TrackingActivity"
+            android:name="zrsApps.safenights.TrackingActivity"
             android:label="@string/title_activity_tracking"
             android:parentActivityName=".MainActivity"
             android:stopWithTask="false"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="apoorvazachmobileapps.safenights.MainActivity" />
+                android:value="zrsApps.safenights.MainActivity" />
         </service>
 
         <meta-data
@@ -53,7 +53,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="apoorvazachmobileapps.safenights.MainActivity" />
+                android:value="zrsApps.safenights.MainActivity" />
         </fragment>
         <fragment
             android:name=".History"
@@ -62,7 +62,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="apoorvazachmobileapps.safenights.MainActivity" />
+                android:value="zrsApps.safenights.MainActivity" />
         </fragment>
         <fragment
             android:name=".AddDrinks"
@@ -72,7 +72,7 @@
             android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="apoorvazachmobileapps.safenights.MainActivity" />
+                android:value="zrsApps.safenights.MainActivity" />
         </fragment>
         <fragment
             android:name=".GetStarted"
@@ -81,16 +81,16 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="apoorvazachmobileapps.safenights.MainActivity" />
+                android:value="zrsApps.safenights.MainActivity" />
         </fragment>
         <activity
-            android:name=".Tutorial"
+            android:name="zrsApps.safenights.Tutorial"
             android:label="Onboarding"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".Login"
+            android:name="zrsApps.safenights.Login"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MainActivity">
+        <activity android:name="zrsApps.safenights.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
