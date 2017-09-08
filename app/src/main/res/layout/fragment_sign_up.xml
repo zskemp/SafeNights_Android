@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="zrsApps.safenights.SignUp"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -131,6 +132,7 @@
                 android:shadowColor="#737f82"
                 android:layout_height="wrap_content"
                 android:textAlignment="viewStart"
+                android:inputType="textNoSuggestions"
                 android:textColorHint="#FFFFFF"
                 android:hint="Username"/>
         </android.support.design.widget.TextInputLayout>
@@ -160,6 +162,16 @@
                 android:textColorHint="#FFFFFF"
                 android:hint="Password"/>
         </android.support.design.widget.TextInputLayout>
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avi"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            style="@style/AVLoadingIndicatorView"
+            android:visibility="gone"
+            app:indicatorName="BallSpinFadeLoaderIndicator"
+            app:indicatorColor="#FFFFFF" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/signup_button"

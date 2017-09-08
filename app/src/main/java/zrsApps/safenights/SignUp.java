@@ -1,16 +1,21 @@
 package zrsApps.safenights;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.wang.avi.AVLoadingIndicatorView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,6 +33,7 @@ public class SignUp extends Fragment {
     private EditText mPassword;
     private TextView appname;
     Button mSignUp;
+    private AVLoadingIndicatorView indicator;
 
     private boolean goodUsername = false;
     private boolean goodFname = false;
@@ -50,6 +56,20 @@ public class SignUp extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootview = inflater.inflate(R.layout.fragment_sign_up, container, false);
+
+        // Set up touch listener for non-text box views to hide keyboard.
+        if (!(rootview instanceof EditText)) {
+            rootview.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideSoftKeyboard(getActivity());
+                    return false;
+                }
+            });
+        }
+
+        // Indicator view
+        indicator = (AVLoadingIndicatorView)rootview.findViewById(R.id.avi);
+
         //Add Proper Logic For Each Field To Validate for Submission
         mUsername   = (EditText)rootview.findViewById(R.id.username);
         mUsername.addTextChangedListener(new TextValidator(mUsername) {
@@ -128,8 +148,10 @@ public class SignUp extends Fragment {
             @Override
             public void onClick(View v) {
                 if(goodUsername && goodFname && goodLname & goodEmail && goodPassword) {
-                    callSignUpAPI(v);
+                    indicator.show();
+                    indicator.setVisibility(View.VISIBLE);
                     mSignUp.setEnabled(false);
+                    callSignUpAPI(v);
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "You must fulfill all requirements above!\nPlease complete and try again :)", Toast.LENGTH_LONG).show();
                 }
@@ -137,6 +159,14 @@ public class SignUp extends Fragment {
         });
 
         return rootview;
+    }
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                activity.getCurrentFocus().getWindowToken(), 0);
     }
 
     public final static boolean isValidEmail(CharSequence target) {
@@ -163,8 +193,6 @@ public class SignUp extends Fragment {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 User u  = response.body();
-                Log.i("Body", u.toString());
-                Log.i("y/n", u.getPassed());
                 if(u.getPassed().equals("y")){
                     //bring them to login page
                     Fragment fragment = new SignIn();
@@ -176,6 +204,9 @@ public class SignUp extends Fragment {
                     Toast.makeText(getActivity().getApplicationContext(), "You have been registered!\nPlease login :)", Toast.LENGTH_LONG).show();
                 }
                 else {
+                    indicator.hide();
+                    indicator.setVisibility(View.GONE);
+                    mSignUp.setEnabled(true);
                     Toast.makeText(getActivity().getApplicationContext(), "There already exists a user with that username.\nPlease choose a different one :)", Toast.LENGTH_LONG).show();
                 }
                 mSignUp.setEnabled(true);
@@ -185,6 +216,8 @@ public class SignUp extends Fragment {
             public void onFailure(Call<User> call, Throwable t) {
                 // Log error here since request failed
                 Log.e("API Call:", t.toString());
+                indicator.hide();
+                indicator.setVisibility(View.GONE);
                 mSignUp.setEnabled(true);
             }
         });

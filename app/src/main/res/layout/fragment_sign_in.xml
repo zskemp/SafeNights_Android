@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Username"
                 android:paddingLeft="5dp"
-                android:inputType="text"
+                android:inputType="textNoSuggestions"
                 android:shadowColor="#737f82"
                 android:ellipsize="start"
                 android:textAlignment="viewStart"

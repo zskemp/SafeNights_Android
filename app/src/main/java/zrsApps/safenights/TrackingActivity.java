@@ -304,8 +304,7 @@ public class TrackingActivity extends Service implements LocationListener {
                     SmsManager smsManager = SmsManager.getDefault();
                     String message = "Hello " + cName + ", " + fname + " " + lname + " went out for a " +
                             "fun night tonight and has entrusted you as their Guardian Angel. We will send you an update if they fail to reach their destination; " +
-                            "However, as their Angel you can always head to safe-nights.com and login with these credentials to keep a protective watch over your adventurer..." +
-                            "\nUsername: " + username + "\nSpecial Password: " + adventureID;
+                            "However, as their Angel you can always keep a protective watch over your adventurer by heading to safe-nights.com/guardian_angel/" + adventureID;
                     ArrayList<String> parts = smsManager.divideMessage(message);
                     smsManager.sendMultipartTextMessage(phone_number, null, parts, null, null);
                 } catch (Exception e) {
